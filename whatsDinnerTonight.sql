@@ -1,7 +1,8 @@
 -- change name of database from mydb to whatsdinner
 DROP DATABASE IF EXISTS `mydb`;
+DROP DATABASE IF EXISTS 'whatsdinner';
 CREATE SCHEMA IF NOT EXISTS `whatsdinner`;
-USE `whatsdinner` ;
+USE `whatsdinner`;
 
 -- -----------------------------------------------------
 -- Table recipe
@@ -15,6 +16,14 @@ CREATE TABLE `recipe` (
   `type` SET('Entree', 'Dessert', 'Side'),
   PRIMARY KEY (`recipeID`));
 -- -----------------------------------------------------
+-- Table raw
+-- -----------------------------------------------------
+CREATE TABLE `raw` (
+  `rawID` INT NOT NULL,
+  `rawName` VARCHAR(45) NULL,
+  PRIMARY KEY (`rawID`));
+
+-- -----------------------------------------------------
 -- Table ingredient
 -- -----------------------------------------------------
 CREATE TABLE `ingredient` (
@@ -23,18 +32,11 @@ CREATE TABLE `ingredient` (
   `rawID` INT NOT NULL,
   `ingredientName` VARCHAR(45) NULL,
   `measurement` INT NULL,
-  `unit` INT NULL,
+  `unit` SET('tbsp', 'tsp', 'fl. oz', 'c', 'ml', 'lb', 'F', 'C', 'g', 'kg', 'l', 'oz', 'gal', 'pt'),
   PRIMARY KEY (`recipeID`, `ingredientID`, `rawID`),
   FOREIGN KEY (`recipeID`) REFERENCES recipe (`recipeID`),
   FOREIGN KEY (`rawID`) REFERENCES raw (`rawID`));
 
--- -----------------------------------------------------
--- Table raw
--- -----------------------------------------------------
-CREATE TABLE `raw` (
-  `rawID` INT NOT NULL,
-  `rawName` VARCHAR(45) NULL,
-  PRIMARY KEY (`rawID`));
 -- -----------------------------------------------------
 -- Table `user`
 -- -----------------------------------------------------
