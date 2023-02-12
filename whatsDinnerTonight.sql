@@ -64,7 +64,7 @@ CREATE TABLE `substitutes` (
 -- -----------------------------------------------------
 CREATE TABLE `favorited` (
   `userID` INT NOT NULL,
-  `recipeID` VARCHAR(45) NULL,
+  `recipeID` INT NOT NULL,
   PRIMARY KEY (`userID`, `recipeID`),  
   FOREIGN KEY (`userID`) REFERENCES user (`userID`),
   FOREIGN KEY (`recipeID`) REFERENCES recipe (`recipeID`));
