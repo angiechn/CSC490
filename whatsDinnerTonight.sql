@@ -39,7 +39,7 @@ CREATE TABLE `ingredient` (
   `ingredientID` INT NOT NULL,
   `measurement` INT NULL,
   `unit` SET('tbsp', 'tsp', 'fl. oz', 'c', 'ml', 'lb', 'F', 'C', 'g', 'kg', 'l', 'oz', 'gal', 'pt'),
-  PRIMARY KEY (`recipeID`, `ingredientID`),
+  PRIMARY KEY (`ingredientID`),
   FOREIGN KEY (`recipeID`) REFERENCES recipe (`recipeID`));
 
 -- -----------------------------------------------------
@@ -79,6 +79,7 @@ CREATE TABLE `reviewed` (
   PRIMARY KEY (`userID`, `recipeID`),
   FOREIGN KEY (`userID`) REFERENCES user (`userID`),
   FOREIGN KEY (`recipeID`) REFERENCES recipe (`recipeID`));
+
 -- -----------------------------------------------------
 -- Table `has`
 -- -----------------------------------------------------
@@ -86,8 +87,9 @@ CREATE TABLE `has` (
   `userID` INT NOT NULL,
   `rawIngredientID` INT NOT NULL,
   PRIMARY KEY (`userID`, `rawIngredientID`),
-  FOREIGN KEY (`userID`) REFERENCES user (`userID`)
+  FOREIGN KEY (`userID`) REFERENCES user (`userID`),
   FOREIGN KEY (`rawIngredientID`) REFERENCES rawIngredient (`rawIngredientID`));
+
 -- -----------------------------------------------------
 -- Table `contains`
 -- -----------------------------------------------------
@@ -95,10 +97,8 @@ CREATE TABLE `contains` (
   `ingredientID` INT NOT NULL,
   `rawIngredientID` INT NOT NULL,
   PRIMARY KEY (`ingredientID`, `rawIngredientID`),
-  FOREIGN KEY (`ingredientID`) REFERENCES ingredient (`ingredientID`)
+  FOREIGN KEY (`ingredientID`) REFERENCES ingredient (`ingredientID`),
   FOREIGN KEY (`rawIngredientID`) REFERENCES rawIngredient (`rawIngredientID`));
-
-
 
 -- SET SQL_MODE=@OLD_SQL_MODE;
 -- SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
