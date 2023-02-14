@@ -81,9 +81,9 @@ CREATE TABLE `reviewed` (
   FOREIGN KEY (`recipeID`) REFERENCES recipe (`recipeID`));
 
 -- -----------------------------------------------------
--- Table `has`
+-- Table `inPantry`
 -- -----------------------------------------------------
-CREATE TABLE `has` (
+CREATE TABLE `inPantry` (
   `userID` INT NOT NULL,
   `rawIngredientID` INT NOT NULL,
   PRIMARY KEY (`userID`, `rawIngredientID`),
