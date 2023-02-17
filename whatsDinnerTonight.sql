@@ -1,5 +1,3 @@
--- change name of database from mydb to whatsdinner
-DROP DATABASE IF EXISTS `mydb`;
 CREATE SCHEMA IF NOT EXISTS `whatsdinner`;
 USE `whatsdinner`;
 
@@ -19,17 +17,17 @@ CREATE TABLE `recipe` (
 -- -----------------------------------------------------
 CREATE TABLE `type` (
   `recipeID` INT NOT NULL,  
-  `type` SET('Entree', 'Dessert', 'Side'),
+  `type` SET('Entree', 'Dessert', 'Side', 'Soup'),
   PRIMARY KEY (`recipeID`, `type`),
   FOREIGN KEY (`recipeID`) REFERENCES recipe (`recipeID`));
 
 -- -----------------------------------------------------
 -- Table raw
 -- -----------------------------------------------------
-CREATE TABLE `rawIngredient` (
-  `rawIngredientID` INT NOT NULL,
-  `rawIngredientName` VARCHAR(45) NULL,
-  PRIMARY KEY (`rawIngredientID`));
+CREATE TABLE `raw` (
+  `rawID` INT NOT NULL,
+  `rawName` VARCHAR(45) NULL,
+  PRIMARY KEY (`rawID`));
 
 -- -----------------------------------------------------
 -- Table ingredient
@@ -39,6 +37,7 @@ CREATE TABLE `ingredient` (
   `ingredientID` INT NOT NULL,
   `measurement` INT NULL,
   `unit` SET('tbsp', 'tsp', 'fl. oz', 'c', 'ml', 'lb', 'F', 'C', 'g', 'kg', 'l', 'oz', 'gal', 'pt'),
+  `preparation` VARCHAR(45) NULL,
   PRIMARY KEY (`ingredientID`),
   FOREIGN KEY (`recipeID`) REFERENCES recipe (`recipeID`));
 
@@ -47,22 +46,13 @@ CREATE TABLE `ingredient` (
 -- -----------------------------------------------------
 CREATE TABLE `user` (
   `userID` INT NOT NULL,
-  `password` VARCHAR(45) NULL,
+  `username` VARCHAR(45) NULL,
   PRIMARY KEY (`userID`));
 
 -- -----------------------------------------------------
--- Table `substitutes`
+-- Table `bookmarked`
 -- -----------------------------------------------------
-CREATE TABLE `substitutes` (
-  `rawIngredientID` INT NOT NULL,
-  `substituteID` INT NOT NULL,
-  PRIMARY KEY (`rawIngredientID`, `substituteID`),
-  FOREIGN KEY (`rawIngredientID`) REFERENCES rawIngredient (`rawIngredientID`));
-
--- -----------------------------------------------------
--- Table `favorited`
--- -----------------------------------------------------
-CREATE TABLE `favorited` (
+CREATE TABLE `bookmarked` (
   `userID` INT NOT NULL,
   `recipeID` INT NOT NULL,
   PRIMARY KEY (`userID`, `recipeID`),  
@@ -85,20 +75,22 @@ CREATE TABLE `reviewed` (
 -- -----------------------------------------------------
 CREATE TABLE `inPantry` (
   `userID` INT NOT NULL,
-  `rawIngredientID` INT NOT NULL,
-  PRIMARY KEY (`userID`, `rawIngredientID`),
+  `rawID` INT NOT NULL,
+  PRIMARY KEY (`userID`, `rawID`),
   FOREIGN KEY (`userID`) REFERENCES user (`userID`),
-  FOREIGN KEY (`rawIngredientID`) REFERENCES rawIngredient (`rawIngredientID`));
+  FOREIGN KEY (`rawID`) REFERENCES raw (`rawID`));
 
 -- -----------------------------------------------------
 -- Table `contains`
+-- TINYINT is MYSQL boolean, 0 is false and 1 is true
 -- -----------------------------------------------------
-CREATE TABLE `contains` (
+CREATE TABLE `ingredientRaw` (
   `ingredientID` INT NOT NULL,
-  `rawIngredientID` INT NOT NULL,
-  PRIMARY KEY (`ingredientID`, `rawIngredientID`),
+  `rawID` INT NOT NULL,
+  `substitute` TINYINT(1), 
+  PRIMARY KEY (`ingredientID`, `rawID`),
   FOREIGN KEY (`ingredientID`) REFERENCES ingredient (`ingredientID`),
-  FOREIGN KEY (`rawIngredientID`) REFERENCES rawIngredient (`rawIngredientID`));
+  FOREIGN KEY (`rawID`) REFERENCES raw (`rawID`));
 
 -- SET SQL_MODE=@OLD_SQL_MODE;
 -- SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
