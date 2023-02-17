@@ -8,8 +8,8 @@ CREATE TABLE `recipe` (
   `recipeID` INT NOT NULL,
   `recipeName` VARCHAR(45) NULL,
   `author` VARCHAR(45) NULL,
-  `instructions` VARCHAR(1000) NULL,
-  `notes` VARCHAR(200) NULL,
+  `instructions` VARCHAR(2000) NULL,
+  `notes` VARCHAR(500) NULL,
   PRIMARY KEY (`recipeID`));
 
 -- -----------------------------------------------------
@@ -61,6 +61,7 @@ CREATE TABLE `bookmarked` (
 
 -- -----------------------------------------------------
 -- Table `reviewed`
+-- TO DO: change datatype of review once rating system implementation logic is discussed
 -- -----------------------------------------------------
 CREATE TABLE `reviewed` (
   `userID` INT NOT NULL,
