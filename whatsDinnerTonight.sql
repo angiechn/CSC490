@@ -33,13 +33,11 @@ CREATE TABLE `raw` (
 -- Table ingredient
 -- -----------------------------------------------------
 CREATE TABLE `ingredient` (
-  `recipeID` INT NOT NULL,
   `ingredientID` INT NOT NULL,
   `measurement` INT NULL,
-  `unit` SET('tbsp', 'tsp', 'fl. oz', 'c', 'ml', 'lb', 'F', 'C', 'g', 'kg', 'l', 'oz', 'gal', 'pt'),
+  `unit` SET('Tablespoon', 'Teaspoon', 'Cup', 'Celcius', 'Fahrenheit', 'Milliliter', 'Pound', 'Gram', 'Kilogram', 'Liter', 'Ounce', 'Gallon', 'Pint'),
   `preparation` VARCHAR(45) NULL,
-  PRIMARY KEY (`ingredientID`),
-  FOREIGN KEY (`recipeID`) REFERENCES recipe (`recipeID`));
+  PRIMARY KEY (`ingredientID`));
 
 -- -----------------------------------------------------
 -- Table `user`
@@ -82,7 +80,7 @@ CREATE TABLE `inPantry` (
   FOREIGN KEY (`rawID`) REFERENCES raw (`rawID`));
 
 -- -----------------------------------------------------
--- Table `contains`
+-- Table `ingredientRaw`
 -- TINYINT is MYSQL boolean, 0 is false and 1 is true
 -- -----------------------------------------------------
 CREATE TABLE `ingredientRaw` (
@@ -92,6 +90,17 @@ CREATE TABLE `ingredientRaw` (
   PRIMARY KEY (`ingredientID`, `rawID`),
   FOREIGN KEY (`ingredientID`) REFERENCES ingredient (`ingredientID`),
   FOREIGN KEY (`rawID`) REFERENCES raw (`rawID`));
+
+-- -----------------------------------------------------
+-- Table `recipeIngredient`
+-- -----------------------------------------------------
+CREATE TABLE `recipeIngredient` (
+  `recipeID` INT NOT NULL,
+  `ingredientID` INT NOT NULL,
+  PRIMARY KEY (`ingredientID`, `recipeID`),
+  FOREIGN KEY (`ingredientID`) REFERENCES ingredient (`ingredientID`),
+  FOREIGN KEY (`recipeID`) REFERENCES recipe (`recipeID`));
+
 
 -- SET SQL_MODE=@OLD_SQL_MODE;
 -- SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
