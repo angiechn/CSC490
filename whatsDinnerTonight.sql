@@ -19,7 +19,7 @@ CREATE TABLE `type` (
   `recipeID` INT NOT NULL,  
   `type` SET('Entree', 'Dessert', 'Side', 'Soup'),
   PRIMARY KEY (`recipeID`, `type`),
-  FOREIGN KEY (`recipeID`) REFERENCES recipe (`recipeID`) ON DELETE CASCADE);
+  FOREIGN KEY (`recipeID`) REFERENCES recipe (`recipeID`) ON DELETE CASCADE ON UPDATE CASCADE);
 
 -- -----------------------------------------------------
 -- Table raw
@@ -33,11 +33,13 @@ CREATE TABLE `raw` (
 -- Table ingredient
 -- -----------------------------------------------------
 CREATE TABLE `ingredient` (
+  `recipeID` INT NOT NULL,
   `ingredientID` INT NOT NULL,
   `measurement` INT NULL,
   `unit` SET('Tablespoon', 'Teaspoon', 'Cup', 'Celcius', 'Fahrenheit', 'Milliliter', 'Pound', 'Gram', 'Kilogram', 'Liter', 'Ounce', 'Gallon', 'Pint'),
   `preparation` VARCHAR(45) NULL,
-  PRIMARY KEY (`ingredientID`));
+  PRIMARY KEY (`recipeID`, `ingredientID`),
+  FOREIGN KEY (`recipeID`) REFERENCES recipe (`recipeID`) ON DELETE CASCADE ON UPDATE CASCADE);
 
 -- -----------------------------------------------------
 -- Table `user`
@@ -55,7 +57,7 @@ CREATE TABLE `bookmarked` (
   `recipeID` INT NOT NULL,
   PRIMARY KEY (`userID`, `recipeID`),  
   FOREIGN KEY (`userID`) REFERENCES user (`userID`) ON DELETE CASCADE,
-  FOREIGN KEY (`recipeID`) REFERENCES recipe (`recipeID`) ON DELETE CASCADE);
+  FOREIGN KEY (`recipeID`) REFERENCES recipe (`recipeID`) ON DELETE CASCADE ON UPDATE CASCADE);
 
 -- -----------------------------------------------------
 -- Table `reviewed`
@@ -66,8 +68,8 @@ CREATE TABLE `reviewed` (
   `recipeID` INT NOT NULL,
   `review` VARCHAR(200) NULL,
   PRIMARY KEY (`userID`, `recipeID`),
-  FOREIGN KEY (`userID`) REFERENCES user (`userID`) ON DELETE CASCADE,
-  FOREIGN KEY (`recipeID`) REFERENCES recipe (`recipeID`) ON DELETE CASCADE);
+  FOREIGN KEY (`userID`) REFERENCES user (`userID`) ON DELETE CASCADE ON UPDATE CASCADE,
+  FOREIGN KEY (`recipeID`) REFERENCES recipe (`recipeID`) ON DELETE CASCADE ON UPDATE CASCADE);
 
 -- -----------------------------------------------------
 -- Table `inPantry`
@@ -76,30 +78,21 @@ CREATE TABLE `inPantry` (
   `userID` INT NOT NULL,
   `rawID` INT NOT NULL,
   PRIMARY KEY (`userID`, `rawID`),
-  FOREIGN KEY (`userID`) REFERENCES user (`userID`) ON DELETE CASCADE,
-  FOREIGN KEY (`rawID`) REFERENCES raw (`rawID`) ON DELETE CASCADE);
+  FOREIGN KEY (`userID`) REFERENCES user (`userID`) ON DELETE CASCADE ON UPDATE CASCADE,
+  FOREIGN KEY (`rawID`) REFERENCES raw (`rawID`) ON DELETE CASCADE ON UPDATE CASCADE);
 
 -- -----------------------------------------------------
 -- Table `ingredientRaw`
 -- TINYINT is MYSQL boolean, 0 is false and 1 is true
 -- -----------------------------------------------------
 CREATE TABLE `ingredientRaw` (
-  `ingredientID` INT NOT NULL,
+  `recID` INT NOT NULL,
+  `ingID` INT NOT NULL,
   `rawID` INT NOT NULL,
   `substitute` TINYINT(1), 
-  PRIMARY KEY (`ingredientID`, `rawID`),
-  FOREIGN KEY (`ingredientID`) REFERENCES ingredient (`ingredientID`) ON DELETE CASCADE,
-  FOREIGN KEY (`rawID`) REFERENCES raw (`rawID`) ON DELETE CASCADE);
-
--- -----------------------------------------------------
--- Table `recipeIngredient`
--- -----------------------------------------------------
-CREATE TABLE `recipeIngredient` (
-  `recipeID` INT NOT NULL,
-  `ingredientID` INT NOT NULL,
-  PRIMARY KEY (`ingredientID`, `recipeID`),
-  FOREIGN KEY (`ingredientID`) REFERENCES ingredient (`ingredientID`) ON DELETE CASCADE,
-  FOREIGN KEY (`recipeID`) REFERENCES recipe (`recipeID`) ON DELETE CASCADE);
+  PRIMARY KEY (`recID`, `ingID`, `rawID`),
+  FOREIGN KEY (`recID`, `ingID`) REFERENCES ingredient (`recipeID`,`ingredientID`) ON DELETE CASCADE ON UPDATE CASCADE,
+  FOREIGN KEY (`rawID`) REFERENCES raw (`rawID`) ON DELETE CASCADE ON UPDATE CASCADE);
 
 
 -- SET SQL_MODE=@OLD_SQL_MODE;

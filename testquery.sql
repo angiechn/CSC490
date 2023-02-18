@@ -16,23 +16,16 @@ INSERT INTO `raw` (`rawID`, `rawName`)
     ('3', 'Chicken Bouillon'), 
     ('4', 'Rice');
 
-INSERT INTO `ingredient` (`ingredientID`, `measurement`,`unit`,`preparation`) 
-    VALUES ('1', '6','Cup', NULL),
-    ('2', '1','Cup', 'Washed'),
-    ('3', '6','Teaspoon', NULL),
-    ('4', '6','Cup', NULL);
+INSERT INTO `ingredient` (`recipeID`, `ingredientID`, `measurement`,`unit`,`preparation`) 
+    VALUES ('1', '1', '6','Cup', NULL),
+    ('1', '2', '1','Cup', 'Washed'),
+    ('1', '3', '6','Teaspoon', NULL);
 
-INSERT INTO `ingredientRaw` (`ingredientID`, `rawID`, `substitute`) 
-    VALUES ('1', '1', '0'),
-    ('2', '4','0'),
-    ('3', '3','0'),
-    ('4', '2','1');
-
-INSERT INTO `recipeIngredient` (`recipeID`, `ingredientID`) 
-    VALUES ('1', '1'),
-    ('1', '2'),
-    ('1', '3'),
-    ('1', '4');
+INSERT INTO `ingredientRaw` (`recID`, `ingID`, `rawID`, `substitute`) 
+    VALUES ('1', '1', '1', '0'),
+    ('1', '2', '4','0'),
+    ('1', '3', '3','0'),
+    ('1', '1', '2','1');
 
 INSERT INTO `inPantry` (`userID`, `rawID`) 
     VALUES ('1', '1'),
