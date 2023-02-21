@@ -30,6 +30,15 @@ CREATE TABLE `raw` (
   PRIMARY KEY (`rawID`));
 
 -- -----------------------------------------------------
+-- Table substitute
+-- -----------------------------------------------------
+CREATE TABLE `substitute` (
+  `rawID` INT NOT NULL,
+  `subOf` INT NOT NULL,
+  PRIMARY KEY (`rawID`),
+  FOREIGN KEY (`subOf`) REFERENCES raw (`rawID`) ON DELETE CASCADE ON UPDATE CASCADE);
+
+-- -----------------------------------------------------
 -- Table ingredient
 -- -----------------------------------------------------
 CREATE TABLE `ingredient` (
@@ -89,7 +98,6 @@ CREATE TABLE `ingredientRaw` (
   `recID` INT NOT NULL,
   `ingID` INT NOT NULL,
   `rawID` INT NOT NULL,
-  `substitute` TINYINT(1), 
   PRIMARY KEY (`recID`, `ingID`, `rawID`),
   FOREIGN KEY (`recID`, `ingID`) REFERENCES ingredient (`recipeID`,`ingredientID`) ON DELETE CASCADE ON UPDATE CASCADE,
   FOREIGN KEY (`rawID`) REFERENCES raw (`rawID`) ON DELETE CASCADE ON UPDATE CASCADE);
