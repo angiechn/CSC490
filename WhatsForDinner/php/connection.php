@@ -10,9 +10,7 @@ try {
     
     //Open a connection via PDO
     $connection = new PDO($dsn, $username, $password, $options);
-
-    echo "Connected successfully";
-
+    
 } catch(PDOException $error) { 
     echo "Database connection error: " . $error->getMessage() . "<BR>";
     die;
