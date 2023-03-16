@@ -35,14 +35,17 @@ try {
 
     fclose($file);
 
-    //Import ingredient table
+    //Import ingredient and ingredientRaw table
     $csvFilePath = "../../ingredientTablePractice.csv";
     $file = fopen($csvFilePath, "r");
 
     while (($row = fgetcsv($file)) !== FALSE) {
         $connection->query('INSERT INTO whatsdinner.ingredient
-        VALUES ("'.$row[0].'", "'.$row[1].'", "'.$row[2].'", "'.$row[3].'", "'.$row[4].'")');
-    
+        VALUES ("'.$row[0].'", "'.$row[2].'", "'.$row[5].'", "'.$row[6].'", "'.$row[4].'")'); 
+
+        $connection->query('INSERT INTO whatsdinner.ingredientRaw
+        VALUES ("'.$row[0].'", "'.$row[2].'", "'.$row[1].'")'); // recID, ingID, rawID
+
         if(feof($file) == TRUE) { 
         echo "Entries for ingredient table inserted" . "<br>";
         }
