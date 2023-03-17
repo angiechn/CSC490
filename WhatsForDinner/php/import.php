@@ -1,12 +1,14 @@
 <?php
 require("connection.php");
 try {
-    //Import recipe table 
+    $connection->query("DELETE FROM whatsdinner.type;");
     $connection->query("DELETE FROM whatsdinner.recipe;");
     $connection->query("DELETE FROM whatsdinner.raw;");
     $connection->query("DELETE FROM whatsdinner.ingredient;");
+    $connection->query("DELETE FROM whatsdinner.ingredientraw;");
 
-    $csvFilePath = "../../recipeTablePractice.csv";
+    //Import recipe table 
+    $csvFilePath = "../../recipeEntries.csv";
     $file = fopen($csvFilePath, "r");
     
     while (($row = fgetcsv($file)) !== FALSE) {
@@ -19,9 +21,9 @@ try {
     }
 
     fclose($file);
-
+    
     //Import raw table 
-    $csvFilePath = "../../rawTablePractice.csv";
+    $csvFilePath = "../../rawEntries.csv";
     $file = fopen($csvFilePath, "r");
 
     while (($row = fgetcsv($file)) !== FALSE) {
@@ -34,17 +36,14 @@ try {
     }
 
     fclose($file);
-
-    //Import ingredient and ingredientRaw table
-    $csvFilePath = "../../ingredientTablePractice.csv";
+    
+    //Import ingredient
+    $csvFilePath = "../../ingredientEntries.csv";
     $file = fopen($csvFilePath, "r");
 
     while (($row = fgetcsv($file)) !== FALSE) {
         $connection->query('INSERT INTO whatsdinner.ingredient
-        VALUES ("'.$row[0].'", "'.$row[2].'", "'.$row[5].'", "'.$row[6].'", "'.$row[4].'")'); 
-
-        $connection->query('INSERT INTO whatsdinner.ingredientRaw
-        VALUES ("'.$row[0].'", "'.$row[2].'", "'.$row[1].'")'); // recID, ingID, rawID
+        VALUES ("'.$row[0].'", "'.$row[1].'", "'.$row[2].'", "'.$row[3].'", "'.$row[4].'")'); 
 
         if(feof($file) == TRUE) { 
         echo "Entries for ingredient table inserted" . "<br>";
@@ -52,6 +51,32 @@ try {
     }
 
     fclose($file);
+    
+    //Import type
+    $csvFilePath = "../../typeEntries.csv";
+    $file = fopen($csvFilePath, "r");
+
+    while (($row = fgetcsv($file)) !== FALSE) {
+        $connection->query('INSERT INTO whatsdinner.type
+        VALUES ("'.$row[0].'", "'.$row[1].'")'); 
+
+        if(feof($file) == TRUE) { 
+        echo "Entries for type table inserted" . "<br>";
+        }
+    }
+
+    //Import ingredientraw
+    $csvFilePath = "../../ingredientRawEntries.csv";
+    $file = fopen($csvFilePath, "r");
+
+    while (($row = fgetcsv($file)) !== FALSE) {
+        $connection->query('INSERT INTO whatsdinner.ingredientraw
+        VALUES ("'.$row[0].'", "'.$row[1].'", "'.$row[2].'")'); 
+
+        if(feof($file) == TRUE) { 
+        echo "Entries for ingredientraw table inserted" . "<br>";
+        }
+    }
 
 } catch (PDOException $error) { 
     echo "Something's wrong..." . $error->getMessage() . "<BR>";
