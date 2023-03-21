@@ -1,25 +1,21 @@
 <?php
 /**
- * Function to query a recipename based on user input
- * User inputs rawname
+ * Function to query all recipe information based on User Input
+ * User inputs recipeID
  */
-
 if (isset($_POST['submit'])) {
   try {
     require "connection.php";
     require "common.php";
 
-    $sql = "SELECT DISTINCT recipeName
+    $sql = "SELECT * 
     FROM whatsdinner.recipe 
-    LEFT JOIN whatsdinner.ingredient ON whatsdinner.recipe.recipeID = whatsdinner.ingredient.recipeID
-    LEFT JOIN whatsdinner.ingredientraw ON whatsdinner.ingredientraw.recID = whatsdinner.ingredient.recipeID
-    LEFT JOIN whatsdinner.raw ON whatsdinner.raw.rawID = whatsdinner.ingredientraw.rawID
-    WHERE rawName = :rawName";
+    WHERE recipeID = :recipeID";
 
-    $rawName = $_POST['rawName'];
+    $recipeID = $_POST['recipeID'];
 
     $statement = $connection->prepare($sql); 
-    $statement->bindParam(':rawName', $rawName, PDO::PARAM_STR);
+    $statement->bindParam(':recipeID', $recipeID, PDO::PARAM_STR);
     $statement->execute();
 
     $result = $statement->fetchAll();
@@ -39,26 +35,31 @@ if (isset($_POST['submit'])) {
       <thead>
         <tr>
           <th>Recipe Name</th>
+          <th>Instructions</th>
+          <th>Notes</th>
+          <th>Author</th>
         </tr>
       </thead>
       <tbody>
-
         <?php foreach ($result as $row) { ?>
           <tr>
             <td><?php echo escape($row["recipeName"]); ?></td>
+            <td><?php echo escape($row["instructions"]); ?></td>
+            <td><?php echo escape($row["notes"]); ?></td>
+            <td><?php echo escape($row["author"]); ?></td>
           </tr>
         <?php } ?>
       </tbody>
     </table>
   <?php } else { ?>
-    > No results found for <?php echo escape($_POST['rawName']); ?>.
+    > No results found for <?php echo escape($_POST['recipeID']); ?>.
 <?php }
 } ?>
 
 <h2>Search Recipe</h2>
 
 <form method="post">
-  <label for="rawName">by RecipeName</label>
-  <input type="text" id="rawName" name="rawName">
+  <label for="recipeID">by RecipeID</label>
+  <input type="text" id="recipeID" name="recipeID">
   <input type="submit" name="submit" value="Search">
 </form>
