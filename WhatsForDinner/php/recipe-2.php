@@ -7,11 +7,13 @@ if (isset($_POST['submit'])) {
   try {
     require "connection.php";
     require "common.php";
-
+    
+    // query to fetch information from recipe
     $sql = "SELECT * 
     FROM whatsdinner.recipe 
     WHERE recipeID = :recipeID";
 
+    // query to fetch ingredients 
     $sql2 = "SELECT * 
     FROM whatsdinner.ingredientRaw 
     LEFT JOIN whatsdinner.ingredient 

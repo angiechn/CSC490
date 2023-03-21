@@ -4,11 +4,19 @@
  * User inputs rawname
  */
 
+// required
+require "connection.php";
+require "common.php";
+
+// query to fetch rawnames for dropdown or dynamic search
+$sql2 = "SELECT DISTINCT rawName FROM whatsdinner.raw";
+$statement2 = $connection->prepare($sql2); 
+$statement2->execute();
+$result2 = $statement2->fetchAll();
+
 if (isset($_POST['submit'])) {
   try {
-    require "connection.php";
-    require "common.php";
-
+    // query to fetch recipe name from raw name
     $sql = "SELECT DISTINCT recipeName
     FROM whatsdinner.recipe 
     LEFT JOIN whatsdinner.ingredient ON whatsdinner.recipe.recipeID = whatsdinner.ingredient.recipeID
@@ -32,9 +40,7 @@ if (isset($_POST['submit'])) {
 <?php
 if (isset($_POST['submit'])) {
   if ($result && $statement->rowCount() > 0) { ?>
-
     <h2>Results</h2>
-
     <table>
       <thead>
         <tr>
@@ -42,7 +48,6 @@ if (isset($_POST['submit'])) {
         </tr>
       </thead>
       <tbody>
-
         <?php foreach ($result as $row) { ?>
           <tr>
             <td><?php echo escape($row["recipeName"]); ?></td>
@@ -58,7 +63,12 @@ if (isset($_POST['submit'])) {
 <h2>Search Recipe</h2>
 
 <form method="post">
-  <label for="rawName">by RecipeName</label>
-  <input type="text" id="rawName" name="rawName">
+  <label for="rawName">by ingredient</label>
+  <select name = "rawName" id = "rawName"> 
+      <option style = "display:none">Choose an ingredient.</option>
+        <?php foreach($result2 as $option):?>
+          <option value= "<?php echo $option['rawName'];?>" required><?php echo $option['rawName'];?>
+        <?php endforeach; ?>
+  </select>
   <input type="submit" name="submit" value="Search">
 </form>
