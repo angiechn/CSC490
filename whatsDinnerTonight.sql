@@ -44,8 +44,8 @@ CREATE TABLE `substitute` (
 CREATE TABLE `ingredient` (
   `recipeID` INT NOT NULL,
   `ingredientID` INT NOT NULL,
-  `measurement` INT NULL,
-  `unit` SET('Tablespoon', 'Teaspoon', 'Cup', 'Celcius', 'Fahrenheit', 'Milliliter', 'Pound', 'Gram', 'Kilogram', 'Liter', 'Ounce', 'Gallon', 'Pint'),
+  `measurement` DOUBLE NULL,
+  `unit` VARCHAR(45) NULL,
   `preparation` VARCHAR(45) NULL,
   PRIMARY KEY (`recipeID`, `ingredientID`),
   FOREIGN KEY (`recipeID`) REFERENCES recipe (`recipeID`) ON DELETE CASCADE ON UPDATE CASCADE);

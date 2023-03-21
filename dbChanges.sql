@@ -1,0 +1,2 @@
+ALTER TABLE whatsdinner.ingredient
+MODIFY measurement double
