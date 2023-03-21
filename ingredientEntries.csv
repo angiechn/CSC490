@@ -439,3 +439,320 @@
 63,8,7,Ounce,
 63,9,1,Pint,
 63,10,0.5,Cup,
+64,1,5,Cup,
+64,2,2,,
+64,3,,,
+64,4,5,Teaspoon,
+64,5,,,
+64,6,,,
+65,1,1,,
+66,1,3,Pound,"Chuck, or shoulder"
+66,2,2,Tablespoon,Chopped
+66,3,2,Cup,Diced
+66,4,0.5,Cup,Boiling
+66,5,,,
+66,6,3,Cup,Diced
+66,7,1,Cup,Cooked
+66,8,,,
+66,9,,,
+66,10,0.333,Cup,
+67,1,0.5,Cup,Shredded
+67,2,0.5,Cup,Diced
+67,3,1,Cup,Diced
+67,4,1,Cup,Diced
+67,5,0.25,Cup,
+67,6,0.5,Cup,Diced
+67,7,0.5,Cup,Diced
+67,8,0.125,Teaspoon,
+67,9,5,Cup,Boiling
+67,10,,,
+67,11,,,
+68,1,1,Can,
+68,2,1,Can,
+68,3,0.5,Cup,
+68,4,3,Tablespoon,
+68,5,0.5,,Seeded and thinly sliced
+68,6,1,Teaspoon,
+68,7,2,Teaspoon,
+68,8,1,Teaspoon,
+68,9,0.5,Teaspoon,
+68,10,0.5,Teaspoon,
+68,11,5,,
+68,12,0.333,Cup,Crumbled
+68,13,,,
+68,14,,,
+68,15,,,
+69,1,1,Tablespoon,
+69,2,3,Cup,Sliced
+69,3,2,Clove,Minced
+69,4,1,Pound,
+69,5,,,
+69,6,6,,"4 yolks + 2 whole, room temperature"
+69,7,1,Cup,Finely grated
+69,8,,,
+70,1,1,Cup,
+70,2,0.5,Cup,Chopped
+70,3,0.5,Cup,
+70,4,0.25,Cup,
+70,5,1,Can,"Canned, broiled, sliced"
+70,6,1.5,Cup,
+70,7,1.5,Cup,
+70,8,3,Cup,
+70,9,,,
+70,10,2,Tablespoon,Snipped
+70,11,1.5,Teaspoon,
+70,12,0.25,Teaspoon,
+71,1,1,Pound,
+71,2,2,Teaspoon,
+71,3,3,,Thinly sliced
+71,4,0.5,Teaspoon,
+71,5,0.5,Teaspoon,
+71,6,0.25,Teaspoon,
+71,7,,,Zested
+71,8,0.25,Cup,"Fresh, thinly sliced"
+72,1,4,Cup,Sifted
+72,2,1.5,Teaspoon,
+72,3,1,Tablespoon,
+72,4,2.25,Teaspoon,
+72,5,0.25,Cup,Warm but not hot
+72,6,1.25,Cup,Scalded
+73,1,6,,Cut 1/2 inch thick
+73,2,2.5,Teaspoon,
+73,3,0.125,Teaspoon,
+73,4,0.25,Teaspoon,Ginger
+73,5,0.25,Teaspoon,
+73,6,0.5,Cup,
+73,7,2,Cup,Fresh
+73,8,2,Tablespoon,
+74,1,1.5,Ounce,
+74,2,0.5,Cup,"Fresh, sliced"
+74,3,0/75,Cup,
+74,4,2,Teaspoon,
+74,5,3,Ounce,
+74,6,0.5,Cup,Sliced
+74,7,2,Ounce,
+75,1,3,,"Halved lengthwise, seeds and pith removed"
+75,2,2,Teaspoon,
+75,3,0.667,Pound,Casings removed
+75,4,4,Ounce,
+75,5,2,Handfuls,
+75,6,,,
+75,7,,,
+75,8,1.5,Tablespoon,
+75,9,,,
+76,1,1.75,Cup,
+76,2,1,Cup,
+76,3,9,,
+76,4,7,Cup,Ice cold
+76,5,,,
+77,1,0.25,Cup,
+77,2,115,Grams,Finely chopped
+77,3,0.75,Cup,
+77,4,2,Tablespoon,Room temperature
+77,5,2,Tablespoon,
+77,6,,,
+78,1,,,
+78,2,2,,Chopped
+78,3,2,Teaspoon,
+78,4,0.5,Teaspoon,
+78,5,0.25,Teaspoon,
+78,6,0.25,Teaspoon,
+78,7,0.25,Teaspoon,
+78,8,5,,Cut and peeled
+78,9,0.5,Cup,Unsweetened
+78,10,,,
+78,11,,,
+78,12,,,
+79,1,0.75,Cup,Raw
+79,2,1,Tablespoon,
+79,3,1,,Chopped
+79,4,3,Clove,Minced
+79,5,2,Tablespoon,"Fresh, chopped"
+79,6,0.5,Teaspoon,
+79,7,,,
+79,8,1.5,Pound,Peeled and sliced into rounds
+79,9,3,Cup,
+79,10,,,
+79,11,,,
+79,12,,,
+80,1,1,Block,Extra firm
+80,2,2,Tablespoon,
+80,3,2,,
+80,4,1,Pound,
+80,5,2,Tablespoon,
+80,6,3,Tablespoon,Creamy
+80,7,1,Tablespoon,
+80,8,2,Tablespoon,
+80,9,2,Tablespoon,
+80,10,1,Teaspoon,Minced
+81,1,1,Package,
+81,2,1,Cup,Boiling
+81,3,1,Cup,Cold
+81,4,3,Ounce,Softened
+81,5,2,Cup,Whipped and prepared
+81,6,1,Cup,Miniature
+81,7,1,Can,Drained
+81,8,1,Cup,Chopped
+82,1,0.5,Cup,
+82,2,2,Cup,
+82,3,1.333,Cup,
+82,4,1,Teaspoon,
+82,5,0.5,Teaspoon,
+83,1,1,,Halved and seeds removed
+83,2,1,Head,Cut into florets
+83,3,2,Tablespoon,
+83,4,1,Teaspoon,
+83,5,,,
+83,6,,,
+83,7,1,Can,
+83,8,0.75,Cup,"Roasted, salted"
+83,9,2,Tablespoon,
+83,10,0.25,Cup,
+83,11,2,Clove,Smashed
+83,12,1,Teaspoon,
+83,13,0.5,Teaspoon,
+83,14,0.25,Cup,"Fresh, chopped"
+83,15,,,
+84,1,1,,
+84,2,0.75,Cup,
+84,3,2,,
+84,4,1,Can,
+84,5,0.5,Cup,Shelled
+84,6,0.5,Teaspoon,
+84,7,0.5,Teaspoon,
+84,8,2,Teaspoon,
+84,9,1.5,Tablespoon,
+84,10,1.5,Tablespoon,
+85,1,0.25,Pound,Diced
+85,2,6,,"Pared, sliced thinly, and quartered"
+85,3,1,Tablespoon,
+85,4,2,,Sliced
+85,5,2,Tablespoon,Melted
+85,6,,,
+85,7,,,
+86,1,8,Ounce,
+86,2,3,Cup,"Chopped, seeded"
+86,3,10,Ounce,Chopped
+86,4,0.5,Cup,Chopped
+86,5,1,Teaspoon,
+86,6,0.25,Teaspoon,
+86,7,0.25,Teaspoon,
+86,8,0.25,Teaspoon,
+86,9,4,Ounce,Crumbled
+87,1,1.5,Cup,
+87,2,0.5,Cup,
+87,3,2,Teaspoon,
+87,4,0.5,Teaspoon,
+87,5,0.25,Cup,
+87,6,1,,
+87,7,0.5,Cup,
+87,8,1,Cup,
+88,1,1,,Prepared
+88,2,2,Cup,"Cooked, coarsely chopped"
+88,3,2,Tablespoon,
+88,4,1,,"Chopped, Medium Red"
+88,5,2,Clove,Crushed
+88,6,2,Tablespoon,Dried
+88,7,1,Teaspoon,Dried
+88,8,0.25,Teaspoon,
+88,9,0.5,Cup,Shredded
+88,10,0.5,Cup,Grated
+89,1,3,,Mashed
+89,2,0.75,Cup,White
+89,3,1,,
+89,4,1,Teaspoon,
+89,5,1,Teaspoon,
+89,6,0.5,Teaspoon,
+89,7,1.5,Cup,
+89,8,0.3,Cup,Melted
+89,9,1,Cup,
+90,1,1.5,Teaspoon,Minced
+90,2,0.25,Cup,
+90,3,2,Tablespoon,
+90,4,1.5,Teaspoon,
+90,5,1,,Zested and juiced
+90,6,2,,14-16 ounce
+91,1,6,,4 ounce
+91,2,5,Tablespoon,Coarse-grained
+91,3,0.75,Cup,
+91,4,2,Tablespoon,Fresh or dried
+91,5,1,Teaspoon,"Dried, crumbled"
+91,6,1,Clove,Minced
+92,1,1,Tablespoon,
+92,2,1,Tablespoon,
+92,3,1,Tablespoon,
+92,4,2,Teaspoon,
+92,5,1,Teaspoon,
+92,6,0.5,Teaspoon,Dried
+92,7,0.25,Teaspoon,
+92,8,1,Pound,"Cubed in 1-inch pieces, Sirloin"
+92,9,2,,Sliced in 1-inch pieces
+92,10,12,,Large
+93,1,6,,"Whole, unpeeled, medium"
+93,2,0.25,Cup,Shredded
+93,3,#REF!,#REF!,
+93,4,1.5,Cup,
+93,5,0.5,Cup,Finely chopped
+93,6,1,Teaspoon,
+93,7,0.25,Teaspoon,
+93,8,,,
+94,1,2,Cup,
+94,2,0.5,Cup,Cold
+94,3,0.75,Cup,"Grated, sharp"
+94,4,#REF!,Cup,
+94,5,1,Teaspoon,"Dried, flaked"
+94,6,0.5,Teaspoon,
+94,7,0.5,Teaspoon,
+95,1,6,Tablespoon,
+95,2,1,Cup,
+95,3,2,,Beaten
+95,4,0.5,Cup,
+95,5,1,,Juiced and zested
+95,6,1.5,Cup,Sifted
+95,7,0.25,Teaspoon,
+95,8,1,Teaspoon,
+95,9,1,Cup,Chopped
+96,1,0.5,Cup,Melted
+96,2,0.6,Cup,
+96,3,2,,
+96,4,1,Cup,
+96,5,1,Cup,Unsifted
+96,6,0.5,Teaspoon,
+96,7,2,Teaspoon,
+96,8,1,Cup,
+96,9,1,Tablespoon,
+96,10,0.5,Teaspoon,
+97,1,2,Can,
+97,2,2,,"Chopped, medium"
+97,3,0.5,Cup,
+97,4,2,,Chopped
+97,5,0.25,Cup,Chopped
+97,6,0.25,Cup,"Chopped, fresh"
+97,7,1,Tablespoon,"Chopped, fresh"
+97,8,1,Tablespoon,
+97,9,0.25,Cup,
+97,10,3,Tablespoon,
+97,11,0.25,Teaspoon,
+97,12,0.5,Teaspoon,Ground
+98,1,2,Tablespoon,
+98,2,2,Tablespoon,"Red, wine"
+98,3,0.5,Teaspoon,Minced
+98,4,0.25,Teaspoon,
+98,5,2,,"Quartered, chopped, medium"
+98,6,2,,"Chunked, medium"
+98,7,3,Tablespoon,Sliced
+99,1,0.5,Cup,Light or Fat-free
+99,2,1.5,Tablespoon,
+99,3,1,Clove,Minced
+99,4,1,Teaspoon,Dried
+99,5,0.25,Teaspoon,
+99,6,8,Ounce,Sliced
+99,7,3,,"Large, chopped"
+100,1,2,Cup,
+100,2,5,Tablespoon,
+100,3,2,,Beaten
+100,4,0.75,,Canned
+100,5,2,Cup,
+100,6,1,Teaspoon,
+100,7,0.25,Cup,
+100,8,0.25,Cup,
