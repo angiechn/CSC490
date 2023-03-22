@@ -1,19 +1,23 @@
 <?php
 /**
- * Function to query all recipe information based on User Input
- * User inputs recipeID
+ * Function to query all recipe information based on recipeID
+ * recipeID is sent from recipe.php
  */
-if (isset($_POST['submit'])) {
+
+// required 
+require "connection.php";
+require "common.php";
+
+// take recipeID
+if (isset($_GET['recipeID'])) {
+  // queries to fetch recipe and ingredient information from recipeID 
   try {
-    require "connection.php";
-    require "common.php";
-    
-    // query to fetch information from recipe
+    $recipeID = $_GET['recipeID']; 
+
     $sql = "SELECT * 
     FROM whatsdinner.recipe 
     WHERE recipeID = :recipeID";
 
-    // query to fetch ingredients 
     $sql2 = "SELECT * 
     FROM whatsdinner.ingredientRaw 
     LEFT JOIN whatsdinner.ingredient 
@@ -21,9 +25,7 @@ if (isset($_POST['submit'])) {
     AND whatsdinner.ingredient.ingredientID = whatsdinner.ingredientRaw.ingID 
     LEFT JOIN whatsdinner.raw ON whatsdinner.raw.rawID = whatsdinner.ingredientraw.rawID 
     WHERE recID = :recipeID";
-
-    $recipeID = $_POST['recipeID'];
-
+    
     $statement = $connection->prepare($sql); 
     $statement->bindParam(':recipeID', $recipeID, PDO::PARAM_STR);
     $statement->execute();
@@ -41,56 +43,49 @@ if (isset($_POST['submit'])) {
 }
 ?>
 
-<?php
-if (isset($_POST['submit'])) {
-  if ($result && $statement->rowCount() > 0) { ?>
-    <h2>Results</h2>
-    <table>
-      <thead>
+<h2>Recipe Information</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Recipe Name</th>
+        <th>Instructions</th>
+        <th>Notes</th>
+        <th>Author</th>
+      </tr>
+    </thead>
+    <tbody>
+      <?php foreach ($result as $row): ?>
         <tr>
-          <th>Recipe Name</th>
-          <th>Instructions</th>
-          <th>Notes</th>
-          <th>Author</th>
+          <td><?php echo escape($row["recipeName"]); ?></td>
+          <td><?php echo escape($row["instructions"]); ?></td>
+          <td><?php echo escape($row["notes"]); ?></td>
+          <td><?php echo escape($row["author"]); ?></td>
         </tr>
-      </thead>
-      <tbody>
-        <?php foreach ($result as $row) { ?>
-          <tr>
-            <td><?php echo escape($row["recipeName"]); ?></td>
-            <td><?php echo escape($row["instructions"]); ?></td>
-            <td><?php echo escape($row["notes"]); ?></td>
-            <td><?php echo escape($row["author"]); ?></td>
-          </tr>
-        <?php } ?>
-      </tbody>
-    </table>
-  <?php } else { ?>
-    > No results found for <?php echo escape($_POST['recipeID']); ?>.
-<?php }
-  if ($result2 && $statement2->rowCount() > 0) { ?>
-    <table>
-      <thead>
+      <?php endforeach; ?>
+    </tbody>
+  </table>
+<table>
+    <thead>
+      <tr>
+        <th>Ingredients</th>
+      </tr>
+    </thead>
+    <tbody>
+      <?php foreach ($result2 as $row): ?>
         <tr>
-          <th>Ingredients</th>
+          <td><?php echo escape($row["preparation"]); ?></td>
+          <td><?php echo escape($row["rawName"]); ?></td>
+          <td><?php echo escape($row["measurement"]); ?></td>
+          <td><?php echo escape($row["unit"]); ?></td>
         </tr>
-      </thead>
-      <tbody>
-        <?php foreach ($result2 as $row) { ?>
-          <tr>
-            <td><?php echo escape($row["preparation"]); ?></td>
-            <td><?php echo escape($row["rawName"]); ?></td>
-            <td><?php echo escape($row["measurement"]); ?></td>
-            <td><?php echo escape($row["unit"]); ?></td>
-          </tr>
-        <?php } ?>
-      </tbody>
-    </table>
-  <?php } else { ?>
-    > No results found for <?php echo escape($_POST['recipeID']); ?>.
-<?php }
-} ?>
+      <?php endforeach; ?>
+    </tbody>
+  </table>
 
+<?php
+// old section for searching by recipeID directly
+
+/*
 <h2>Search Recipe</h2>
 
 <form method="post">
@@ -98,3 +93,5 @@ if (isset($_POST['submit'])) {
   <input type="text" id="recipeID" name="recipeID">
   <input type="submit" name="submit" value="Search">
 </form>
+*/
+?>

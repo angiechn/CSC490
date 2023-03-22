@@ -1,6 +1,6 @@
 <?php
 /**
- * Function to query a recipename based on user input
+ * Function to query a recipes based on user input
  * User inputs rawname
  */
 
@@ -14,15 +14,19 @@ $statement2 = $connection->prepare($sql2);
 $statement2->execute();
 $result2 = $statement2->fetchAll();
 
+// take user input from submit bar
 if (isset($_POST['submit'])) {
   try {
     // query to fetch recipe name from raw name
-    $sql = "SELECT DISTINCT recipeName
-    FROM whatsdinner.recipe 
-    LEFT JOIN whatsdinner.ingredient ON whatsdinner.recipe.recipeID = whatsdinner.ingredient.recipeID
-    LEFT JOIN whatsdinner.ingredientraw ON whatsdinner.ingredientraw.recID = whatsdinner.ingredient.recipeID
-    LEFT JOIN whatsdinner.raw ON whatsdinner.raw.rawID = whatsdinner.ingredientraw.rawID
-    WHERE rawName = :rawName";
+    $sql = "SELECT *
+    FROM whatsdinner.recipe
+    WHERE whatsdinner.recipe.recipeID IN 
+      (SELECT DISTINCT whatsdinner.recipe.recipeID
+      FROM whatsdinner.recipe 
+      LEFT JOIN whatsdinner.ingredient ON whatsdinner.recipe.recipeID = whatsdinner.ingredient.recipeID
+      LEFT JOIN whatsdinner.ingredientraw ON whatsdinner.ingredientraw.recID = whatsdinner.ingredient.recipeID
+      LEFT JOIN whatsdinner.raw ON whatsdinner.raw.rawID = whatsdinner.ingredientraw.rawID
+      WHERE rawName = :rawName)";
 
     $rawName = $_POST['rawName'];
 
@@ -38,6 +42,7 @@ if (isset($_POST['submit'])) {
 ?>
 
 <?php
+// output results 
 if (isset($_POST['submit'])) {
   if ($result && $statement->rowCount() > 0) { ?>
     <h2>Results</h2>
@@ -51,6 +56,7 @@ if (isset($_POST['submit'])) {
         <?php foreach ($result as $row) { ?>
           <tr>
             <td><?php echo escape($row["recipeName"]); ?></td>
+            <td><a href="recipe-2.php?recipeID=<?php echo escape($row["recipeID"]);?>">View</a></td>
           </tr>
         <?php } ?>
       </tbody>
