@@ -81,17 +81,12 @@ if (isset($_GET['recipeID'])) {
       <?php endforeach; ?>
     </tbody>
   </table>
-
-<?php
-// old section for searching by recipeID directly
-
-/*
-<h2>Search Recipe</h2>
-
-<form method="post">
-  <label for="recipeID">by RecipeID</label>
-  <input type="text" id="recipeID" name="recipeID">
-  <input type="submit" name="submit" value="Search">
-</form>
-*/
-?>
+<style>
+a:link, a:visited {
+  color: #000000;
+}  
+a:hover, a:active {
+  color: #ff7e66;
+}
+</style>
+<a href="home.php"><strong>Back to Home</strong></a>

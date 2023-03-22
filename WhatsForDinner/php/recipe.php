@@ -1,6 +1,6 @@
 <?php
 /**
- * Function to query a recipes based on user input
+ * Function to query recipes based on user input
  * User inputs rawname
  */
 
@@ -56,7 +56,7 @@ if (isset($_POST['submit'])) {
         <?php foreach ($result as $row) { ?>
           <tr>
             <td><?php echo escape($row["recipeName"]); ?></td>
-            <td><a href="recipe-2.php?recipeID=<?php echo escape($row["recipeID"]);?>">View</a></td>
+            <td><a href="recipe-2.php?recipeID=<?php echo escape($row["recipeID"]);?>"><strong>View</strong></a></td>
           </tr>
         <?php } ?>
       </tbody>
@@ -66,10 +66,9 @@ if (isset($_POST['submit'])) {
 <?php }
 } ?>
 
+<?php // user input ?>
 <h2>Search Recipe</h2>
-
 <form method="post">
-  <label for="rawName">by ingredient</label>
   <select name = "rawName" id = "rawName"> 
       <option style = "display:none">Choose an ingredient.</option>
         <?php foreach($result2 as $option):?>
@@ -78,3 +77,12 @@ if (isset($_POST['submit'])) {
   </select>
   <input type="submit" name="submit" value="Search">
 </form>
+<style>
+a:link, a:visited {
+  color: #000000;
+}  
+a:hover, a:active {
+  color: #ff7e66;
+}
+</style>
+<a href="home.php"><strong>Back to Home</strong></a>
