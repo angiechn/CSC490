@@ -8,7 +8,7 @@ try {
         FROM whatsdinner.recipe
         LEFT JOIN whatsdinner.type 
         ON whatsdinner.recipe.recipeID = whatsdinner.type.recipeID
-        WHERE whatsdinner.type.type = 'Entree'";
+        WHERE whatsdinner.type.type = 'Side'";
 
     $statement = $connection->prepare($sql); 
     $statement->execute();
