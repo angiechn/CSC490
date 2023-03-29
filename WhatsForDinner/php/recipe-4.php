@@ -17,10 +17,6 @@ $result2 = $statement2->fetchAll();
 // take user input from submit bar
 if (isset($_POST['submit'])) {
   try {
-    $raws = $_POST['rawName']; // retrieve user input array
-    $rawsString = implode("','", $raws); // separate with commas and single quotes
-    $rawsString = "'" . $rawsString . "'"; // add single quotes to front and end
-
     // query to fetch recipe name from raw names
     $sql = "SELECT *
     FROM whatsdinner.recipe
@@ -30,10 +26,14 @@ if (isset($_POST['submit'])) {
       LEFT JOIN whatsdinner.ingredient ON whatsdinner.recipe.recipeID = whatsdinner.ingredient.recipeID
       LEFT JOIN whatsdinner.ingredientraw ON whatsdinner.ingredientraw.recID = whatsdinner.ingredient.recipeID
       LEFT JOIN whatsdinner.raw ON whatsdinner.raw.rawID = whatsdinner.ingredientraw.rawID
-      WHERE rawName IN ( :rawNames ))";
+      WHERE rawName IN (:rawsString))";
     $statement = $connection->prepare($sql); 
 
-    $statement->bindParam(':rawNames', $rawsString, PDO::PARAM_STR);
+    $raws = $_POST['rawName']; // retrieve user input array
+    $rawsString = implode("', '", $raws); // separate with commas and single quotes
+    $rawsString = "'" . $rawsString . "'"; // add single quotes to front and end
+
+    $statement->bindParam(':rawsString', $rawsString, PDO::PARAM_STR);
     $statement->execute();
 
     $result = $statement->fetchAll();
@@ -64,7 +64,13 @@ if (isset($_POST['submit'])) {
       </tbody>
     </table>
   <?php } else { ?>
-    > No results found for <?php echo escape($_POST['rawName']); ?>.
+    > No results found for 
+      <?php 
+      $raws = $_POST['rawName']; // retrieve user input array
+      $rawsString = implode(", ", $raws);
+      echo escape($rawsString); 
+      ?>
+      .
 <?php }
 } ?>
 
