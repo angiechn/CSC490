@@ -1,7 +1,7 @@
 <?php
 /**
  * Function to query recipes based on user input
- * User inputs rawname
+ * User inputs rawnames
  */
 
 // required
@@ -17,8 +17,9 @@ $result2 = $statement2->fetchAll();
 // take user input from submit bar
 if (isset($_POST['submit'])) {
   try {
+    $raws = $_POST['rawName'];
     // query to fetch recipe name from raw names
-    $sql = "SELECT *
+    $sql = sprintf("SELECT *
     FROM whatsdinner.recipe
     WHERE whatsdinner.recipe.recipeID IN 
       (SELECT DISTINCT whatsdinner.recipe.recipeID
@@ -26,20 +27,14 @@ if (isset($_POST['submit'])) {
       LEFT JOIN whatsdinner.ingredient ON whatsdinner.recipe.recipeID = whatsdinner.ingredient.recipeID
       LEFT JOIN whatsdinner.ingredientraw ON whatsdinner.ingredientraw.recID = whatsdinner.ingredient.recipeID
       LEFT JOIN whatsdinner.raw ON whatsdinner.raw.rawID = whatsdinner.ingredientraw.rawID
-      WHERE rawName IN (:rawsString)
+      WHERE rawName IN (%s)
       GROUP BY whatsdinner.recipe.recipeID
-      HAVING count(DISTINCT whatsdinner.raw.rawID) = :rawCount)";
+      HAVING count(DISTINCT whatsdinner.raw.rawID) = %s)",
+      "'" . implode("', '", $raws) . "'",
+      count($raws)
+    );
     $statement = $connection->prepare($sql); 
-
-    $raws = $_POST['rawName']; // retrieve user input array
-    $rawCount = count($raws); // retrieve number of array elements
-    $rawsString = implode("', '", $raws); // separate with commas and single quotes
-    $rawsString = "'" . $rawsString . "'"; // add single quotes to front and end
-    
-    $statement->bindParam(':rawCount', $rawCount, PDO::PARAM_STR);
-    $statement->bindParam(':rawsString', $rawsString, PDO::PARAM_STR);
     $statement->execute();
-
     $result = $statement->fetchAll();
   } catch (PDOException $error) {
     echo $sql . "<br>" . $error->getMessage();
@@ -70,18 +65,16 @@ if (isset($_POST['submit'])) {
   <?php } else { ?>
     > No results found for 
       <?php 
-      $raws = $_POST['rawName']; // retrieve user input array
-      $rawsString = implode(", ", $raws);
-      echo escape($rawsString); 
+      $rawsString = implode("', '", $raws);
+      print_r($rawsString); 
       ?>
-      .
 <?php }
 } ?>
 
 <?php // user input ?>
 <h2>Search Recipe</h2>
 <form method="post">
-  <select name = "rawName[]" multiple id = "rawName[]" size = 8> 
+  <select name = "rawName[]" multiple id = "rawName[]" size = 8 required> 
       <option style = "display:none">Choose an ingredient.</option>
         <?php foreach($result2 as $option):?>
           <option value= "<?php echo $option['rawName'];?>" required><?php echo $option['rawName'];?>
