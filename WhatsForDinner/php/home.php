@@ -9,5 +9,7 @@ a:hover, a:active {
   text-decoration: none
 }
 </style>
-<li><a href="recipe.php"><strong>Search by Ingredient</strong></a></li>
-<li><a href="recipe-3.php"><strong>Search by Recipe Name</strong></a></li> 
+<li><a href="recipeSingleSearch.php"><strong>Search by (1) Ingredient</strong></a></li>
+<li><a href="recipeMultiSearch.php"><strong>Search by Multiple Ingredients (BROKEN qq)</strong></a></li>
+<li><a href="recipeMatchcaseSearch.php"><strong>Search by Recipe Name</strong></a></li> 
+<li><a href="recipeMatchcaseSearch.php"><strong>Search by Tags</strong></a></li> 

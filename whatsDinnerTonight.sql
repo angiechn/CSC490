@@ -75,7 +75,7 @@ CREATE TABLE `bookmarked` (
 CREATE TABLE `reviewed` (
   `userID` INT NOT NULL,
   `recipeID` INT NOT NULL,
-  `review` VARCHAR(200) NULL,
+  `review` INT NOT NULL,
   PRIMARY KEY (`userID`, `recipeID`),
   FOREIGN KEY (`userID`) REFERENCES user (`userID`) ON DELETE CASCADE ON UPDATE CASCADE,
   FOREIGN KEY (`recipeID`) REFERENCES recipe (`recipeID`) ON DELETE CASCADE ON UPDATE CASCADE);
@@ -92,7 +92,6 @@ CREATE TABLE `inPantry` (
 
 -- -----------------------------------------------------
 -- Table `ingredientRaw`
--- TINYINT is MYSQL boolean, 0 is false and 1 is true
 -- -----------------------------------------------------
 CREATE TABLE `ingredientRaw` (
   `recID` INT NOT NULL,

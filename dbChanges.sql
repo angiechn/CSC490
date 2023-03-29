@@ -1,5 +1,8 @@
-ALTER TABLE whatsdinner.ingredient
-MODIFY measurement double;
+ALTER TABLE whatsdinner.reviewed
+MODIFY review int;
 
-ALTER TABLE whatsdinner.ingredient
-MODIFY unit varchar(60)
+INSERT INTO whatsdinner.user (`userID`, `username`) 
+    VALUES ('1', 'Test'),
+    ('2', 'Angie'),
+    ('3', 'Jamie'),
+    ('4', 'Faith');

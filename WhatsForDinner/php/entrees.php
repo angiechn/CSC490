@@ -34,7 +34,7 @@ if ($result && $statement->rowCount() > 0) { ?>
         <?php foreach ($result as $row) { ?>
           <tr>
             <td><?php echo escape($row["recipeName"]); ?></td>
-            <td><a href="recipe-2.php?recipeID=<?php echo escape($row["recipeID"]);?>"><strong>View</strong></a></td>
+            <td><a href="recipeDisplay.php?recipeID=<?php echo escape($row["recipeID"]);?>"><strong>View</strong></a></td>
           </tr>
         <?php } ?>
       </tbody>

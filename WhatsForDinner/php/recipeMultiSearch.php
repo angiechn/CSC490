@@ -17,7 +17,7 @@ $result2 = $statement2->fetchAll();
 // take user input from submit bar
 if (isset($_POST['submit'])) {
   try {
-    // query to fetch recipe name from raw name
+    // query to fetch recipe name from raw names
     $sql = "SELECT *
     FROM whatsdinner.recipe
     WHERE whatsdinner.recipe.recipeID IN 
@@ -26,12 +26,18 @@ if (isset($_POST['submit'])) {
       LEFT JOIN whatsdinner.ingredient ON whatsdinner.recipe.recipeID = whatsdinner.ingredient.recipeID
       LEFT JOIN whatsdinner.ingredientraw ON whatsdinner.ingredientraw.recID = whatsdinner.ingredient.recipeID
       LEFT JOIN whatsdinner.raw ON whatsdinner.raw.rawID = whatsdinner.ingredientraw.rawID
-      WHERE rawName = :rawName)";
-
-    $rawName = $_POST['rawName'];
-
+      WHERE rawName IN (:rawsString)
+      GROUP BY whatsdinner.recipe.recipeID
+      HAVING count(DISTINCT whatsdinner.raw.rawID) = :rawCount)";
     $statement = $connection->prepare($sql); 
-    $statement->bindParam(':rawName', $rawName, PDO::PARAM_STR);
+
+    $raws = $_POST['rawName']; // retrieve user input array
+    $rawCount = count($raws); // retrieve number of array elements
+    $rawsString = implode("', '", $raws); // separate with commas and single quotes
+    $rawsString = "'" . $rawsString . "'"; // add single quotes to front and end
+    
+    $statement->bindParam(':rawCount', $rawCount, PDO::PARAM_STR);
+    $statement->bindParam(':rawsString', $rawsString, PDO::PARAM_STR);
     $statement->execute();
 
     $result = $statement->fetchAll();
@@ -56,20 +62,26 @@ if (isset($_POST['submit'])) {
         <?php foreach ($result as $row) { ?>
           <tr>
             <td><?php echo escape($row["recipeName"]); ?></td>
-            <td><a href="recipe-2.php?recipeID=<?php echo escape($row["recipeID"]);?>"><strong>View</strong></a></td>
+            <td><a href="recipeDisplay.php?recipeID=<?php echo escape($row["recipeID"]);?>"><strong>View</strong></a></td>
           </tr>
         <?php } ?>
       </tbody>
     </table>
   <?php } else { ?>
-    > No results found for <?php echo escape($_POST['rawName']); ?>.
+    > No results found for 
+      <?php 
+      $raws = $_POST['rawName']; // retrieve user input array
+      $rawsString = implode(", ", $raws);
+      echo escape($rawsString); 
+      ?>
+      .
 <?php }
 } ?>
 
 <?php // user input ?>
 <h2>Search Recipe</h2>
 <form method="post">
-  <select name = "rawName" id = "rawName"> 
+  <select name = "rawName[]" multiple id = "rawName[]" size = 8> 
       <option style = "display:none">Choose an ingredient.</option>
         <?php foreach($result2 as $option):?>
           <option value= "<?php echo $option['rawName'];?>" required><?php echo $option['rawName'];?>
