@@ -44,8 +44,26 @@ if ($stmt = $connection->prepare('SELECT userID, password FROM whatsdinner.user 
 	if ($stmt->rowCount() > 0) {
 		echo 'Username exists, please choose another!';
 	} else {
-		// Insert new account
-        echo 'There is nothing here yet';
+		//Insert new account
+        try {
+            $userID = uniqid();
+            $username = $_POST['username'];
+            $email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
+            $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
+            
+            $stmt = $connection->prepare('INSERT INTO whatsdinner.user (userID, username, email, password) 
+            VALUES (:userID, :username, :email, :password)');
+
+            $stmt->bindParam(':userID', $userID);
+            $stmt->bindParam(':username', $username);
+            $stmt->bindParam(':email', $email);
+            $stmt->bindParam(':password', $password);
+            $stmt->execute();
+            echo 'You have successfully registered!';
+        } catch (Exception $e) { 
+            echo $e;
+            echo 'Could not execute statement.';
+        }
 	}
 } else {
 	echo 'Something is wrong with the SQL statement. Check to make sure accounts table exists with all 3 fields!';
