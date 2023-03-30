@@ -72,7 +72,7 @@ $result2 = $statement2->fetchAll();
 	<header class="top-navbar">
 		<nav class="navbar navbar-expand-lg navbar-light bg-light">
 			<div class="container">
-				<a class="navbar-brand" href="home.html">
+				<a class="navbar-brand" href="not-demo.php">
 					<img src="../images/logo.png" width=150px alt="What's for Dinner?" />
 				</a>
 				<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbars-rs-food"
@@ -87,17 +87,17 @@ $result2 = $statement2->fetchAll();
                   <input type="submit" name="submit" value="Search">
               </form>
 						</div>
-						<li class="nav-item"><a class="nav-link" href="home.html">Home</a></li>
+						<li class="nav-item"><a class="nav-link" href="not-demo.php">Home</a></li>
 						<li class="nav-item dropdown">
 							<a class="nav-link dropdown-toggle" href="#" id="dropdown-a"
 								data-toggle="dropdown">Catagories</a>
 							<div class="dropdown-menu" aria-labelledby="dropdown-a">
-								<a class="dropdown-item" href="results.html">Entrees</a>
-								<a class="dropdown-item" href="results.html">Sides</a>
-								<a class="dropdown-item" href="results.html">Desserts</a>
+								<a class="dropdown-item" href="">Entrees</a>
+								<a class="dropdown-item" href="">Sides</a>
+								<a class="dropdown-item" href="">Desserts</a>
 							</div>
 						</li>
-						<li class="nav-item"><a class="nav-link" href="account.html">Account</a></li>
+						<li class="nav-item"><a class="nav-link" href="">Account</a></li>
 					</ul>
 				</div>
 			</div>
@@ -184,7 +184,7 @@ if (isset($_POST['submit'])) {
 						<?php foreach ($result as $row) { ?>
 						<div class="row">
 							<div class="col-lg-11">
-								<h1><a href="recipe-2.php?recipeID=<?php echo escape($row["recipeID"]);?>">
+								<h1><a href="not-demo-recipe.php?recipeID=<?php echo escape($row["recipeID"]);?>">
 								<?php echo escape($row["recipeName"]); ?></a></h1>
 							<?php } ?>
 								<ul>
