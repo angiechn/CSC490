@@ -133,7 +133,7 @@ $result2 = $statement2->fetchAll();
                         <option value= "<?php echo $option['rawName'];?>" required><?php echo $option['rawName'];?>
                       <?php endforeach; ?>
                 </select>
-                <a class="btn btn-lg btn-circle btn-outline-new-white" href="results.html">
+                <a class="btn btn-lg btn-circle btn-outline-new-white">
                   <input type="submit" name="submit" value="Search">
                 </a>
               </form>
