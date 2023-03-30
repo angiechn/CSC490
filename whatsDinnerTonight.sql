@@ -56,6 +56,8 @@ CREATE TABLE `ingredient` (
 CREATE TABLE `user` (
   `userID` INT NOT NULL,
   `username` VARCHAR(45) NULL,
+  `email` VARCHAR(255) NOT NULL,
+  `password` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`userID`));
 
 -- -----------------------------------------------------
