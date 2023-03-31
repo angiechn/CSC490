@@ -26,7 +26,6 @@ session_start();
 
 require "../connection.php";
 
-
 //Check login data in the form
 if ( !isset($_POST['username'], $_POST['password']) ) {
 	exit('Please fill both the username and password fields!');
@@ -53,7 +52,7 @@ if ($stmt = $connection->prepare('SELECT userID, password FROM whatsdinner.user 
             $_SESSION['loggedin'] = TRUE;
             $_SESSION['username'] = $_POST['username'];
             $_SESSION['userID'] = $userID;
-            echo 'Welcome ' . $_SESSION['username'] . '!';
+            header('Location: ../../account.html');
         } else {
             echo 'Incorrect username and/or password!';
         }

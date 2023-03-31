@@ -8,6 +8,7 @@
     <style>
     	h1 {text-align: center;}
         form {text-align: center;}
+		footer {padding-top: 15px;}
     </style>
 		<div class="register">
 			<h1>Register</h1>
@@ -16,6 +17,7 @@
 				<input type="password" name="password" placeholder="Password" id="password" required>
 				<input type="email" name="email" placeholder="Email" id="email" required>
 				<input type="submit" value="Register">
+				<footer>Already have an account? <a href="login.php">Login here</a></footer>
 			</form>
 		</div>
 	</body>
@@ -24,15 +26,10 @@
 <?php
 require "../connection.php";
 
-//Check if data exists
-if (!isset($_POST['username'], $_POST['password'], $_POST['email'])) {
-	//Could not retrieve data
-	exit('Please complete the registration form!');
-}
 //Make sure values are not empty
 if (empty($_POST['username']) || empty($_POST['password']) || empty($_POST['email'])) {
 	//Some values are empty
-	exit('Please complete the registration form');
+	exit('Please complete the registration form!');
 }
 
 //Email, username, and password validation
