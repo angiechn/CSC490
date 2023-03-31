@@ -5,10 +5,10 @@
 		<title>Register</title>
 	</head>
 	<body>
-        <style>
-        h1 {text-align: center;}
+    <style>
+    	h1 {text-align: center;}
         form {text-align: center;}
-        </style>
+    </style>
 		<div class="register">
 			<h1>Register</h1>
 			<form action="register.php" method="post" autocomplete="off">
@@ -34,6 +34,21 @@ if (empty($_POST['username']) || empty($_POST['password']) || empty($_POST['emai
 	//Some values are empty
 	exit('Please complete the registration form');
 }
+
+//Email, username, and password validation
+if (!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
+	exit('Email is not valid!');
+}
+
+if (preg_match('/^[a-zA-Z0-9]+$/', $_POST['username']) == 0) {
+	echo 'Registration failed!';
+    exit('Username can only contain alphabetical and numerical characters!');
+}
+
+if (strlen($_POST['password']) > 20 || strlen($_POST['password']) < 5) {
+	exit('Password must be between 5 and 20 characters long!');
+}
+
 
 //Check if username exists in database
 if ($stmt = $connection->prepare('SELECT userID, password FROM whatsdinner.user WHERE username = :username')) {
@@ -66,7 +81,7 @@ if ($stmt = $connection->prepare('SELECT userID, password FROM whatsdinner.user 
         }
 	}
 } else {
-	echo 'Something is wrong with the SQL statement. Check to make sure accounts table exists with all 3 fields!';
+	echo 'SQL statement is wrong.';
 }
 $connection = null;
 ?>
