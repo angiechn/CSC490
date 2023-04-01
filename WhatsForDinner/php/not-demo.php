@@ -90,7 +90,7 @@ $result2 = $statement2->fetchAll();
 						<li class="nav-item"><a class="nav-link" href="not-demo.php">Home</a></li>
 						<li class="nav-item dropdown">
 							<a class="nav-link dropdown-toggle" href="#" id="dropdown-a"
-								data-toggle="dropdown">Catagories</a>
+								data-toggle="dropdown">Categories</a>
 							<div class="dropdown-menu" aria-labelledby="dropdown-a">
 								<a class="dropdown-item" href="">Entrees</a>
 								<a class="dropdown-item" href="">Sides</a>
@@ -127,14 +127,14 @@ $result2 = $statement2->fetchAll();
 				<div class="col-lg-12">
 					<div class="search-form">
               <form method="post">
-                <select name = "rawName" id = "rawName"> 
+                <select name = "rawName[]" multiple id = "rawName[]" size = 8 required> 
                     <option style = "display:none">Choose an ingredient.</option>
                       <?php foreach($result2 as $option):?>
                         <option value= "<?php echo $option['rawName'];?>" required><?php echo $option['rawName'];?>
                       <?php endforeach; ?>
                 </select>
                 <a class="btn btn-lg btn-circle btn-outline-new-white">
-                  <input type="submit" name="submit" value="Search">
+                  <input type="submit" name="MultiSearchSubmit" value="Search">
                 </a>
               </form>
 						<div class="text-sm-center">
@@ -150,29 +150,30 @@ $result2 = $statement2->fetchAll();
 
 <!--take user input from submit bar-->
 <?php
-if (isset($_POST['submit'])) {
-  try {
-    // query to fetch recipe name from raw name
-    $sql = "SELECT *
-    FROM whatsdinner.recipe
-    WHERE whatsdinner.recipe.recipeID IN 
-      (SELECT DISTINCT whatsdinner.recipe.recipeID
-      FROM whatsdinner.recipe 
-      LEFT JOIN whatsdinner.ingredient ON whatsdinner.recipe.recipeID = whatsdinner.ingredient.recipeID
-      LEFT JOIN whatsdinner.ingredientraw ON whatsdinner.ingredientraw.recID = whatsdinner.ingredient.recipeID
-      LEFT JOIN whatsdinner.raw ON whatsdinner.raw.rawID = whatsdinner.ingredientraw.rawID
-      WHERE rawName = :rawName)";
-
-    $rawName = $_POST['rawName'];
-
-    $statement = $connection->prepare($sql); 
-    $statement->bindParam(':rawName', $rawName, PDO::PARAM_STR);
-    $statement->execute();
-
-    $result = $statement->fetchAll();
-  } catch (PDOException $error) {
-    echo $sql . "<br>" . $error->getMessage();
-  }
+if (isset($_POST['MultiSearch'])) {
+	try {
+		$raws = $_POST['rawName'];
+		// query to fetch recipe name from raw names
+		$sql = sprintf("SELECT *
+		FROM whatsdinner.recipe
+		WHERE whatsdinner.recipe.recipeID IN 
+			(SELECT DISTINCT whatsdinner.recipe.recipeID
+			FROM whatsdinner.recipe 
+			LEFT JOIN whatsdinner.ingredient ON whatsdinner.recipe.recipeID = whatsdinner.ingredient.recipeID
+			LEFT JOIN whatsdinner.ingredientraw ON whatsdinner.ingredientraw.recID = whatsdinner.ingredient.recipeID
+			LEFT JOIN whatsdinner.raw ON whatsdinner.raw.rawID = whatsdinner.ingredientraw.rawID
+			WHERE rawName IN (%s)
+			GROUP BY whatsdinner.recipe.recipeID
+			HAVING count(DISTINCT whatsdinner.raw.rawID) = %s)",
+			"'" . implode("', '", $raws) . "'",
+			count($raws)
+		);
+		$statement = $connection->prepare($sql); 
+		$statement->execute();
+		$result = $statement->fetchAll();
+		} catch (PDOException $error) {
+		echo $sql . "<br>" . $error->getMessage();
+	}
 }
 ?>
 	<div class="result-container">
