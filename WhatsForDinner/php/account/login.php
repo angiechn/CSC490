@@ -52,7 +52,7 @@ if ($stmt = $connection->prepare('SELECT userID, password FROM whatsdinner.user 
             $_SESSION['loggedin'] = TRUE;
             $_SESSION['username'] = $_POST['username'];
             $_SESSION['userID'] = $userID;
-            header('Location: ../../account.html');
+            header('Location: ../../userProfile.php');
         } else {
             echo 'Incorrect username and/or password!';
         }

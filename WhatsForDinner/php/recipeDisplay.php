@@ -4,6 +4,7 @@
  * recipeID is sent from recipe.php
  */
 
+session_start();
 // required 
 require "connection.php";
 require "common.php";
@@ -39,6 +40,22 @@ if (isset($_GET['recipeID'])) {
     $result2 = $statement2->fetchAll();
   } catch (PDOException $error) {
     echo $sql . "<br>" . $error->getMessage();
+  }
+}
+
+if (isset($_POST['BookmarkSubmit'])) {
+  try {
+      $userID = $_SESSION['userID'];
+
+      $AddBookmarkSQL = "INSERT INTO whatsdinner.bookmarked (`userID`, `recipeID`) 
+      VALUES (:userID, :recipeID)";
+      
+      $AddBookmarkStmt = $connection->prepare($AddBookmarkSQL); 
+      $AddBookmarkStmt->bindParam(':recipeID', $recipeID, PDO::PARAM_STR);
+      $AddBookmarkStmt->bindParam(':userID', $userID, PDO::PARAM_STR);
+      $AddBookmarkStmt->execute();
+  } catch (PDOException $error) {
+    echo $AddBookmarkSQL . "<br>" . $error->getMessage();
   }
 }
 ?>
@@ -81,6 +98,13 @@ if (isset($_GET['recipeID'])) {
       <?php endforeach; ?>
     </tbody>
   </table>
+
+  <?php if ($_SESSION['loggedin'] = TRUE) { ?>
+          <input type="submit" name="BookmarkSubmit" value="Bookmark">
+          </form>
+  <?php } ?>
+
+
 <style>
 a:link, a:visited {
   color: #000000;
@@ -90,3 +114,4 @@ a:hover, a:active {
 }
 </style>
 <a href="home.php"><strong>Back to Home</strong></a>
+
