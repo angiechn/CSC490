@@ -141,12 +141,12 @@ if (isset($_GET['recipeID'])) {
 				<div class="col-lg-6 col-md-6 text-center">
 					<div class="recipe-ingredients">
 						<div class="inner-column">
-							<h1><span><?php echo escape($row["recipeName"]); ?></span></h1>
+							<h1><?php echo escape($row["recipeName"]); ?></h1>
 							<?php foreach ($result2 as $row): ?>
-								<ul><?php echo escape($row["preparation"]); ?></ul>
-								<ul><?php echo escape($row["rawName"]); ?></ul>
-								<ul><?php echo escape($row["measurement"]); ?></ul>
-								<ul><?php echo escape($row["unit"]); ?></ul>
+								<ul><?php echo escape($row["preparation"]); ?>
+                                <?php echo escape($row["rawName"]); ?>
+                                <?php echo escape($row["measurement"]); ?>
+                                <?php echo escape($row["unit"]); ?></ul>
 							<?php endforeach; ?>
 						</div>
 					</div>

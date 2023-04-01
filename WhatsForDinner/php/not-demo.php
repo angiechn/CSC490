@@ -67,6 +67,36 @@ $result2 = $statement2->fetchAll();
   }
 }
 ?>
+
+<!--take user input from submit bar-->
+<?php
+if (isset($_POST['submitMulti'])) {
+  try {
+    // query to fetch recipe name from raw name
+    $sql = "SELECT *
+    FROM whatsdinner.recipe
+    WHERE whatsdinner.recipe.recipeID IN 
+      (SELECT DISTINCT whatsdinner.recipe.recipeID
+      FROM whatsdinner.recipe 
+      LEFT JOIN whatsdinner.ingredient ON whatsdinner.recipe.recipeID = whatsdinner.ingredient.recipeID
+      LEFT JOIN whatsdinner.ingredientraw ON whatsdinner.ingredientraw.recID = whatsdinner.ingredient.recipeID
+      LEFT JOIN whatsdinner.raw ON whatsdinner.raw.rawID = whatsdinner.ingredientraw.rawID
+      WHERE rawName = :rawName)";
+
+    $rawName = $_POST['rawName'];
+
+    $statement = $connection->prepare($sql); 
+    $statement->bindParam(':rawName', $rawName, PDO::PARAM_STR);
+    $statement->execute();
+
+    $result = $statement->fetchAll();
+  } catch (PDOException $error) {
+    echo $sql . "<br>" . $error->getMessage();
+  }
+}
+?>
+
+
 <body>
 	<!-- Start header -->
 	<header class="top-navbar">
@@ -148,39 +178,11 @@ $result2 = $statement2->fetchAll();
 	<!-- End Search -->
 
 
-<!--take user input from submit bar-->
-<?php
-if (isset($_POST['MultiSearch'])) {
-	try {
-		$raws = $_POST['rawName'];
-		// query to fetch recipe name from raw names
-		$sql = sprintf("SELECT *
-		FROM whatsdinner.recipe
-		WHERE whatsdinner.recipe.recipeID IN 
-			(SELECT DISTINCT whatsdinner.recipe.recipeID
-			FROM whatsdinner.recipe 
-			LEFT JOIN whatsdinner.ingredient ON whatsdinner.recipe.recipeID = whatsdinner.ingredient.recipeID
-			LEFT JOIN whatsdinner.ingredientraw ON whatsdinner.ingredientraw.recID = whatsdinner.ingredient.recipeID
-			LEFT JOIN whatsdinner.raw ON whatsdinner.raw.rawID = whatsdinner.ingredientraw.rawID
-			WHERE rawName IN (%s)
-			GROUP BY whatsdinner.recipe.recipeID
-			HAVING count(DISTINCT whatsdinner.raw.rawID) = %s)",
-			"'" . implode("', '", $raws) . "'",
-			count($raws)
-		);
-		$statement = $connection->prepare($sql); 
-		$statement->execute();
-		$result = $statement->fetchAll();
-		} catch (PDOException $error) {
-		echo $sql . "<br>" . $error->getMessage();
-	}
-}
-?>
 	<div class="result-container">
 		<div class="container">
 			<?php
 				// output results 
-				if (isset($_POST['submit'])) {
+				if (isset($_POST['submitMulti'])) {
 				if ($result && $statement->rowCount() > 0) { ?>
 						<?php foreach ($result as $row) { ?>
 						<div class="row">
