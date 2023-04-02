@@ -1,6 +1,6 @@
 <?php
 /**
- * Functions to bookmark recipes
+ * Displays information from bookmarked 
  */
 session_start();
 if (!isset ($_SESSION['loggedin'])) {
@@ -39,9 +39,9 @@ if ($_SESSION['loggedin'] = TRUE) {
 <?php
 // output results 
 if ($UserBookmarkResult && $UserBookmarkStmt ->rowCount() > 0) { ?>
-    <h2>Results</h2>
+    <h2><?php echo escape($userName)?>'s Profile</h2>
     <table>
-      <thead>q
+      <thead>
         <tr>
           <th>Bookmarked Recipes</th>
         </tr>

@@ -47,7 +47,7 @@ if (isset($_POST['BookmarkSubmit'])) {
   try {
       $userID = $_SESSION['userID'];
 
-      $AddBookmarkSQL = "INSERT INTO whatsdinner.bookmarked (`userID`, `recipeID`) 
+      $AddBookmarkSQL = "INSERT INTO whatsdinner.bookmarked (userID, recipeID) 
       VALUES (:userID, :recipeID)";
       
       $AddBookmarkStmt = $connection->prepare($AddBookmarkSQL); 
@@ -100,6 +100,7 @@ if (isset($_POST['BookmarkSubmit'])) {
   </table>
 
   <?php if ($_SESSION['loggedin'] = TRUE) { ?>
+          <form method = "post">
           <input type="submit" name="BookmarkSubmit" value="Bookmark">
           </form>
   <?php } ?>
