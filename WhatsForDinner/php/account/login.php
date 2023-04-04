@@ -8,6 +8,7 @@
     <style>
         h1 {text-align: center;}
         form {text-align: center;}
+        footer {padding-top: 15px;}
     </style>
 		<div class="login">
 			<h1>Login</h1>
@@ -15,6 +16,7 @@
 				<input type="text" name="username" placeholder="Username" id="username" required>
 				<input type="password" name="password" placeholder="Password" id="password" required>
 				<input type="submit" value="Login">
+                <footer>Not registered yet? <a href="register.php">Register here</a></footer>
 			</form>
 		</div>
 	</body>
@@ -52,7 +54,7 @@ if ($stmt = $connection->prepare('SELECT userID, password FROM whatsdinner.user 
             $_SESSION['loggedin'] = TRUE;
             $_SESSION['username'] = $_POST['username'];
             $_SESSION['userID'] = $userID;
-            header('Location: ../../userProfile.php');
+            header('Location: ../userProfile.php');
         } else {
             echo 'Incorrect username and/or password!';
         }
