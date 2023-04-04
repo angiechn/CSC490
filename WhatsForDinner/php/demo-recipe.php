@@ -84,7 +84,7 @@ if (isset($_GET['recipeID'])) {
 	<header class="top-navbar">
 		<nav class="navbar navbar-expand-lg navbar-light bg-light">
 			<div class="container">
-				<a class="navbar-brand" href="not-demo.php">
+				<a class="navbar-brand" href="demo-home.php">
 					<img src="../images/logo.png" width=150px alt="What's for Dinner?" />
 				</a>
 				<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbars-rs-food"
@@ -99,7 +99,7 @@ if (isset($_GET['recipeID'])) {
 								<i class="fa fa-search" aria-hidden="true"></i>
 							</button>
 						</div>
-						<li class="nav-item"><a class="nav-link" href="not-demo.php">Home</a></li>
+						<li class="nav-item"><a class="nav-link" href="demo-home.php">Home</a></li>
 						<li class="nav-item dropdown">
 							<a class="nav-link dropdown-toggle" href="#" id="dropdown-a"
 								data-toggle="dropdown">Catagories</a>
