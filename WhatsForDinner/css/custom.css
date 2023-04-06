@@ -19,8 +19,6 @@
 }
 
 .recipe-ingredients {
-  height: 100px;
-  line-height: 100px;
   display: inline-block;
   vertical-align: middle;
   padding-top: 30px;

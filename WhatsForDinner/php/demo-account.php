@@ -59,12 +59,12 @@
 							<a class="nav-link dropdown-toggle" href="#" id="dropdown-a"
 								data-toggle="dropdown">Categories</a>
 							<div class="dropdown-menu" aria-labelledby="dropdown-a">
-								<a class="dropdown-item" href="">Entrees</a>
+								<a class="dropdown-item" href="demo-entrees.php">Entrees</a>
 								<a class="dropdown-item" href="">Sides</a>
 								<a class="dropdown-item" href="">Desserts</a>
 							</div>
 						</li>
-						<li class="nav-item"><a class="nav-link" href="">Account</a></li>
+						<li class="nav-item"><a class="nav-link" href="demo-account.php">Account</a></li>
 					</ul>
 				</div>
 			</div>
@@ -77,7 +77,9 @@
 		<div class="container text-center">
 			<div class="row">
 				<div class="col-lg-12">
-					<h1>Account</h1>
+					<?php if ($UserBookmarkResult && $UserBookmarkStmt ->rowCount() > 0) { ?>
+                        <h1><?php echo escape($userName)?>'s Profile</h1>
+					<?php } ?>
 				</div>
 			</div>
 		</div>
@@ -88,15 +90,6 @@
 	<div class="blog-box">
 		<div class="container">
 			<div class="row">
-				<div class="col-lg-12">
-					<div class="heading-title text-center">
-                    <?php if ($UserBookmarkResult && $UserBookmarkStmt ->rowCount() > 0) { ?>
-                        <h2><?php echo escape($userName)?>'s Profile</h2>
-                        <?php } ?>
-					</div>
-				</div>
-			</div>
-			<div class="row">
 				<div class="col-xl-8 col-lg-8 col-12">
 					<div class="blog-inner-details-page">
 						<div class="blog-inner-box">
@@ -106,7 +99,7 @@
                                     <?php foreach ($UserBookmarkResult as $row) { ?>
                                         <div class="col-xl-8 col-lg-8 col-12">
                                         <img src="../images/placeholder.png" class="result-image" alt="Image">
-                                        <h1><a href="not-demo-recipe.php?recipeID=<?php echo escape($row["recipeID"]);?>">
+                                        <h1><a href="demo-recipe.php?recipeID=<?php echo escape($row["recipeID"]);?>">
                                             <?php echo escape($row["recipeName"]); ?></a></h1>
                                     <?php } ?>
 								</div>
@@ -149,14 +142,13 @@
 	<a href="#" id="back-to-top" title="Back to top" style="display: none;">&uarr;</a>
 
 	<!-- ALL JS FILES -->
-	<script src="js/jquery-3.2.1.min.js"></script>
-	<script src="js/popper.min.js"></script>
-	<script src="js/bootstrap.min.js"></script>
-	<!-- ALL PLUGINS -->
+	<script src="../js/jquery-3.2.1.min.js"></script>
+	<script src="../js/popper.min.js"></script>
+	<script src="../js/bootstrap.min.js"></script>
+    <!-- ALL PLUGINS -->
+	<script src="../js/images-loded.min.js"></script>
+    <script src="../js/custom.js"></script>
 
-	<script src="js/images-loded.min.js"></script>
-	<script src="js/isotope.min.js"></script>
-	<script src="js/custom.js"></script>
 </body>
 
 </html>

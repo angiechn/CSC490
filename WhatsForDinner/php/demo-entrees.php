@@ -123,7 +123,7 @@ if (isset($_POST['submitMulti'])) {
 							<a class="nav-link dropdown-toggle" href="#" id="dropdown-a"
 								data-toggle="dropdown">Categories</a>
 							<div class="dropdown-menu" aria-labelledby="dropdown-a">
-								<a class="dropdown-item" href="">Entrees</a>
+								<a class="dropdown-item" href="demo-entrees.php">Entrees</a>
 								<a class="dropdown-item" href="">Sides</a>
 								<a class="dropdown-item" href="">Desserts</a>
 							</div>
@@ -142,8 +142,7 @@ if (isset($_POST['submitMulti'])) {
 		<div class="container text-center">
 			<div class="row">
 				<div class="col-lg-12">
-					<h1>What's For Dinner?</h1>
-					<h2>Reverse Recipe Search</h2>
+					<h1>Entrees</h1>
 				</div>
 			</div>
 		</div>
@@ -160,36 +159,16 @@ if (isset($_POST['submitMulti'])) {
 								<?php foreach ($result as $row) { ?>
 									<div class="col-lg-11">
 										<img src="../images/placeholder.png" class="result-image" alt="Image">
-										<h1><a href="not-demo-recipe.php?recipeID=<?php echo escape($row["recipeID"]);?>">
+										<h1><a href="demo-recipe.php?recipeID=<?php echo escape($row["recipeID"]);?>">
 										<?php echo escape($row["recipeName"]); ?></a></h1>
-										<p class="em">matched ingredients</p> 
-										<p>other ingredients</p>
+										<p><?php echo escape($row["rawName"]); ?> Ingredients • Listed • Here</p> 
 									</div>
 								<?php } ?>
 							</div>
 					  <?php }
 					else { ?>
 						<p> No results found. </p>
-					<?php }
-					// output results for multi search
-					if (isset($_POST['submitMulti'])) {
-						if ($result && $statement->rowCount() > 0) { ?>
-							<div class="row">
-								<?php foreach ($result as $row) { ?>
-									<div class="col-lg-11">
-										<img src="../images/placeholder.png" class="result-image" alt="Image">
-										<h1><a href="not-demo-recipe.php?recipeID=<?php echo escape($row["recipeID"]);?>">
-										<?php echo escape($row["recipeName"]); ?></a></h1>
-										<p class="em">matched ingredients</p> 
-										<p>other ingredients</p>
-									</div>
-								<?php } ?>
-							</div>
-					<?php } else { ?>
-							<p> No results found.</p>
-					<?php }
-					} 
-				?>
+					<?php } ?>
 		</div>
 	</div>
 	<!--End Results-->
@@ -208,12 +187,12 @@ if (isset($_POST['submitMulti'])) {
 	<a href="#" id="back-to-top" title="Back to top" style="display: none;">&uarr;</a>
 
 	<!-- ALL JS FILES -->
-	<script src="js/jquery-3.2.1.min.js"></script>
-	<script src="js/popper.min.js"></script>
-	<script src="js/bootstrap.min.js"></script>
-	<!-- ALL PLUGINS -->
-	<script src="js/images-loded.min.js"></script>
-	<script src="js/custom.js"></script>
+	<script src="../js/jquery-3.2.1.min.js"></script>
+	<script src="../js/popper.min.js"></script>
+	<script src="../js/bootstrap.min.js"></script>
+    <!-- ALL PLUGINS -->
+	<script src="../js/images-loded.min.js"></script>
+    <script src="../js/custom.js"></script>
 </body>
 
 </html>

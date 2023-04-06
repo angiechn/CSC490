@@ -123,12 +123,12 @@ if (isset($_POST['submitMulti'])) {
 							<a class="nav-link dropdown-toggle" href="#" id="dropdown-a"
 								data-toggle="dropdown">Categories</a>
 							<div class="dropdown-menu" aria-labelledby="dropdown-a">
-								<a class="dropdown-item" href="">Entrees</a>
+								<a class="dropdown-item" href="demo-entrees.php">Entrees</a>
 								<a class="dropdown-item" href="">Sides</a>
 								<a class="dropdown-item" href="">Desserts</a>
 							</div>
 						</li>
-						<li class="nav-item"><a class="nav-link" href="">Account</a></li>
+						<li class="nav-item"><a class="nav-link" href="demo-account.php">Account</a></li>
 					</ul>
 				</div>
 			</div>
@@ -240,12 +240,13 @@ if (isset($_POST['submitMulti'])) {
 	<a href="#" id="back-to-top" title="Back to top" style="display: none;">&uarr;</a>
 
 	<!-- ALL JS FILES -->
-	<script src="js/jquery-3.2.1.min.js"></script>
-	<script src="js/popper.min.js"></script>
-	<script src="js/bootstrap.min.js"></script>
-	<!-- ALL PLUGINS -->
-	<script src="js/images-loded.min.js"></script>
-	<script src="js/custom.js"></script>
+	<script src="../js/jquery-3.2.1.min.js"></script>
+	<script src="../js/popper.min.js"></script>
+	<script src="../js/bootstrap.min.js"></script>
+    <!-- ALL PLUGINS -->
+	<script src="../js/images-loded.min.js"></script>
+    <script src="../js/custom.js"></script>
+
 </body>
 
 </html>

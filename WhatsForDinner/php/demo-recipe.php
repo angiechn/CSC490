@@ -93,23 +93,23 @@ if (isset($_GET['recipeID'])) {
 				</button>
 				<div class="collapse navbar-collapse" id="navbars-rs-food">
 					<ul class="navbar-nav ml-auto">
-						<div class="blog-search-form">
-							<input name="search" placeholder="Search" type="text">
-							<button class="search-btn">
-								<i class="fa fa-search" aria-hidden="true"></i>
-							</button>
+						<div class="search">
+							<form method="post">
+								<input type="text" required name="recName" id="recName">
+								<input type="submit" name="submitMatchCase" value="Search">
+							</form>
 						</div>
 						<li class="nav-item"><a class="nav-link" href="demo-home.php">Home</a></li>
 						<li class="nav-item dropdown">
 							<a class="nav-link dropdown-toggle" href="#" id="dropdown-a"
-								data-toggle="dropdown">Catagories</a>
+								data-toggle="dropdown">Categories</a>
 							<div class="dropdown-menu" aria-labelledby="dropdown-a">
-								<a class="dropdown-item" href="">Entrees</a>
+								<a class="dropdown-item" href="demo-entrees.php">Entrees</a>
 								<a class="dropdown-item" href="">Sides</a>
 								<a class="dropdown-item" href="">Desserts</a>
 							</div>
 						</li>
-						<li class="nav-item"><a class="nav-link" href="">Account</a></li>
+						<li class="nav-item"><a class="nav-link" href="demo-account.php">Account</a></li>
 					</ul>
 				</div>
 			</div>
@@ -177,16 +177,11 @@ if (isset($_GET['recipeID'])) {
 	<a href="#" id="back-to-top" title="Back to top" style="display: none;">&uarr;</a>
 
 	<!-- ALL JS FILES -->
-	<script src="js/jquery-3.2.1.min.js"></script>
-	<script src="js/popper.min.js"></script>
-	<script src="js/bootstrap.min.js"></script>
+	<script src="../js/jquery-3.2.1.min.js"></script>
+	<script src="../js/popper.min.js"></script>
+	<script src="../js/bootstrap.min.js"></script>
     <!-- ALL PLUGINS -->
-	<script src="js/jquery.superslides.min.js"></script>
-	<script src="js/images-loded.min.js"></script>
-	<script src="js/isotope.min.js"></script>
-	<script src="js/baguetteBox.min.js"></script>
-	<script src="js/form-validator.min.js"></script>
-    <script src="js/contact-form-script.js"></script>
-    <script src="js/custom.js"></script>
+	<script src="../js/images-loded.min.js"></script>
+    <script src="../js/custom.js"></script>
 </body>
 </html>
