@@ -165,8 +165,9 @@ if (isset($_POST['submitMulti'])) {
 								<?php endforeach; ?>
 							</select>
 							<p></p>
-							<a class="btn btn-lg btn-circle btn-outline-new-white" name="submitMulti" type="submit" value="Search">Search</a>
+							<!-- <a class="btn btn-lg btn-circle btn-outline-new-white" name="submitMulti" type="submit" value="Search">Search</a> -->
 							</a>
+							<input class="btn btn-lg btn-circle btn-outline-new-white" name="submitMulti" type="submit" value="Search">
 						</form>
 						<p></p>
 						<div class="text-sm-center">
@@ -190,7 +191,7 @@ if (isset($_POST['submitMulti'])) {
 								<?php foreach ($result as $row) { ?>
 									<div class="col-lg-11">
 										<img src="../images/placeholder.png" class="result-image" alt="Image">
-										<h1><a href="not-demo-recipe.php?recipeID=<?php echo escape($row["recipeID"]);?>">
+										<h1><a href="demo-recipe.php?recipeID=<?php echo escape($row["recipeID"]);?>">
 										<?php echo escape($row["recipeName"]); ?></a></h1>
 											<p class="em">matched ingredients</p> 
 											<p>other ingredients</p>
@@ -209,7 +210,7 @@ if (isset($_POST['submitMulti'])) {
 								<?php foreach ($result as $row) { ?>
 									<div class="col-lg-11">
 										<img src="../images/placeholder.png" class="result-image" alt="Image">
-										<h1><a href="not-demo-recipe.php?recipeID=<?php echo escape($row["recipeID"]);?>">
+										<h1><a href="demo-recipe.php?recipeID=<?php echo escape($row["recipeID"]);?>">
 										<?php echo escape($row["recipeName"]); ?></a></h1>
 										<p class="em">matched ingredients</p> 
 										<p>other ingredients</p>
