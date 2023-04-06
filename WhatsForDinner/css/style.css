@@ -318,10 +318,10 @@ button:focus {
 .inner-column {
   display: inline-block;
   vertical-align: middle;
-  padding: 20px;
+  padding: 10px;
 }
 .inner-column h1 {
-  padding: 100px;
+  padding: 20px;
   font-family: "Arbutus Slab", serif;
   font-size: 30px;
   color: #010101;

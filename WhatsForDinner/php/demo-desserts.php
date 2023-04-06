@@ -49,23 +49,22 @@ $result2 = $statement2->fetchAll();
 
 </head>
 
-<?php
-  if (isset($_POST['submitMatchCase'])) {
-  try {
-    // query to fetch recipe name from rec name
-    $sql = "SELECT *
-    FROM whatsdinner.recipe
-    WHERE whatsdinner.recipe.recipeName LIKE :recName";
-    $statement = $connection->prepare($sql); 
-    $recName = '%' . $_POST['recName'] . '%';
-    $statement->bindParam(':recName', $recName, PDO::PARAM_STR);
-    $statement->execute();
+<?php //Query to fetch all recipe names with type "Dessert"
+try { 
+    $sql = "SELECT whatsdinner.recipe.recipeID, whatsdinner.recipe.recipeName 
+        FROM whatsdinner.recipe
+        LEFT JOIN whatsdinner.type 
+        ON whatsdinner.recipe.recipeID = whatsdinner.type.recipeID
+        WHERE whatsdinner.type.type = 'Dessert'";
 
+    $statement = $connection->prepare($sql); 
+    $statement->execute();
     $result = $statement->fetchAll();
-  } catch (PDOException $error) {
+
+
+} catch (PDOException $error) {
     echo $sql . "<br>" . $error->getMessage();
   }
-} else 
 ?>
 
 <!--take user input from submit bar-->
@@ -124,11 +123,11 @@ if (isset($_POST['submitMulti'])) {
 								data-toggle="dropdown">Categories</a>
 							<div class="dropdown-menu" aria-labelledby="dropdown-a">
 								<a class="dropdown-item" href="demo-entrees.php">Entrees</a>
-								<a class="dropdown-item" href="demo-sides.php">Sides</a>
-								<a class="dropdown-item" href="demo-desserts.php">Desserts</a>
+								<a class="dropdown-item" href="">Sides</a>
+								<a class="dropdown-item" href="">Desserts</a>
 							</div>
 						</li>
-						<li class="nav-item"><a class="nav-link" href="demo-account.php">Account</a></li>
+						<li class="nav-item"><a class="nav-link" href="">Account</a></li>
 					</ul>
 				</div>
 			</div>
@@ -142,86 +141,33 @@ if (isset($_POST['submitMulti'])) {
 		<div class="container text-center">
 			<div class="row">
 				<div class="col-lg-12">
-					<h1>What's For Dinner?</h1>
-					<h2>Reverse Recipe Search</h2>
+					<h1>Entrees</h1>
 				</div>
 			</div>
 		</div>
 	</div>
 	<!-- End header -->
 
-
-  	<!-- Start Search -->
-	<div class="section-box">
-		<div class="container">
-			<div class="row">
-				<div class="col-lg-12">
-					<div class="blog-search-form">
-						<form method="post">
-							<select name = "rawName[]" multiple id = "rawName[]" size = 8 required> 
-								<option style = "display:none">Choose an ingredient.</option>
-								<?php foreach($result2 as $option):?>
-									<option value= "<?php echo $option['rawName'];?>" required><?php echo $option['rawName'];?>
-								<?php endforeach; ?>
-							</select>
-							<p></p>
-							<!-- <a class="btn btn-lg btn-circle btn-outline-new-white" name="submitMulti" type="submit" value="Search">Search</a> -->
-							</a>
-							<input class="btn btn-lg btn-circle btn-outline-new-white" name="submitMulti" type="submit" value="Search">
-						</form>
-						<p></p>
-						<div class="text-sm-center">
-							<p>selected ingredients to be shown as tags, click to remove</p>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-	<!-- End Search -->
-
 	<!--Start Results-->
 	<div class="result-container">
 		<div class="container">
 				<?php
 					// output results for match case
-					if (isset($_POST['submitMatchCase'])) {
-						if ($result && $statement->rowCount() > 0) { ?>
-							<div class="row">
+					if ($result && $statement->rowCount() > 0) { ?>
+						<div class="row">
 								<?php foreach ($result as $row) { ?>
 									<div class="col-lg-11">
 										<img src="../images/placeholder.png" class="result-image" alt="Image">
 										<h1><a href="demo-recipe.php?recipeID=<?php echo escape($row["recipeID"]);?>">
 										<?php echo escape($row["recipeName"]); ?></a></h1>
-											<p class="em">matched ingredients</p> 
-											<p>other ingredients</p>
-											<p></p>
+										<p><?php echo escape($row["rawName"]); ?> Ingredients • Listed • Here</p> 
 									</div>
 								<?php } ?>
 							</div>
-					<?php } else { ?>
-							<p> No results found.</p>
-					<?php }
-					} else 
-					// output results for multi search
-					if (isset($_POST['submitMulti'])) {
-						if ($result && $statement->rowCount() > 0) { ?>
-							<div class="row">
-								<?php foreach ($result as $row) { ?>
-									<div class="col-lg-11">
-										<img src="../images/placeholder.png" class="result-image" alt="Image">
-										<h1><a href="demo-recipe.php?recipeID=<?php echo escape($row["recipeID"]);?>">
-										<?php echo escape($row["recipeName"]); ?></a></h1>
-										<p class="em">matched ingredients</p> 
-										<p>other ingredients</p>
-									</div>
-								<?php } ?>
-							</div>
-					<?php } else { ?>
-							<p> No results found.</p>
-					<?php }
-					} 
-				?>
+					  <?php }
+					else { ?>
+						<p> No results found. </p>
+					<?php } ?>
 		</div>
 	</div>
 	<!--End Results-->
@@ -246,7 +192,6 @@ if (isset($_POST['submitMulti'])) {
     <!-- ALL PLUGINS -->
 	<script src="../js/images-loded.min.js"></script>
     <script src="../js/custom.js"></script>
-
 </body>
 
 </html>

@@ -60,8 +60,8 @@
                                     data-toggle="dropdown">Categories</a>
                                 <div class="dropdown-menu" aria-labelledby="dropdown-a">
                                     <a class="dropdown-item" href="demo-entrees.php">Entrees</a>
-                                    <a class="dropdown-item" href="">Sides</a>
-                                    <a class="dropdown-item" href="">Desserts</a>
+                                    <a class="dropdown-item" href="demo-sides.php">Sides</a>
+                                    <a class="dropdown-item" href="demo-desserts.php">Desserts</a>
                                 </div>
                             </li>
                             <li class="nav-item"><a class="nav-link" href="demo-account.php">Account</a></li>
@@ -72,19 +72,32 @@
         </header>
         <!-- End header -->
 
+        <!-- Start header -->
+        <div class="all-page-title page-breadcrumb">
+            <div class="container text-center">
+            </div>
+        </div>
+        <!-- End header -->
+
+
 
         <!--Start Login-->
-        <div class="row">
-            <div class="blog-box-inner" position="center">
-                <div class="blog-detail">
-                    <h1 class="text-center">Login</h1>
-                    <div class="blog-search-form">
-                        <input name="username" placeholder="Username" id="username" type="text" required>
-                        <p></p>
-                        <input name="password" placeholder="Password" id="password" type="password" required>
-                    </div>
-                    <div class="text-center">
-                    <a class="btn btn-lg btn-circle btn-outline-new-white" value="Login" type="input">Login</a>
+        <div class="blog-box">
+            <div class="container" position="center">
+                <div class="row">
+                    <div class="col-lg-4 col-md-6 col-12">
+                        <div class="blog-box-inner">
+                                <h1 class="text-center">Login</h1>
+                                <div class="blog-search-form">
+                                    <input name="username" placeholder="Username" id="username" type="text" required>
+                                    <p></p>
+                                    <input name="password" placeholder="Password" id="password" type="password" required>
+                                </div>
+                                <div class="text-center">
+                                    <p></p>
+                                <a class="btn btn-lg btn-circle btn-outline-new-white" value="Login" type="input">Login</a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

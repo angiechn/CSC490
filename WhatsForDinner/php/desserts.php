@@ -2,7 +2,7 @@
 require "connection.php";
 require "common.php";
 
-//Query to fetch all recipe names with type "Entree"
+//Query to fetch all recipe names with type "Dessert"
 try { 
     $sql = "SELECT whatsdinner.recipe.recipeID, whatsdinner.recipe.recipeName 
         FROM whatsdinner.recipe

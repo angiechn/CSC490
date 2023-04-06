@@ -124,8 +124,8 @@ if (isset($_POST['submitMulti'])) {
 								data-toggle="dropdown">Categories</a>
 							<div class="dropdown-menu" aria-labelledby="dropdown-a">
 								<a class="dropdown-item" href="demo-entrees.php">Entrees</a>
-								<a class="dropdown-item" href="">Sides</a>
-								<a class="dropdown-item" href="">Desserts</a>
+								<a class="dropdown-item" href="demo-sides.php">Sides</a>
+								<a class="dropdown-item" href="demo-desserts.php">Desserts</a>
 							</div>
 						</li>
 						<li class="nav-item"><a class="nav-link" href="">Account</a></li>
