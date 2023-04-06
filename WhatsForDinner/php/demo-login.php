@@ -126,7 +126,7 @@
 //Start a session
 session_start();
 
-require "../connection.php";
+require "connection.php";
 
 //Check login data in the form
 if ( !isset($_POST['username'], $_POST['password']) ) {

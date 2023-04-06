@@ -160,7 +160,7 @@ if (isset($_POST['submitMulti'])) {
 										<img src="../images/placeholder.png" class="result-image" alt="Image">
 										<h1><a href="demo-recipe.php?recipeID=<?php echo escape($row["recipeID"]);?>">
 										<?php echo escape($row["recipeName"]); ?></a></h1>
-										<p><?php echo escape($row["rawName"]); ?> Ingredients • Listed • Here</p> 
+										<p>Ingredients • Listed • Here</p> 
 									</div>
 								<?php } ?>
 							</div>

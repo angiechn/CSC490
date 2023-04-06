@@ -1,25 +1,26 @@
 <?php
-/**
- * Function to query all recipe information based on recipeID
- * recipeID is sent from recipe.php
+/** RECIPE DISPLAY
+ * takes recipeID and displays recipe information
+ * USER FUNCTIONS
+ * bookmark
  */
-
 session_start();
-// required 
+
 require "connection.php";
 require "common.php";
+?>
 
-// take recipeID
+<?php
+// fetch all recipe information from recipeID
 if (isset($_GET['recipeID'])) {
-  // queries to fetch recipe and ingredient information from recipeID 
   try {
     $recipeID = $_GET['recipeID']; 
 
-    $sql = "SELECT * 
+    $RecDisplaySQL= "SELECT * 
     FROM whatsdinner.recipe 
     WHERE recipeID = :recipeID";
 
-    $sql2 = "SELECT * 
+    $IngDisplaySQL = "SELECT * 
     FROM whatsdinner.ingredientRaw 
     LEFT JOIN whatsdinner.ingredient 
     ON whatsdinner.ingredient.recipeID = whatsdinner.ingredientRaw.recID 
@@ -27,22 +28,23 @@ if (isset($_GET['recipeID'])) {
     LEFT JOIN whatsdinner.raw ON whatsdinner.raw.rawID = whatsdinner.ingredientraw.rawID 
     WHERE recID = :recipeID";
     
-    $statement = $connection->prepare($sql); 
-    $statement->bindParam(':recipeID', $recipeID, PDO::PARAM_STR);
-    $statement->execute();
+    $RecDisplayStmt = $connection->prepare($RecDisplaySQL); 
+    $RecDisplayStmt->bindParam(':recipeID', $recipeID, PDO::PARAM_STR);
+    $RecDisplayStmt->execute();
 
-    $result = $statement->fetchAll();
+    $RecResult = $RecDisplayStmt->fetchAll();
     
-    $statement2 = $connection->prepare($sql2); 
-    $statement2->bindParam(':recipeID', $recipeID, PDO::PARAM_STR);
-    $statement2->execute();
+    $IngDisplayStmt = $connection->prepare($IngDisplaySQL); 
+    $IngDisplayStmt->bindParam(':recipeID', $recipeID, PDO::PARAM_STR);
+    $IngDisplayStmt->execute();
 
-    $result2 = $statement2->fetchAll();
+    $IngResult = $IngDisplayStmt->fetchAll();
   } catch (PDOException $error) {
     echo $sql . "<br>" . $error->getMessage();
   }
 }
 
+// insert into bookmark 
 if (isset($_POST['BookmarkSubmit'])) {
   try {
       $userID = $_SESSION['userID'];
@@ -54,6 +56,8 @@ if (isset($_POST['BookmarkSubmit'])) {
       $AddBookmarkStmt->bindParam(':recipeID', $recipeID, PDO::PARAM_STR);
       $AddBookmarkStmt->bindParam(':userID', $userID, PDO::PARAM_STR);
       $AddBookmarkStmt->execute();
+
+      echo "Bookmark Added";
   } catch (PDOException $error) {
     echo $AddBookmarkSQL . "<br>" . $error->getMessage();
   }
@@ -71,7 +75,7 @@ if (isset($_POST['BookmarkSubmit'])) {
       </tr>
     </thead>
     <tbody>
-      <?php foreach ($result as $row): ?>
+      <?php foreach ($RecResult as $row): ?>
         <tr>
           <td><?php echo escape($row["recipeName"]); ?></td>
           <td><?php echo escape($row["instructions"]); ?></td>
@@ -88,7 +92,7 @@ if (isset($_POST['BookmarkSubmit'])) {
       </tr>
     </thead>
     <tbody>
-      <?php foreach ($result2 as $row): ?>
+      <?php foreach ($IngResult as $row): ?>
         <tr>
           <td><?php echo escape($row["preparation"]); ?></td>
           <td><?php echo escape($row["rawName"]); ?></td>
@@ -99,12 +103,11 @@ if (isset($_POST['BookmarkSubmit'])) {
     </tbody>
   </table>
 
-  <?php if ($_SESSION['loggedin'] = TRUE) { ?>
-          <form method = "post">
-          <input type="submit" name="BookmarkSubmit" value="Bookmark">
-          </form>
-  <?php } ?>
-
+<?php if ($_SESSION['loggedin'] = TRUE) { ?>
+        <form method = "post">
+        <input type="submit" name="BookmarkSubmit" value="Bookmark">
+        </form>
+<?php } ?>
 
 <style>
 a:link, a:visited {
@@ -115,4 +118,3 @@ a:hover, a:active {
 }
 </style>
 <a href="home.php"><strong>Back to Home</strong></a>
-
