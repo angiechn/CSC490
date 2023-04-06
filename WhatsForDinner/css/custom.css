@@ -21,13 +21,7 @@
 .recipe-ingredients {
   display: inline-block;
   vertical-align: middle;
-  padding-top: 30px;
-}
-
-.recipe-ingredients span {
-  display: inline-block;
-  vertical-align: middle;
-  line-height: normal;
+  padding: 20px;
 }
 
 .instructions {

@@ -139,16 +139,19 @@ if (isset($_GET['recipeID'])) {
 					<img src="../images/Placeholder.png" alt="" class="img-fluid">
 				</div>
 				<div class="col-lg-6 col-md-6 text-center">
-					<div class="recipe-ingredients">
-						<div class="inner-column">
-							<h1><?php echo escape($row["recipeName"]); ?></h1>
-							<?php foreach ($result2 as $row): ?>
-								<ul><?php echo escape($row["preparation"]); ?>
-                                <?php echo escape($row["rawName"]); ?>
-                                <?php echo escape($row["measurement"]); ?>
-                                <?php echo escape($row["unit"]); ?></ul>
-							<?php endforeach; ?>
-						</div>
+					<div class="inner-column">
+						<p></p>
+						<h1> </h1>
+						<h1>Ingredients</h1>
+						<p></p>
+						<?php foreach ($result2 as $row): ?>
+							<ul>
+								<?php echo escape($row["measurement"]); ?>
+								<?php echo escape($row["unit"]); ?>
+								<?php echo escape($row["preparation"]); ?>
+								<?php echo escape($row["rawName"]); ?>
+							</ul>
+						<?php endforeach; ?>
 					</div>
 				</div>
 				<div class="col-md-12">

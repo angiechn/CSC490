@@ -316,8 +316,12 @@ button:focus {
   padding: 20px;
 }
 .inner-column {
+  display: inline-block;
+  vertical-align: middle;
+  padding: 20px;
 }
 .inner-column h1 {
+  padding: 100px;
   font-family: "Arbutus Slab", serif;
   font-size: 30px;
   color: #010101;
@@ -667,43 +671,6 @@ button:focus {
 }
 .footer-area p a:hover {
   color: #ff7e66;
-}
-
-.subscribe_form {
-  display: block;
-  text-align: center;
-  padding: 5px 0;
-}
-
-.subscribe_form .form_input {
-  display: block;
-  background-color: rgba(0, 0, 0, 0.7);
-  color: #fff;
-  border: none;
-  font-size: 19px;
-  line-height: 50px;
-  padding: 0 10px;
-  float: left;
-  width: 100%;
-  transition: all 0.5s ease-in-out;
-}
-
-.subscribe_form .submit {
-  background-color: #ff7e66;
-  color: #fff;
-  font-size: 16px;
-  font-weight: 600;
-  line-height: 50px;
-  display: inline-block;
-  padding: 0 10px;
-  float: left;
-  width: 100%;
-  border: none;
-  cursor: pointer;
-  transition: all 0.5s ease-in-out;
-}
-.subscribe_form .submit:hover {
-  background: #010101;
 }
 
 .f-social {
