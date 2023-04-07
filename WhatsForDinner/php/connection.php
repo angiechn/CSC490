@@ -5,8 +5,9 @@ try {
     $dbname = "whatsdinner";
     $dsn = "mysql:host = $host; mysql:dbname = $dbname";
     $username = "root";
-    $password = "";
     $options = null;
+
+    require_once("secrets.php");
     
     //Open a connection via PDO
     $connection = new PDO($dsn, $username, $password, $options);
