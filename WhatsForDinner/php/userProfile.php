@@ -51,7 +51,7 @@ try {
 
 // fetch ingredient names from user pantry
 try {
-    $UserPantrySQL = "SELECT rawName
+    $UserPantrySQL = "SELECT *
     FROM whatsdinner.raw
     LEFT JOIN whatsdinner.inpantry ON whatsdinner.raw.rawID = whatsdinner.inpantry.rawID
     WHERE whatsdinner.inpantry.userID = :userID";
@@ -66,6 +66,46 @@ try {
 }
 ?>
 
+<?php
+// delete bookmark if get recipeID is sent
+if (isset($_GET['recipeID'])) {
+  try {
+      $recipeID = $_GET['recipeID'];
+
+      $DelBookmarkSQL = "DELETE FROM whatsdinner.bookmarked WHERE recipeID = :recipeID AND userID = :userID";
+
+      $DelBookmarkStmt = $connection->prepare($DelBookmarkSQL);
+      $DelBookmarkStmt->bindParam(':recipeID', $recipeID, PDO::PARAM_STR);
+      $DelBookmarkStmt->bindParam(':userID', $userID, PDO::PARAM_STR);
+      $DelBookmarkStmt->execute();
+
+      // refresh page after deleted
+      header('Location: userProfile.php');
+  } catch (PDOException $error) {
+      echo $DelBookmarkSQL . "<br>" . $error->getMessage();
+  }
+}
+
+// delete pantry ingredient if get rawID is sent
+if (isset($_GET['rawID'])) {
+  try {
+      $rawID = $_GET['rawID'];
+
+      $DelPantrySQL = "DELETE FROM whatsdinner.inpantry WHERE rawID = :rawID AND userID = :userID";
+
+      $DelPantryStmt = $connection->prepare($DelPantrySQL);
+      $DelPantryStmt->bindParam(':rawID', $rawID, PDO::PARAM_STR);
+      $DelPantryStmt->bindParam(':userID', $userID, PDO::PARAM_STR);
+      $DelPantryStmt->execute();
+
+      // refresh page after deleted
+      header('Location: userProfile.php');
+  } catch (PDOException $error) {
+      echo $DelPantrySQL . "<br>" . $error->getMessage();
+  }
+}
+?>
+
 <h3>Bookmarked Recipes</h3>
 
 <?php
@@ -77,6 +117,7 @@ if ($UserBookmarkResult && $UserBookmarkStmt ->rowCount() > 0) { ?>
           <tr>
             <td><?php echo escape($row["recipeName"]); ?></td>
             <td><a href="recipeDisplay.php?recipeID=<?php echo escape($row["recipeID"]);?>"><strong>View</strong></a></td>
+            <td><a href="userProfile.php?recipeID=<?php echo escape($row["recipeID"]);?>"><strong>Delete</strong></a></td>
           </tr>
         <?php } ?>
       </tbody>
@@ -95,6 +136,7 @@ if ($UserPantryResult && $UserPantryStmt ->rowCount() > 0) { ?>
         <?php foreach ($UserPantryResult as $row) { ?>
           <tr>
             <td><?php echo escape($row["rawName"]);?></td>
+            <td><a href="userProfile.php?rawID=<?php echo escape($row["rawID"]);?>"><strong>Delete</strong></a></td>
           </tr>
         <?php } ?>
       </tbody>
@@ -128,14 +170,14 @@ if (isset($_POST['submitAddToPantry'])) {
 
 <!-- user input for addToPantry -->
 <h3>Add Ingredient to Pantry</h3>
-<form method="post">
+<form method = "post">
   <select name = "rawID" id = "rawID"> 
       <option style = "display:none">Choose an ingredient to add.</option>
         <?php foreach($RawResult as $option):?>
-          <option value= "<?php echo $option['rawID'];?>" required><?php echo $option['rawName'];?>
+          <option value = "<?php echo $option['rawID'];?>" required><?php echo $option['rawName'];?>
         <?php endforeach; ?>
   </select>
-  <input type="submit" name="submitAddToPantry" value="Add">
+  <input type = "submit" name = "submitAddToPantry" value = "Add">
 </form>
 
 <style>
