@@ -56,9 +56,24 @@ if ($stmt = $connection->prepare('SELECT userID, password FROM whatsdinner.user 
 	if ($stmt->rowCount() > 0) {
 		echo 'Username exists, please choose another!';
 	} else {
+	
+	//Generate unique userID
+	$unique = false;
+	while (!$unique) {
+		$userID = mt_rand(1, 2147483647);
+		
+		// Check if userID exists in database
+		$stmt = $connection->prepare('SELECT COUNT(*) FROM whatsdinner.user WHERE userID = :userID');
+		$stmt->bindParam(':userID', $userID);
+		$stmt->execute();
+		
+		$count = $stmt->fetchColumn();
+		if ($count == 0) {
+				$unique = true;
+		}
+	}
 		//Insert new account
         try {
-            $userID = uniqid();
             $username = $_POST['username'];
             $email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
             $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
