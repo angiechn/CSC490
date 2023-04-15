@@ -1,19 +1,23 @@
 <?php
-/**
- * Function to query recipes based on user input
- * User inputs rawnames
+/** MULTI SEARCH
+ * Function to take user input of ingredients
+ * Display names of Results
  */
-
-// required
 require "connection.php";
 require "common.php";
 
-// query to fetch rawnames for dropdown or dynamic search
-$sql2 = "SELECT DISTINCT rawName FROM whatsdinner.raw";
-$statement2 = $connection->prepare($sql2); 
-$statement2->execute();
-$result2 = $statement2->fetchAll();
+session_start();
+?>
 
+<?php
+// fetch rawnames for dynamic search
+$RawSQL = "SELECT DISTINCT rawName, rawID FROM whatsdinner.raw";
+$RawStmt = $connection->prepare($RawSQL); 
+$RawStmt->execute();
+$RawResult = $RawStmt->fetchAll();
+?>
+
+<?php
 // take user input from submit bar
 if (isset($_POST['submit'])) {
   try {
@@ -71,17 +75,25 @@ if (isset($_POST['submit'])) {
 <?php }
 } ?>
 
-<?php // user input ?>
+<!-- user input for multisearch -->
 <h2>Search Recipe</h2>
+
 <form method="post">
   <select name = "rawName[]" multiple id = "rawName[]" size = 8 required> 
       <option style = "display:none">Choose an ingredient.</option>
-        <?php foreach($result2 as $option):?>
+        <?php foreach($RawResult as $option):?>
           <option value= "<?php echo $option['rawName'];?>" required><?php echo $option['rawName'];?>
         <?php endforeach; ?>
   </select>
-  <input type="submit" name="submit" value="Search">
+  <input type="submit" name="submitMulti" value="Search">
 </form>
+
+<form method="post">
+  Include Pantry
+  <input type="checkbox">
+  <input type="submit" name="togglePantry" value="Confirm">
+</form>
+
 <style>
 a:link, a:visited {
   color: #000000;
@@ -91,3 +103,5 @@ a:hover, a:active {
 }
 </style>
 <a href="home.php"><strong>Back to Home</strong></a>
+
+<script src="../js/functions.js"></script>
