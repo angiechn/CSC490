@@ -1,7 +1,8 @@
 <?php
 /** MULTI SEARCH
  * Function to take user input of ingredients
- * Display names of Results
+ * Display names of resulting recipes
+ * Display matching and unmatching ingredients for each result
  */
 require "connection.php";
 require "common.php";
@@ -11,7 +12,7 @@ session_start();
 
 <?php
 // fetch rawnames for dynamic search
-$RawSQL = "SELECT DISTINCT rawName, rawID FROM whatsdinner.raw";
+$RawSQL = "SELECT DISTINCT rawName, rawID FROM whatsdinner.raw ORDER BY rawName";
 $RawStmt = $connection->prepare($RawSQL); 
 $RawStmt->execute();
 $RawResult = $RawStmt->fetchAll();
@@ -19,13 +20,13 @@ $RawResult = $RawStmt->fetchAll();
 
 <?php
 // take user input from submit bar
-if (isset($_POST['submit'])) {
+if (isset($_POST['submitMulti'])) {
   try {
     $raws = $_POST['rawName'];
     // query to fetch recipe name from raw names
-    $sql = sprintf("SELECT *
-    FROM whatsdinner.recipe
-    WHERE whatsdinner.recipe.recipeID IN 
+    $MultiSearchSQL = sprintf("SELECT *
+      FROM whatsdinner.recipe
+      WHERE whatsdinner.recipe.recipeID IN 
       (SELECT DISTINCT whatsdinner.recipe.recipeID
       FROM whatsdinner.recipe 
       LEFT JOIN whatsdinner.ingredient ON whatsdinner.recipe.recipeID = whatsdinner.ingredient.recipeID
@@ -37,32 +38,63 @@ if (isset($_POST['submit'])) {
       "'" . implode("', '", $raws) . "'",
       count($raws)
     );
-    $statement = $connection->prepare($sql); 
-    $statement->execute();
-    $result = $statement->fetchAll();
+    $MultiSearchStmt = $connection->prepare($MultiSearchSQL); 
+    $MultiSearchStmt->execute();
+    $MultiSearchResult = $MultiSearchStmt->fetchAll();
   } catch (PDOException $error) {
-    echo $sql . "<br>" . $error->getMessage();
+    echo $MultiSearchSQL . "<br>" . $error->getMessage();
   }
 }
 ?>
 
 <?php
 // output results 
-if (isset($_POST['submit'])) {
-  if ($result && $statement->rowCount() > 0) { ?>
+if (isset($_POST['submitMulti'])) {
+  if ($MultiSearchResult && $MultiSearchStmt->rowCount() > 0) { ?>
     <h2>Results</h2>
     <table>
-      <thead>
-        <tr>
-          <th>Recipe Name</th>
-        </tr>
-      </thead>
       <tbody>
-        <?php foreach ($result as $row) { ?>
-          <tr>
-            <td><?php echo escape($row["recipeName"]); ?></td>
-            <td><a href="recipeDisplay.php?recipeID=<?php echo escape($row["recipeID"]);?>"><strong>View</strong></a></td>
-          </tr>
+        <?php foreach ($MultiSearchResult as $row) { 
+                try { 
+                  // fetch unmatching ingredients for recipe
+                  $recipeID = $row["recipeID"];
+
+                  $IngDisplaySQL = sprintf("SELECT *
+                    FROM whatsdinner.ingredientRaw 
+                    LEFT JOIN whatsdinner.ingredient 
+                    ON whatsdinner.ingredient.recipeID = whatsdinner.ingredientRaw.recID 
+                    AND whatsdinner.ingredient.ingredientID = whatsdinner.ingredientRaw.ingID 
+                    LEFT JOIN whatsdinner.raw ON whatsdinner.raw.rawID = whatsdinner.ingredientraw.rawID 
+                    WHERE recID = :recipeID AND rawName NOT IN (%s)",
+                    "'" . implode("', '", $raws) . "'");
+
+                  $IngDisplayStmt = $connection->prepare($IngDisplaySQL); 
+                  $IngDisplayStmt->bindParam(':recipeID', $recipeID, PDO::PARAM_STR);
+                  $IngDisplayStmt->execute();
+
+                  $IngResult = $IngDisplayStmt->fetchAll();
+                } catch (PDOException $error) {
+                  echo $IngDisplaySQL . "<br>" . $error->getMessage();
+                } ?>
+              <tr>
+                <td><strong><?php echo escape($row["recipeName"]); ?></strong></td>
+                <td><a href="recipeDisplay.php?recipeID=<?php echo escape($row["recipeID"]);?>"><strong>View</strong></a></td>
+              </tr>
+              <tr>
+                <td>
+                  Matched:
+                  <em><?php 
+                  $rawsString = implode(", ", $raws);
+                  echo($rawsString);
+                  ?></em>
+                </td>
+                <td>
+                  Unmatched:
+                  <em><?php foreach ($IngResult as $tuple) {
+                  echo escape($tuple["rawName"]) . ", "; 
+                  } ?></em>
+                </td>
+              </tr>
         <?php } ?>
       </tbody>
     </table>
@@ -70,7 +102,7 @@ if (isset($_POST['submit'])) {
     > No results found for 
       <?php 
       $rawsString = implode("', '", $raws);
-      print_r($rawsString); 
+      echo($rawsString); 
       ?>
 <?php }
 } ?>
@@ -103,5 +135,3 @@ a:hover, a:active {
 }
 </style>
 <a href="home.php"><strong>Back to Home</strong></a>
-
-<script src="../js/functions.js"></script>
