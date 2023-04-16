@@ -10,21 +10,29 @@ require "common.php";
 session_start();
 ?>
 
-<?php
-// fetch rawnames for dynamic search
+<style>
+a:link, a:visited {
+  color: #000000;
+}  
+a:hover, a:active {
+  color: #ff7e66;
+}
+</style>
+
+<?php // fetch rawnames for dynamic search
 $RawSQL = "SELECT DISTINCT rawName, rawID FROM whatsdinner.raw ORDER BY rawName";
 $RawStmt = $connection->prepare($RawSQL); 
 $RawStmt->execute();
 $RawResult = $RawStmt->fetchAll();
 ?>
 
-<?php
-// take user input from submit bar
+<?php // take user input from submit bar
 if (isset($_POST['submitMulti'])) {
   try {
     $raws = $_POST['rawName'];
     // query to fetch recipe name from raw names
-    $MultiSearchSQL = sprintf("SELECT *
+    $MultiSearchSQL = sprintf(
+      "SELECT *
       FROM whatsdinner.recipe
       WHERE whatsdinner.recipe.recipeID IN 
       (SELECT DISTINCT whatsdinner.recipe.recipeID
@@ -44,11 +52,9 @@ if (isset($_POST['submitMulti'])) {
   } catch (PDOException $error) {
     echo $MultiSearchSQL . "<br>" . $error->getMessage();
   }
-}
-?>
+} ?>
 
-<?php
-// output results 
+<?php // output results 
 if (isset($_POST['submitMulti'])) {
   if ($MultiSearchResult && $MultiSearchStmt->rowCount() > 0) { ?>
     <h2>Results</h2>
@@ -76,25 +82,9 @@ if (isset($_POST['submitMulti'])) {
                 } catch (PDOException $error) {
                   echo $IngDisplaySQL . "<br>" . $error->getMessage();
                 } ?>
-              <tr>
-                <td><strong><?php echo escape($row["recipeName"]); ?></strong></td>
-                <td><a href="recipeDisplay.php?recipeID=<?php echo escape($row["recipeID"]);?>"><strong>View</strong></a></td>
-              </tr>
-              <tr>
-                <td>
-                  Matched:
-                  <em><?php 
-                  $rawsString = implode(", ", $raws);
-                  echo($rawsString);
-                  ?></em>
-                </td>
-                <td>
-                  Unmatched:
-                  <em><?php foreach ($IngResult as $tuple) {
-                  echo escape($tuple["rawName"]) . ", "; 
-                  } ?></em>
-                </td>
-              </tr>
+              <tr><td><a href="recipeDisplay.php?recipeID=<?php echo escape($row["recipeID"]);?>"><strong><?php echo escape($row["recipeName"]); ?></strong></td></tr>
+              <tr><td> Matched: <em> <?php $rawsString = implode(", ", $raws); echo($rawsString);?></em></tr></td>
+              <tr><td> Other: <em><?php foreach ($IngResult as $tuple) { echo escape($tuple["rawName"]) . ", "; } ?></em></td></tr>
         <?php } ?>
       </tbody>
     </table>
@@ -126,12 +116,4 @@ if (isset($_POST['submitMulti'])) {
   <input type="submit" name="togglePantry" value="Confirm">
 </form>
 
-<style>
-a:link, a:visited {
-  color: #000000;
-}  
-a:hover, a:active {
-  color: #ff7e66;
-}
-</style>
 <a href="home.php"><strong>Back to Home</strong></a>
