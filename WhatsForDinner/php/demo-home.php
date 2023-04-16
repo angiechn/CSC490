@@ -1,20 +1,4 @@
 <!DOCTYPE html>
-<?php
-/**
- * Function to query recipes based on user input
- * User inputs rawname
- */
-
-// required
-require "connection.php";
-require "common.php";
-
-// query to fetch rawnames for dropdown or dynamic search
-$sql2 = "SELECT DISTINCT rawName FROM whatsdinner.raw";
-$statement2 = $connection->prepare($sql2); 
-$statement2->execute();
-$result2 = $statement2->fetchAll();
-?>
 
 <head>
 	<meta charset="utf-8">
@@ -43,29 +27,46 @@ $result2 = $statement2->fetchAll();
 	<link rel="stylesheet" href="../css/custom.css">
 
 	<!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
-
+	  <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+	  <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+	<![endif]-->
 </head>
 
+<!--Start PHP-->
 <?php
-  if (isset($_POST['submitMatchCase'])) {
-  try {
-    // query to fetch recipe name from rec name
-    $sql = "SELECT *
-    FROM whatsdinner.recipe
-    WHERE whatsdinner.recipe.recipeName LIKE :recName";
-    $statement = $connection->prepare($sql); 
-    $recName = '%' . $_POST['recName'] . '%';
-    $statement->bindParam(':recName', $recName, PDO::PARAM_STR);
-    $statement->execute();
+/**
+ * Function to query recipes based on user input
+ * User inputs rawname
+ */
 
-    $result = $statement->fetchAll();
-  } catch (PDOException $error) {
-    echo $sql . "<br>" . $error->getMessage();
-  }
-} else 
+// required
+require "connection.php";
+require "common.php";
+
+// query to fetch rawnames for dropdown or dynamic search
+$sql2 = "SELECT DISTINCT rawName FROM whatsdinner.raw";
+$statement2 = $connection->prepare($sql2);
+$statement2->execute();
+$result2 = $statement2->fetchAll();
+?>
+
+<?php
+if (isset($_POST['submitMatchCase'])) {
+	try {
+		// query to fetch recipe name from rec name
+		$sql = "SELECT *
+        FROM whatsdinner.recipe
+        WHERE whatsdinner.recipe.recipeName LIKE :recName";
+		$statement = $connection->prepare($sql);
+		$recName = '%' . $_POST['recName'] . '%';
+		$statement->bindParam(':recName', $recName, PDO::PARAM_STR);
+		$statement->execute();
+
+		$result = $statement->fetchAll();
+	} catch (PDOException $error) {
+		echo $sql . "<br>" . $error->getMessage();
+	}
+} else
 ?>
 
 <!--take user input from submit bar-->
@@ -75,27 +76,28 @@ if (isset($_POST['submitMulti'])) {
 		$raws = $_POST['rawName'];
 		// query to fetch recipe name from raw names
 		$sql = sprintf("SELECT *
-		FROM whatsdinner.recipe
-		WHERE whatsdinner.recipe.recipeID IN 
-			(SELECT DISTINCT whatsdinner.recipe.recipeID
-			FROM whatsdinner.recipe 
-			LEFT JOIN whatsdinner.ingredient ON whatsdinner.recipe.recipeID = whatsdinner.ingredient.recipeID
-			LEFT JOIN whatsdinner.ingredientraw ON whatsdinner.ingredientraw.recID = whatsdinner.ingredient.recipeID
-			LEFT JOIN whatsdinner.raw ON whatsdinner.raw.rawID = whatsdinner.ingredientraw.rawID
-			WHERE rawName IN (%s)
-			GROUP BY whatsdinner.recipe.recipeID
-			HAVING count(DISTINCT whatsdinner.raw.rawID) = %s)",
+            FROM whatsdinner.recipe
+            WHERE whatsdinner.recipe.recipeID IN 
+                (SELECT DISTINCT whatsdinner.recipe.recipeID
+                FROM whatsdinner.recipe 
+                LEFT JOIN whatsdinner.ingredient ON whatsdinner.recipe.recipeID = whatsdinner.ingredient.recipeID
+                LEFT JOIN whatsdinner.ingredientraw ON whatsdinner.ingredientraw.recID = whatsdinner.ingredient.recipeID
+                LEFT JOIN whatsdinner.raw ON whatsdinner.raw.rawID = whatsdinner.ingredientraw.rawID
+                WHERE rawName IN (%s)
+                GROUP BY whatsdinner.recipe.recipeID
+                HAVING count(DISTINCT whatsdinner.raw.rawID) = %s)",
 			"'" . implode("', '", $raws) . "'",
 			count($raws)
 		);
-		$statement = $connection->prepare($sql); 
+		$statement = $connection->prepare($sql);
 		$statement->execute();
 		$result = $statement->fetchAll();
-		} catch (PDOException $error) {
+	} catch (PDOException $error) {
 		echo $sql . "<br>" . $error->getMessage();
 	}
 }
 ?>
+<!--End PHP-->
 
 
 <body>
@@ -135,7 +137,7 @@ if (isset($_POST['submitMulti'])) {
 		</nav>
 	</header>
 	<!-- End header -->
-	
+
 
 	<!-- Start header -->
 	<div class="all-page-title page-breadcrumb">
@@ -151,23 +153,24 @@ if (isset($_POST['submitMulti'])) {
 	<!-- End header -->
 
 
-  	<!-- Start Search -->
+	<!-- Start Search -->
 	<div class="section-box">
 		<div class="container">
 			<div class="row">
 				<div class="col-lg-12">
 					<div class="blog-search-form">
 						<form method="post">
-							<select name = "rawName[]" multiple id = "rawName[]" size = 8 required> 
-								<option style = "display:none">Choose an ingredient.</option>
-								<?php foreach($result2 as $option):?>
-									<option value= "<?php echo $option['rawName'];?>" required><?php echo $option['rawName'];?>
-								<?php endforeach; ?>
+							<select name="rawName[]" multiple id="rawName[]" size=8 required>
+								<option style="display:none">Choose an ingredient.</option>
+								<?php foreach ($result2 as $option): ?>
+									<option value="<?php echo $option['rawName']; ?>" required><?php echo $option['rawName']; ?>
+									<?php endforeach; ?>
 							</select>
 							<p></p>
 							<!-- <a class="btn btn-lg btn-circle btn-outline-new-white" name="submitMulti" type="submit" value="Search">Search</a> -->
 							</a>
-							<input class="btn btn-lg btn-circle btn-outline-new-white" name="submitMulti" type="submit" value="Search">
+							<input class="btn btn-lg btn-circle btn-outline-new-white" name="submitMulti" type="submit"
+								value="Search">
 						</form>
 						<p></p>
 						<div class="text-sm-center">
@@ -183,57 +186,55 @@ if (isset($_POST['submitMulti'])) {
 	<!--Start Results-->
 	<div class="result-container">
 		<div class="container">
-				<?php
-					// output results for match case
-					if (isset($_POST['submitMatchCase'])) {
-						if ($result && $statement->rowCount() > 0) { ?>
-							<div class="row">
-								<?php foreach ($result as $row) { ?>
-									<div class="col-lg-11">
-										<img src="../images/placeholder.png" class="result-image" alt="Image">
-										<h1><a href="demo-recipe.php?recipeID=<?php echo escape($row["recipeID"]);?>">
+			<?php
+			// output results for match case
+			if (isset($_POST['submitMatchCase'])) {
+				if ($result && $statement->rowCount() > 0) { ?>
+					<div class="row">
+						<?php foreach ($result as $row) { ?>
+							<div class="col-lg-11">
+								<img src="../images/placeholder.png" class="result-image" alt="Image">
+								<h1><a href="demo-recipe.php?recipeID=<?php echo escape($row["recipeID"]); ?>">
 										<?php echo escape($row["recipeName"]); ?></a></h1>
-											<p class="em">matched ingredients</p> 
-											<p>other ingredients</p>
-											<p></p>
-									</div>
-								<?php } ?>
+								<p class="em">matched ingredients</p>
+								<p>other ingredients</p>
+								<p></p>
 							</div>
+						<?php } ?>
+					</div>
+				<?php } else { ?>
+					<p> No results found.</p>
+				<?php }
+			} else
+				// output results for multi search
+				if (isset($_POST['submitMulti'])) {
+					if ($result && $statement->rowCount() > 0) { ?>
+						<div class="row">
+							<?php foreach ($result as $row) { ?>
+								<div class="col-lg-11">
+									<img src="../images/placeholder.png" class="result-image" alt="Image">
+									<h1><a href="demo-recipe.php?recipeID=<?php echo escape($row["recipeID"]); ?>">
+											<?php echo escape($row["recipeName"]); ?></a></h1>
+									<p class="em">matched ingredients</p>
+									<p>other ingredients</p>
+								</div>
+							<?php } ?>
+						</div>
 					<?php } else { ?>
-							<p> No results found.</p>
+						<p> No results found.</p>
 					<?php }
-					} else 
-					// output results for multi search
-					if (isset($_POST['submitMulti'])) {
-						if ($result && $statement->rowCount() > 0) { ?>
-							<div class="row">
-								<?php foreach ($result as $row) { ?>
-									<div class="col-lg-11">
-										<img src="../images/placeholder.png" class="result-image" alt="Image">
-										<h1><a href="demo-recipe.php?recipeID=<?php echo escape($row["recipeID"]);?>">
-										<?php echo escape($row["recipeName"]); ?></a></h1>
-										<p class="em">matched ingredients</p> 
-										<p>other ingredients</p>
-									</div>
-								<?php } ?>
-							</div>
-					<?php } else { ?>
-							<p> No results found.</p>
-					<?php }
-					} 
-				?>
+				}
+			?>
 		</div>
 	</div>
 	<!--End Results-->
 
-
-
 	<!-- Start Footer -->
 	<footer class="footer-area bg-f">
-			<div class="container">
-				<div class="row">
-				</div>
+		<div class="container" border-inline="black">
+			<div class="row">
 			</div>
+		</div>
 	</footer>
 	<!-- End Footer -->
 
@@ -243,9 +244,9 @@ if (isset($_POST['submitMulti'])) {
 	<script src="../js/jquery-3.2.1.min.js"></script>
 	<script src="../js/popper.min.js"></script>
 	<script src="../js/bootstrap.min.js"></script>
-    <!-- ALL PLUGINS -->
+	<!-- ALL PLUGINS -->
 	<script src="../js/images-loded.min.js"></script>
-    <script src="../js/custom.js"></script>
+	<script src="../js/custom.js"></script>
 
 </body>
 

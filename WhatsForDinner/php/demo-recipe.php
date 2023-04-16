@@ -165,6 +165,15 @@ if (isset($_GET['recipeID'])) {
 	</div>
 	<!-- End Recipe -->
 
+	<!-- Start Bookmark -->
+	<div class="container text-center">
+		<input class="btn btn-lg btn-circle btn-outline-new-white" name="submitMulti" type="submit" value="Bookmark">
+		<p>not functional</p>
+	</div>
+
+	<!-- End Bookmark -->
+
+
   	 <!-- Start Footer -->
 	   <footer class="footer-area bg-f">
 		<div class="container">
