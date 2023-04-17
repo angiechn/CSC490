@@ -93,27 +93,41 @@ if (isset($_POST['submitMulti'])) {
       <?php 
       $rawsString = implode("', '", $raws);
       echo($rawsString); 
-      ?>
-<?php }
+  }
 } ?>
 
-<!-- user input for multisearch -->
-<h2>Search Recipe</h2>
+<?php // toggle pantry
+if (isset($_POST['yesPantry']) && $_SESSION['usePantry'] == "FALSE") {
+  $_SESSION['usePantry'] = "TRUE";
+  header('Location: recipeMultiSearch.php');
+} else if (isset($_POST['noPantry']) && $_SESSION['usePantry'] == "TRUE") {
+  $_SESSION['usePantry'] = "FALSE";
+  header('Location: recipeMultiSearch.php');
+}
+?>
 
-<form method="post">
+<h2>Search Recipe</h2>
+<!-- pantry toggle -->
+<form method = "post">
+  <?php if ($_SESSION['usePantry'] == "FALSE") { ?>
+    <input type = "submit" name = "yesPantry" value = "Use Pantry"> 
+    <?php echo $_SESSION['usePantry']; ?>
+  <?php } else if ($_SESSION['usePantry'] == "TRUE") { ?>
+    <input type = "submit" name = "noPantry" value = "Don't Use Pantry">
+    <?php echo $_SESSION['usePantry']; ?>
+  <?php } ?>
+</form>
+
+
+<!-- user input for multisearch -->
+<form method ="post">
   <select name = "rawName[]" multiple id = "rawName[]" size = 8 required> 
       <option style = "display:none">Choose an ingredient.</option>
         <?php foreach($RawResult as $option):?>
           <option value= "<?php echo $option['rawName'];?>" required><?php echo $option['rawName'];?>
         <?php endforeach; ?>
   </select>
-  <input type="submit" name="submitMulti" value="Search">
-</form>
-
-<form method="post">
-  Include Pantry
-  <input type="checkbox">
-  <input type="submit" name="togglePantry" value="Confirm">
+  <input type="submit" name = "submitMulti" value= "Search">
 </form>
 
 <a href="home.php"><strong>Back to Home</strong></a>
