@@ -14,17 +14,13 @@ session_start();
 if (!isset ($_SESSION['loggedin'])) {
     header('Location: login.php');
 }
-
-// save session keys
-$userName = $_SESSION['username'];
-$userID = $_SESSION['userID'];
 ?>
 
-<h1><?php echo escape($userName)?>'s Profile</h1>
+<h1><?php echo escape($_SESSION['username'])?>'s Profile</h1>
 
 <?php
 // fetch raw names for pantry saving
-$RawSQL = "SELECT DISTINCT rawName, rawID FROM whatsdinner.raw";
+$RawSQL = "SELECT DISTINCT rawName, rawID FROM whatsdinner.raw ORDER BY rawName";
 $RawStmt = $connection->prepare($RawSQL); 
 $RawStmt->execute();
 $RawResult = $RawStmt->fetchAll();
@@ -41,7 +37,7 @@ try {
     WHERE user.userID = :userID)";
 
     $UserBookmarkStmt = $connection->prepare($UserBookmarkSQL); 
-    $UserBookmarkStmt->bindParam(':userID', $userID, PDO::PARAM_STR);
+    $UserBookmarkStmt->bindParam(':userID', $_SESSION['userID'], PDO::PARAM_STR);
     $UserBookmarkStmt->execute();
 
     $UserBookmarkResult = $UserBookmarkStmt->fetchAll();
@@ -57,7 +53,7 @@ try {
     WHERE whatsdinner.inpantry.userID = :userID";
 
     $UserPantryStmt = $connection->prepare($UserPantrySQL); 
-    $UserPantryStmt->bindParam(':userID', $userID, PDO::PARAM_STR);
+    $UserPantryStmt->bindParam(':userID', $_SESSION['userID'], PDO::PARAM_STR);
     $UserPantryStmt->execute();
 
     $UserPantryResult = $UserPantryStmt->fetchAll();
@@ -76,7 +72,7 @@ if (isset($_GET['recipeID'])) {
 
       $DelBookmarkStmt = $connection->prepare($DelBookmarkSQL);
       $DelBookmarkStmt->bindParam(':recipeID', $recipeID, PDO::PARAM_STR);
-      $DelBookmarkStmt->bindParam(':userID', $userID, PDO::PARAM_STR);
+      $DelBookmarkStmt->bindParam(':userID', $_SESSION['userID'], PDO::PARAM_STR);
       $DelBookmarkStmt->execute();
 
       // refresh page after deleted
@@ -95,7 +91,7 @@ if (isset($_GET['rawID'])) {
 
       $DelPantryStmt = $connection->prepare($DelPantrySQL);
       $DelPantryStmt->bindParam(':rawID', $rawID, PDO::PARAM_STR);
-      $DelPantryStmt->bindParam(':userID', $userID, PDO::PARAM_STR);
+      $DelPantryStmt->bindParam(':userID', $_SESSION['userID'], PDO::PARAM_STR);
       $DelPantryStmt->execute();
 
       // refresh page after deleted
@@ -156,7 +152,7 @@ if (isset($_POST['submitAddToPantry'])) {
     VALUES (:userID, :rawID)";
 
     $AddPantryStmt = $connection->prepare($AddPantrySQL); 
-    $AddPantryStmt->bindParam(':userID', $userID, PDO::PARAM_STR);
+    $AddPantryStmt->bindParam(':userID', $_SESSION['userID'], PDO::PARAM_STR);
     $AddPantryStmt->bindParam(':rawID', $rawID, PDO::PARAM_STR);
     $AddPantryStmt->execute();
 

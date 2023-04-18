@@ -103,11 +103,12 @@ if (isset($_POST['BookmarkSubmit'])) {
     </tbody>
   </table>
 
-<?php if ($_SESSION['loggedin'] = TRUE) { ?>
+<?php if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == TRUE) { ?>
         <form method = "post">
         <input type="submit" name="BookmarkSubmit" value="Bookmark">
         </form>
 <?php } ?>
+
 
 <style>
 a:link, a:visited {

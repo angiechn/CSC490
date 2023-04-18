@@ -20,11 +20,29 @@ a:hover, a:active {
 </style>
 
 <?php // fetch rawnames for dynamic search
-$RawSQL = "SELECT DISTINCT rawName, rawID FROM whatsdinner.raw ORDER BY rawName";
+$RawSQL = "SELECT DISTINCT rawName FROM whatsdinner.raw ORDER BY rawName";
 $RawStmt = $connection->prepare($RawSQL); 
 $RawStmt->execute();
 $RawResult = $RawStmt->fetchAll();
 ?>
+
+<?php // fetch pantry if user logged in
+if ($_SESSION['loggedin'] == TRUE) { 
+  try {
+    $UserPantrySQL = "SELECT raw.rawName
+    FROM whatsdinner.raw
+    LEFT JOIN whatsdinner.inpantry ON whatsdinner.raw.rawID = whatsdinner.inpantry.rawID
+    WHERE whatsdinner.inpantry.userID = :userID";
+
+    $UserPantryStmt = $connection->prepare($UserPantrySQL); 
+    $UserPantryStmt->bindParam(':userID', $_SESSION['userID'], PDO::PARAM_STR);
+    $UserPantryStmt->execute();
+
+    $UserPantryResult = $UserPantryStmt->fetchAll();
+  } catch (PDOException $error) {
+      echo $UserPantrySQL . "<br>" . $error->getMessage();
+  }
+} ?>
 
 <?php // take user input from submit bar
 if (isset($_POST['submitMulti'])) {
@@ -111,21 +129,22 @@ if (isset($_POST['yesPantry']) && $_SESSION['usePantry'] == "FALSE") {
 <form method = "post">
   <?php if ($_SESSION['usePantry'] == "FALSE") { ?>
     <input type = "submit" name = "yesPantry" value = "Use Pantry"> 
-    <?php echo $_SESSION['usePantry']; ?>
   <?php } else if ($_SESSION['usePantry'] == "TRUE") { ?>
     <input type = "submit" name = "noPantry" value = "Don't Use Pantry">
-    <?php echo $_SESSION['usePantry']; ?>
   <?php } ?>
 </form>
 
-
 <!-- user input for multisearch -->
 <form method ="post">
-  <select name = "rawName[]" multiple id = "rawName[]" size = 8 required> 
+  <select name = "rawName[]" id = "rawName[]" size = 8 multiple required> 
       <option style = "display:none">Choose an ingredient.</option>
-        <?php foreach($RawResult as $option):?>
-          <option value= "<?php echo $option['rawName'];?>" required><?php echo $option['rawName'];?>
-        <?php endforeach; ?>
+        <?php foreach($RawResult as $option):
+                if((in_array($option, $UserPantryResult)) == TRUE && $_SESSION['usePantry'] == "TRUE") { ?>
+                  <option value = "<?php echo $option['rawName'];?>" required selected><?php echo $option['rawName'];?></option>
+                <?php } else { ?>
+                  <option value = "<?php echo $option['rawName'];?>" required><?php echo $option['rawName'];?></option>
+                <?php } 
+        endforeach; ?>
   </select>
   <input type="submit" name = "submitMulti" value= "Search">
 </form>
