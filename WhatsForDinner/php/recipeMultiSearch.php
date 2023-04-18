@@ -27,7 +27,7 @@ $RawResult = $RawStmt->fetchAll();
 ?>
 
 <?php // fetch pantry if user logged in
-if ($_SESSION['loggedin'] == TRUE) { 
+if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == TRUE) { 
   try {
     $UserPantrySQL = "SELECT raw.rawName
     FROM whatsdinner.raw
@@ -115,10 +115,10 @@ if (isset($_POST['submitMulti'])) {
 } ?>
 
 <?php // toggle pantry
-if (isset($_POST['yesPantry']) && $_SESSION['usePantry'] == "FALSE") {
+if (isset($_SESSION['loggedin']) && isset($_POST['yesPantry']) && $_SESSION['usePantry'] == "FALSE") {
   $_SESSION['usePantry'] = "TRUE";
   header('Location: recipeMultiSearch.php');
-} else if (isset($_POST['noPantry']) && $_SESSION['usePantry'] == "TRUE") {
+} else if (isset($_SESSION['loggedin']) && isset($_POST['noPantry']) && $_SESSION['usePantry'] == "TRUE") {
   $_SESSION['usePantry'] = "FALSE";
   header('Location: recipeMultiSearch.php');
 }
@@ -127,9 +127,9 @@ if (isset($_POST['yesPantry']) && $_SESSION['usePantry'] == "FALSE") {
 <h2>Search Recipe</h2>
 <!-- pantry toggle -->
 <form method = "post">
-  <?php if ($_SESSION['usePantry'] == "FALSE") { ?>
+  <?php if (isset($_SESSION['loggedin']) && $_SESSION['usePantry'] == "FALSE") { ?>
     <input type = "submit" name = "yesPantry" value = "Use Pantry"> 
-  <?php } else if ($_SESSION['usePantry'] == "TRUE") { ?>
+  <?php } else if (isset($_SESSION['loggedin']) && $_SESSION['usePantry'] == "TRUE") { ?>
     <input type = "submit" name = "noPantry" value = "Don't Use Pantry">
   <?php } ?>
 </form>
@@ -139,7 +139,7 @@ if (isset($_POST['yesPantry']) && $_SESSION['usePantry'] == "FALSE") {
   <select name = "rawName[]" id = "rawName[]" size = 8 multiple required> 
       <option style = "display:none">Choose an ingredient.</option>
         <?php foreach($RawResult as $option):
-                if((in_array($option, $UserPantryResult)) == TRUE && $_SESSION['usePantry'] == "TRUE") { ?>
+                if((isset($_SESSION['loggedin']) && in_array($option, $UserPantryResult)) == TRUE && $_SESSION['usePantry'] == "TRUE") { ?>
                   <option value = "<?php echo $option['rawName'];?>" required selected><?php echo $option['rawName'];?></option>
                 <?php } else { ?>
                   <option value = "<?php echo $option['rawName'];?>" required><?php echo $option['rawName'];?></option>
