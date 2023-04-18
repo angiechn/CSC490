@@ -59,10 +59,8 @@ if (isset($_POST['submitMulti'])) {
       LEFT JOIN whatsdinner.ingredientraw ON whatsdinner.ingredientraw.recID = whatsdinner.ingredient.recipeID
       LEFT JOIN whatsdinner.raw ON whatsdinner.raw.rawID = whatsdinner.ingredientraw.rawID
       WHERE rawName IN (%s)
-      GROUP BY whatsdinner.recipe.recipeID
-      HAVING count(DISTINCT whatsdinner.raw.rawID) = %s)",
-      "'" . implode("', '", $raws) . "'",
-      count($raws)
+      GROUP BY whatsdinner.recipe.recipeID)",
+      "'" . implode("', '", $raws) . "'"
     );
     $MultiSearchStmt = $connection->prepare($MultiSearchSQL); 
     $MultiSearchStmt->execute();
@@ -83,7 +81,7 @@ if (isset($_POST['submitMulti'])) {
                   // fetch unmatching ingredients for recipe
                   $recipeID = $row["recipeID"];
 
-                  $IngDisplaySQL = sprintf("SELECT *
+                  $OtherIngDisplaySQL = sprintf("SELECT *
                     FROM whatsdinner.ingredientRaw 
                     LEFT JOIN whatsdinner.ingredient 
                     ON whatsdinner.ingredient.recipeID = whatsdinner.ingredientRaw.recID 
@@ -92,17 +90,37 @@ if (isset($_POST['submitMulti'])) {
                     WHERE recID = :recipeID AND rawName NOT IN (%s)",
                     "'" . implode("', '", $raws) . "'");
 
-                  $IngDisplayStmt = $connection->prepare($IngDisplaySQL); 
-                  $IngDisplayStmt->bindParam(':recipeID', $recipeID, PDO::PARAM_STR);
-                  $IngDisplayStmt->execute();
+                  $OtherIngDisplayStmt = $connection->prepare($OtherIngDisplaySQL); 
+                  $OtherIngDisplayStmt->bindParam(':recipeID', $recipeID, PDO::PARAM_STR);
+                  $OtherIngDisplayStmt->execute();
 
-                  $IngResult = $IngDisplayStmt->fetchAll();
+                  $OtherIngResult = $OtherIngDisplayStmt->fetchAll();
                 } catch (PDOException $error) {
-                  echo $IngDisplaySQL . "<br>" . $error->getMessage();
-                } ?>
+                  echo $OtherIngDisplaySQL . "<br>" . $error->getMessage();
+                } 
+
+                try { 
+                  $MatchIngDisplaySQL = sprintf("SELECT *
+                    FROM whatsdinner.ingredientRaw 
+                    LEFT JOIN whatsdinner.ingredient 
+                    ON whatsdinner.ingredient.recipeID = whatsdinner.ingredientRaw.recID 
+                    AND whatsdinner.ingredient.ingredientID = whatsdinner.ingredientRaw.ingID 
+                    LEFT JOIN whatsdinner.raw ON whatsdinner.raw.rawID = whatsdinner.ingredientraw.rawID 
+                    WHERE recID = :recipeID AND rawName IN (%s)",
+                    "'" . implode("', '", $raws) . "'");
+
+                  $MatchIngDisplayStmt = $connection->prepare($MatchIngDisplaySQL); 
+                  $MatchIngDisplayStmt->bindParam(':recipeID', $recipeID, PDO::PARAM_STR);
+                  $MatchIngDisplayStmt->execute();
+
+                  $MatchIngResult = $MatchIngDisplayStmt->fetchAll();
+                } catch (PDOException $error) {
+                  echo $MatchIngDisplaySQL . "<br>" . $error->getMessage();
+                } 
+                ?>
               <tr><td><a href="recipeDisplay.php?recipeID=<?php echo escape($row["recipeID"]);?>"><strong><?php echo escape($row["recipeName"]); ?></strong></td></tr>
-              <tr><td> Matched: <em> <?php $rawsString = implode(", ", $raws); echo($rawsString);?></em></tr></td>
-              <tr><td> Other: <em><?php foreach ($IngResult as $tuple) { echo escape($tuple["rawName"]) . ", "; } ?></em></td></tr>
+              <tr><td> Matched: <em><?php foreach ($MatchIngResult as $tuple) { echo escape($tuple["rawName"]) . ", "; } ?></em></td></tr>
+              <tr><td> Other: <em><?php foreach ($OtherIngResult as $tuple) { echo escape($tuple["rawName"]) . ", "; } ?></em></td></tr>
         <?php } ?>
       </tbody>
     </table>
