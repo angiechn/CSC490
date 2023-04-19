@@ -17,6 +17,7 @@
 				<input type="password" name="password" placeholder="Password" id="password" required>
 				<input type="submit" value="Login">
                 <footer>Not registered yet? <a href="register.php">Register here</a></footer>
+                <footer>Forgot password? <a href="reset.php">Reset password</a></footer>
 			</form>
 		</div>
 	</body>
@@ -30,7 +31,7 @@ require "../connection.php";
 
 //Check login data in the form
 if ( !isset($_POST['username'], $_POST['password']) ) {
-	exit('Please fill both the username and password fields!');
+	exit('');
 }
 
 if ($stmt = $connection->prepare('SELECT userID, password FROM whatsdinner.user WHERE username = :username')) {
