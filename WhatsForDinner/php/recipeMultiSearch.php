@@ -50,16 +50,17 @@ if (isset($_POST['submitMulti'])) {
     $raws = $_POST['rawName'];
     // query to fetch recipe name from raw names
     $MultiSearchSQL = sprintf(
-      "SELECT *
+      "SELECT DISTINCT recipe.recipeID, recipe.recipeName, COUNT(rawName)
       FROM whatsdinner.recipe
-      WHERE whatsdinner.recipe.recipeID IN 
-      (SELECT DISTINCT whatsdinner.recipe.recipeID
-      FROM whatsdinner.recipe 
-      LEFT JOIN whatsdinner.ingredient ON whatsdinner.recipe.recipeID = whatsdinner.ingredient.recipeID
-      LEFT JOIN whatsdinner.ingredientraw ON whatsdinner.ingredientraw.recID = whatsdinner.ingredient.recipeID
-      LEFT JOIN whatsdinner.raw ON whatsdinner.raw.rawID = whatsdinner.ingredientraw.rawID
+      LEFT JOIN whatsdinner.ingredientRaw
+      ON whatsdinner.ingredientRaw.recID = whatsdinner.recipe.recipeID
+      LEFT JOIN whatsdinner.ingredient 
+      ON whatsdinner.ingredient.recipeID = whatsdinner.ingredientRaw.recID 
+      AND whatsdinner.ingredient.ingredientID = whatsdinner.ingredientRaw.ingID 
+      LEFT JOIN whatsdinner.raw ON whatsdinner.raw.rawID = whatsdinner.ingredientraw.rawID 
       WHERE rawName IN (%s)
-      GROUP BY whatsdinner.recipe.recipeID)",
+      GROUP BY ingredientRaw.recID
+      ORDER BY COUNT(rawName) DESC",
       "'" . implode("', '", $raws) . "'"
     );
     $MultiSearchStmt = $connection->prepare($MultiSearchSQL); 
@@ -118,9 +119,9 @@ if (isset($_POST['submitMulti'])) {
                   echo $MatchIngDisplaySQL . "<br>" . $error->getMessage();
                 } 
                 ?>
-              <tr><td><a href="recipeDisplay.php?recipeID=<?php echo escape($row["recipeID"]);?>"><strong><?php echo escape($row["recipeName"]); ?></strong></td></tr>
-              <tr><td> Matched: <em><?php foreach ($MatchIngResult as $tuple) { echo escape($tuple["rawName"]) . ", "; } ?></em></td></tr>
-              <tr><td> Other: <em><?php foreach ($OtherIngResult as $tuple) { echo escape($tuple["rawName"]) . ", "; } ?></em></td></tr>
+              <tr><td><a href="recipeDisplay.php?recipeID=<?php echo escape($row["recipeID"]);?>"><strong><?php echo escape($row["recipeName"]);?></strong></td></tr>
+              <tr><td> Matched: <?php foreach ($MatchIngResult as $tuple) { echo escape($tuple["rawName"]) . ", "; } ?></td></tr>
+              <tr><td> Other: <?php foreach ($OtherIngResult as $tuple) { echo escape($tuple["rawName"]) . ", "; } ?></td></tr>
         <?php } ?>
       </tbody>
     </table>
