@@ -32,28 +32,18 @@
 	<![endif]-->
 </head>
 
-<!--Start PHP-->
-<?php
-/**
- * Function to query recipes based on user input
- * User inputs rawname
- */
+<?php require "connection.php"; 
+require "common.php"; ?>
 
-// required
-require "connection.php";
-require "common.php";
+<?php // fetch rawnames for dynamic search
+$RawSQL = "SELECT DISTINCT rawName FROM whatsdinner.raw ORDER BY rawName";
+$RawStmt = $connection->prepare($RawSQL); 
+$RawStmt->execute();
+$RawResult = $RawStmt->fetchAll(); ?>
 
-// query to fetch rawnames for dropdown or dynamic search
-$sql2 = "SELECT DISTINCT rawName FROM whatsdinner.raw";
-$statement2 = $connection->prepare($sql2);
-$statement2->execute();
-$result2 = $statement2->fetchAll();
-?>
-
-<?php
+<?php // matchcase or multisearch submits
 if (isset($_POST['submitMatchCase'])) {
-	try {
-		// query to fetch recipe name from rec name
+	try { // query to fetch recipe name from rec name
 		$sql = "SELECT *
         FROM whatsdinner.recipe
         WHERE whatsdinner.recipe.recipeName LIKE :recName";
@@ -66,38 +56,31 @@ if (isset($_POST['submitMatchCase'])) {
 	} catch (PDOException $error) {
 		echo $sql . "<br>" . $error->getMessage();
 	}
-} else
-?>
-
-<!--take user input from submit bar-->
-<?php
-if (isset($_POST['submitMulti'])) {
-	try {
-		$raws = $_POST['rawName'];
-		// query to fetch recipe name from raw names
-		$sql = sprintf("SELECT *
-            FROM whatsdinner.recipe
-            WHERE whatsdinner.recipe.recipeID IN 
-                (SELECT DISTINCT whatsdinner.recipe.recipeID
-                FROM whatsdinner.recipe 
-                LEFT JOIN whatsdinner.ingredient ON whatsdinner.recipe.recipeID = whatsdinner.ingredient.recipeID
-                LEFT JOIN whatsdinner.ingredientraw ON whatsdinner.ingredientraw.recID = whatsdinner.ingredient.recipeID
-                LEFT JOIN whatsdinner.raw ON whatsdinner.raw.rawID = whatsdinner.ingredientraw.rawID
-                WHERE rawName IN (%s)
-                GROUP BY whatsdinner.recipe.recipeID
-                HAVING count(DISTINCT whatsdinner.raw.rawID) = %s)",
-			"'" . implode("', '", $raws) . "'",
-			count($raws)
-		);
-		$statement = $connection->prepare($sql);
-		$statement->execute();
-		$result = $statement->fetchAll();
-	} catch (PDOException $error) {
-		echo $sql . "<br>" . $error->getMessage();
-	}
-}
-?>
-<!--End PHP-->
+} else if (isset($_POST['submitMulti'])) {
+  try {
+    $raws = $_POST['rawName'];
+    // query to fetch recipe name from raw names
+    $MultiSearchSQL = sprintf(
+      "SELECT DISTINCT recipe.recipeID, recipe.recipeName, COUNT(rawName)
+      FROM whatsdinner.recipe
+      LEFT JOIN whatsdinner.ingredientRaw
+      ON whatsdinner.ingredientRaw.recID = whatsdinner.recipe.recipeID
+      LEFT JOIN whatsdinner.ingredient 
+      ON whatsdinner.ingredient.recipeID = whatsdinner.ingredientRaw.recID 
+      AND whatsdinner.ingredient.ingredientID = whatsdinner.ingredientRaw.ingID 
+      LEFT JOIN whatsdinner.raw ON whatsdinner.raw.rawID = whatsdinner.ingredientraw.rawID 
+      WHERE rawName IN (%s)
+      GROUP BY ingredientRaw.recID
+      ORDER BY COUNT(rawName) DESC",
+      "'" . implode("', '", $raws) . "'"
+    );
+    $MultiSearchStmt = $connection->prepare($MultiSearchSQL); 
+    $MultiSearchStmt->execute();
+    $MultiSearchResult = $MultiSearchStmt->fetchAll();
+  } catch (PDOException $error) {
+    echo $MultiSearchSQL . "<br>" . $error->getMessage();
+  }
+} ?>
 
 
 <body>
@@ -153,78 +136,106 @@ if (isset($_POST['submitMulti'])) {
 	<!-- End header -->
 
 
-	<!-- Start Search -->
+	<!-- Start Multi Search -->
 	<div class="section-box">
 		<div class="container">
 			<div class="row">
 				<div class="col-lg-12">
 					<div class="blog-search-form">
-						<form method="post">
-							<select name="rawName[]" multiple id="rawName[]" size=8 required>
-								<option style="display:none">Choose an ingredient.</option>
-								<?php foreach ($result2 as $option): ?>
-									<option value="<?php echo $option['rawName']; ?>" required><?php echo $option['rawName']; ?>
-									<?php endforeach; ?>
+						<form method ="post">
+							<select name = "rawName[]" id = "rawName[]" size = 8 multiple required> 
+								<?php foreach($RawResult as $option):
+										if((isset($_SESSION['loggedin']) && in_array($option, $UserPantryResult)) == TRUE && $_SESSION['usePantry'] == "TRUE") { ?>
+										<option value = "<?php echo $option['rawName'];?>" required selected><?php echo $option['rawName'];?></option>
+										<?php } else { ?>
+										<option value = "<?php echo $option['rawName'];?>" required><?php echo $option['rawName'];?></option>
+										<?php } 
+								endforeach; ?>
 							</select>
-							<p></p>
 							<!-- <a class="btn btn-lg btn-circle btn-outline-new-white" name="submitMulti" type="submit" value="Search">Search</a> -->
-							</a>
-							<input class="btn btn-lg btn-circle btn-outline-new-white" name="submitMulti" type="submit"
-								value="Search">
+							<input class="btn btn-lg btn-circle btn-outline-new-white" name="submitMulti" type="submit" value="Search"></a>
 						</form>
-						<p></p>
-						<div class="text-sm-center">
-							<p>selected ingredients to be shown as tags, click to remove</p>
-						</div>
+						<div class="text-sm-center"> <p>Hold "Ctrl" and click to select multiple ingredients.</p> </div>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
-	<!-- End Search -->
+	<!-- End Multi Search -->
 
 	<!--Start Results-->
 	<div class="result-container">
 		<div class="container">
-			<?php
-			// output results for match case
+			<?php // output results for match case
 			if (isset($_POST['submitMatchCase'])) {
 				if ($result && $statement->rowCount() > 0) { ?>
 					<div class="row">
 						<?php foreach ($result as $row) { ?>
 							<div class="col-lg-11">
 								<img src="../images/placeholder.png" class="result-image" alt="Image">
-								<h1><a href="demo-recipe.php?recipeID=<?php echo escape($row["recipeID"]); ?>">
-										<?php echo escape($row["recipeName"]); ?></a></h1>
-								<p class="em">matched ingredients</p>
-								<p>other ingredients</p>
-								<p></p>
+								<h1><a href="demo-recipe.php?recipeID=<?php echo escape($row["recipeID"]); ?>"> <?php echo escape($row["recipeName"]); ?></a></h1>
 							</div>
 						<?php } ?>
 					</div>
-				<?php } else { ?>
-					<p> No results found.</p>
-				<?php }
-			} else
-				// output results for multi search
-				if (isset($_POST['submitMulti'])) {
-					if ($result && $statement->rowCount() > 0) { ?>
-						<div class="row">
-							<?php foreach ($result as $row) { ?>
+				<?php } else { ?> <p> No results found.</p> <?php }
+			} else if (isset($_POST['submitMulti'])) {
+			  	if ($MultiSearchResult && $MultiSearchStmt->rowCount() > 0) { ?>
+					<div class = "row">
+						<?php foreach ($MultiSearchResult as $row) { 
+								try { // fetch unmatching ingredients for recipe
+								$recipeID = $row["recipeID"];
+				
+								$OtherIngDisplaySQL = sprintf("SELECT *
+									FROM whatsdinner.ingredientRaw 
+									LEFT JOIN whatsdinner.ingredient 
+									ON whatsdinner.ingredient.recipeID = whatsdinner.ingredientRaw.recID 
+									AND whatsdinner.ingredient.ingredientID = whatsdinner.ingredientRaw.ingID 
+									LEFT JOIN whatsdinner.raw ON whatsdinner.raw.rawID = whatsdinner.ingredientraw.rawID 
+									WHERE recID = :recipeID AND rawName NOT IN (%s)",
+									"'" . implode("', '", $raws) . "'");
+				
+								$OtherIngDisplayStmt = $connection->prepare($OtherIngDisplaySQL); 
+								$OtherIngDisplayStmt->bindParam(':recipeID', $recipeID, PDO::PARAM_STR);
+								$OtherIngDisplayStmt->execute();
+				
+								$OtherIngResult = $OtherIngDisplayStmt->fetchAll();
+								} catch (PDOException $error) {
+								echo $OtherIngDisplaySQL . "<br>" . $error->getMessage();
+								} 
+				
+								try { 
+								$MatchIngDisplaySQL = sprintf("SELECT *
+									FROM whatsdinner.ingredientRaw 
+									LEFT JOIN whatsdinner.ingredient 
+									ON whatsdinner.ingredient.recipeID = whatsdinner.ingredientRaw.recID 
+									AND whatsdinner.ingredient.ingredientID = whatsdinner.ingredientRaw.ingID 
+									LEFT JOIN whatsdinner.raw ON whatsdinner.raw.rawID = whatsdinner.ingredientraw.rawID 
+									WHERE recID = :recipeID AND rawName IN (%s)",
+									"'" . implode("', '", $raws) . "'");
+				
+								$MatchIngDisplayStmt = $connection->prepare($MatchIngDisplaySQL); 
+								$MatchIngDisplayStmt->bindParam(':recipeID', $recipeID, PDO::PARAM_STR);
+								$MatchIngDisplayStmt->execute();
+				
+								$MatchIngResult = $MatchIngDisplayStmt->fetchAll();
+								} catch (PDOException $error) {
+								echo $MatchIngDisplaySQL . "<br>" . $error->getMessage();
+								} ?>
+
 								<div class="col-lg-11">
 									<img src="../images/placeholder.png" class="result-image" alt="Image">
-									<h1><a href="demo-recipe.php?recipeID=<?php echo escape($row["recipeID"]); ?>">
-											<?php echo escape($row["recipeName"]); ?></a></h1>
-									<p class="em">matched ingredients</p>
-									<p>other ingredients</p>
+									<h1><a href="demo-recipe.php?recipeID=<?php echo escape($row["recipeID"]); ?>"> <?php echo escape($row["recipeName"]); ?></a></h1>
+									<p class="em"> <?php foreach ($MatchIngResult as $tuple) { echo escape($tuple["rawName"]) . ", "; } ?> </p>
+									<p> <?php foreach ($OtherIngResult as $tuple) { echo escape($tuple["rawName"]) . ", "; } ?> </p>
 								</div>
-							<?php } ?>
-						</div>
-					<?php } else { ?>
-						<p> No results found.</p>
-					<?php }
+						<?php } ?>
+			  	<?php } else { ?>
+					> No results found for 
+					<?php 
+					$rawsString = implode("', '", $raws);
+					echo($rawsString); 
 				}
-			?>
+			} ?>
 		</div>
 	</div>
 	<!--End Results-->
