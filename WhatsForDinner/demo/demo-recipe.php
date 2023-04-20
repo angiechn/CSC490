@@ -136,7 +136,7 @@ if (isset($_GET['recipeID'])) {
 		<div class="container">
 			<div class="row">
 				<div class="col-lg-6 col-md-6">
-					<img src="../images/Placeholder.png" alt="" class="img-fluid">
+					<img src="../images/<?php echo escape($row["recipeID"]); ?>.jpg" alt="" class="img-fluid">
 				</div>
 				<div class="col-lg-6 col-md-6 text-center">
 					<div class="inner-column">
