@@ -2,12 +2,7 @@
 session_start();
 require "connection.php";?>
 
-<?php //Check login data in the form
-if ( !isset($_POST['username'], $_POST['password']) ) {
-	exit('');
-}
-
-if ($stmt = $connection->prepare('SELECT userID, password FROM whatsdinner.user WHERE username = :username')) {
+<?php if ($stmt = $connection->prepare('SELECT userID, password FROM whatsdinner.user WHERE username = :username')) {
     
     $stmt->bindParam(':username', $_POST['username']);
     $stmt->execute();
@@ -163,3 +158,8 @@ if ($stmt = $connection->prepare('SELECT userID, password FROM whatsdinner.user 
 
 </body>
 </html>
+
+<?//Check login data in the form
+if ( !isset($_POST['username'], $_POST['password']) ) {
+	exit('');
+}?>
