@@ -158,7 +158,7 @@ if (isset($_POST['submitMulti'])) {
 						<div class="row">
 								<?php foreach ($result as $row) { ?>
 									<div class="col-lg-11">
-										<img src="../images/placeholder.png" class="result-image" alt="Image">
+									<img src="../images/<?php echo escape($row["recipeID"]); ?>.jpg" class="result-image" alt="Image">
 										<h1><a href="demo-recipe.php?recipeID=<?php echo escape($row["recipeID"]);?>">
 										<?php echo escape($row["recipeName"]); ?></a></h1>
 										<p>Ingredients • Listed • Here</p> 
