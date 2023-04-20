@@ -211,7 +211,7 @@ if (isset($_SESSION['loggedin']) && isset($_POST['yesPantry']) && $_SESSION['use
 					<div class="row">
 						<?php foreach ($result as $row) { ?>
 							<div class="col-lg-11">
-								<img src="../images/placeholder.png" class="result-image" alt="Image">
+								<img src="../images/<?php echo escape($row["recipeID"]); ?>.jpg" class="result-image" alt="Image">
 								<h1><a href="demo-recipe.php?recipeID=<?php echo escape($row["recipeID"]); ?>"> <?php echo escape($row["recipeName"]); ?></a></h1>
 							</div>
 						<?php } ?>
@@ -262,7 +262,7 @@ if (isset($_SESSION['loggedin']) && isset($_POST['yesPantry']) && $_SESSION['use
 								} ?>
 
 								<div class="col-lg-11">
-									<img src="../images/placeholder.png" class="result-image" alt="Image">
+									<img src="../images/<?php echo escape($row["recipeID"]); ?>.jpg" class="result-image" alt="Image">
 									<h1><a href="demo-recipe.php?recipeID=<?php echo escape($row["recipeID"]); ?>"> <?php echo escape($row["recipeName"]); ?></a></h1>
 									<p class="em"> <?php foreach ($MatchIngResult as $tuple) { echo escape($tuple["rawName"]) . ", "; } ?> </p>
 									<p> <?php foreach ($OtherIngResult as $tuple) { echo escape($tuple["rawName"]) . ", "; } ?> </p>
