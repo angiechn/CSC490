@@ -1,5 +1,44 @@
 <?php //Start a session
-session_start();?>
+session_start();
+require "connection.php";?>
+
+<?php //Check login data in the form
+if ( !isset($_POST['username'], $_POST['password']) ) {
+	exit('');
+}
+
+if ($stmt = $connection->prepare('SELECT userID, password FROM whatsdinner.user WHERE username = :username')) {
+    
+    $stmt->bindParam(':username', $_POST['username']);
+    $stmt->execute();
+    
+    //Check if account exists
+    if ($stmt->rowCount() > 0) {
+        
+        $stmt->bindColumn('userID', $userID);
+        $stmt->bindColumn('password', $password);
+        $stmt->fetch();
+
+        //If account exists, verify password
+        if (password_verify($_POST['password'], $password) == TRUE) {
+
+            //Verification success
+            session_regenerate_id();
+
+            $_SESSION['loggedin'] = TRUE;
+            $_SESSION['username'] = $_POST['username'];
+            $_SESSION['userID'] = $userID;
+            $_SESSION['usePantry'] = "FALSE";
+            header('Location: demo-account.php');
+        } else {
+            echo 'Incorrect username and/or password!';
+        }
+    } else {
+        echo 'Incorrect username and/or password!';
+    }
+    unset($stmt);
+}
+?>
 
 <!DOCTYPE html>
 <html lang="en"><!-- Basic -->
@@ -88,14 +127,15 @@ session_start();?>
                 <div class="col-lg-4 col-md-6 col-12">
                     <div class="blog-box-inner">
                             <h1 class="text-center">Login</h1>
-                            <div class="blog-search-form">
+                            <form action = "demo-login.php" method = "post" class = "blog-search-form">
                                 <input name="username" placeholder="Username" id="username" type="text" required>
                                 <p></p>
                                 <input name="password" placeholder="Password" id="password" type="password" required>
-                            </div>
-                            <div class="text-center">
+                                </div>
+                                <div class="text-center">
                                 <p></p>
-                            <a class="btn btn-lg btn-circle btn-outline-new-white" value="Login" type="input">Login</a>
+                                <input class="btn btn-lg btn-circle btn-outline-new-white" type="submit" value="Login">
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -122,46 +162,4 @@ session_start();?>
     <script src="../js/custom.js"></script>
 
 </body>
-
-<?php 
-require "connection.php";
-
-//Check login data in the form
-if ( !isset($_POST['username'], $_POST['password']) ) {
-	exit('');
-}
-
-if ($stmt = $connection->prepare('SELECT userID, password FROM whatsdinner.user WHERE username = :username')) {
-    
-    $stmt->bindParam(':username', $_POST['username']);
-    $stmt->execute();
-    
-    //Check if account exists
-    if ($stmt->rowCount() > 0) {
-        
-        $stmt->bindColumn('userID', $userID);
-        $stmt->bindColumn('password', $password);
-        $stmt->fetch();
-
-        //If account exists, verify password
-        if (password_verify($_POST['password'], $password) == TRUE) {
-
-            //Verification success
-            session_regenerate_id();
-
-            $_SESSION['loggedin'] = TRUE;
-            $_SESSION['username'] = $_POST['username'];
-            $_SESSION['userID'] = $userID;
-            $_SESSION['usePantry'] = "FALSE";
-            header('Location: demo-account.php');
-        } else {
-            echo 'Incorrect username and/or password!';
-        }
-    } else {
-        echo 'Incorrect username and/or password!';
-    }
-    unset($stmt);
-}
-?>
-
 </html>
