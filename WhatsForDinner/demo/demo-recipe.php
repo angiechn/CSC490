@@ -1,3 +1,7 @@
+<?php require "connection.php"; 
+require "common.php"; 
+session_start();?>
+
 <!DOCTYPE html>
 <html lang="en"><!-- Basic -->
 
@@ -40,21 +44,17 @@
  * recipeID is sent from recipe.php
  */
 
-// required 
-require "connection.php";
-require "common.php";
-
 // take recipeID
 if (isset($_GET['recipeID'])) {
   // queries to fetch recipe and ingredient information from recipeID 
   try {
     $recipeID = $_GET['recipeID']; 
 
-    $sql = "SELECT * 
+    $rec1SQL = "SELECT * 
     FROM whatsdinner.recipe 
     WHERE recipeID = :recipeID";
 
-    $sql2 = "SELECT * 
+    $rec2SQL = "SELECT * 
     FROM whatsdinner.ingredientRaw 
     LEFT JOIN whatsdinner.ingredient 
     ON whatsdinner.ingredient.recipeID = whatsdinner.ingredientRaw.recID 
@@ -62,19 +62,52 @@ if (isset($_GET['recipeID'])) {
     LEFT JOIN whatsdinner.raw ON whatsdinner.raw.rawID = whatsdinner.ingredientraw.rawID 
     WHERE recID = :recipeID";
     
-    $statement = $connection->prepare($sql); 
-    $statement->bindParam(':recipeID', $recipeID, PDO::PARAM_STR);
-    $statement->execute();
+    $rec1Stmt = $connection->prepare($rec1SQL); 
+    $rec1Stmt->bindParam(':recipeID', $recipeID, PDO::PARAM_STR);
+    $rec1Stmt->execute();
 
-    $result = $statement->fetchAll();
+    $rec1Result = $rec1Stmt->fetchAll();
     
-    $statement2 = $connection->prepare($sql2); 
-    $statement2->bindParam(':recipeID', $recipeID, PDO::PARAM_STR);
-    $statement2->execute();
+    $rec2Stmt = $connection->prepare($rec2SQL); 
+    $rec2Stmt->bindParam(':recipeID', $recipeID, PDO::PARAM_STR);
+    $rec2Stmt->execute();
 
-    $result2 = $statement2->fetchAll();
+    $rec2Result = $rec2Stmt->fetchAll();
   } catch (PDOException $error) {
-    echo $sql . "<br>" . $error->getMessage();
+    echo $rec1SQL . "<br>" . $error->getMessage();
+    echo $rec2SQL . "<br>" . $error->getMessage();
+  }
+}
+?>
+
+<?php // check if bookmarked 
+if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == TRUE) {
+  $CheckBookmarkSQL = "SELECT 1 FROM whatsdinner.bookmarked 
+  WHERE whatsdinner.bookmarked.userID = :userID AND whatsdinner.bookmarked.recipeID = :recipeID";
+  
+  $CheckBookmarkStmt = $connection->prepare($CheckBookmarkSQL); 
+  $CheckBookmarkStmt->bindParam(':recipeID', $recipeID, PDO::PARAM_STR);
+  $CheckBookmarkStmt->bindParam(':userID', $_SESSION['userID'], PDO::PARAM_STR);
+  $CheckBookmarkStmt->execute();
+  
+  $CheckBookmarkResult = count($rows = $CheckBookmarkStmt->fetchAll());
+}
+?>
+
+<?php // insert into bookmark 
+if (isset($_POST['BookmarkSubmit'])) {
+  try {
+      $AddBookmarkSQL = "INSERT INTO whatsdinner.bookmarked (userID, recipeID) 
+      VALUES (:userID, :recipeID)";
+      
+      $AddBookmarkStmt = $connection->prepare($AddBookmarkSQL); 
+      $AddBookmarkStmt->bindParam(':recipeID', $recipeID, PDO::PARAM_STR);
+      $AddBookmarkStmt->bindParam(':userID', $_SESSION['userID'], PDO::PARAM_STR);
+      $AddBookmarkStmt->execute();
+
+      echo "Bookmark Added";
+  } catch (PDOException $error) {
+    echo $AddBookmarkSQL . "<br>" . $error->getMessage();
   }
 }
 ?>
@@ -122,7 +155,7 @@ if (isset($_GET['recipeID'])) {
 		<div class="container text-center">
 			<div class="row">
 				<div class="col-lg-12">
-					<h1><?php foreach ($result as $row): ?>
+					<h1><?php foreach ($rec1Result as $row): ?>
 						<?php echo escape($row["recipeName"]); ?>
 					<?php endforeach; ?></h1>
 				</div>
@@ -141,7 +174,7 @@ if (isset($_GET['recipeID'])) {
 				<div class="col-lg-6 col-md-6 text-center">
 					<div class="inner-column">
 						<h1>Ingredients</h1>
-						<?php foreach ($result2 as $row): ?>
+						<?php foreach ($rec2Result as $row): ?>
 							<ul>
 								<?php echo escape($row["measurement"]); ?>
 								<?php echo escape($row["unit"]); ?>
@@ -154,7 +187,7 @@ if (isset($_GET['recipeID'])) {
 				<div class="col-md-12">
 					<div class="instructions">
 						<h1>Directions</h1>
-						<?php foreach ($result as $row): ?>
+						<?php foreach ($rec1Result as $row): ?>
 							<p><?php echo escape($row["instructions"]); ?></p>
 							<p><?php echo escape($row["notes"]); ?></p>
 						<?php endforeach; ?>
@@ -167,8 +200,11 @@ if (isset($_GET['recipeID'])) {
 
 	<!-- Start Bookmark -->
 	<div class="container text-center">
-		<input class="btn btn-lg btn-circle btn-outline-new-white" name="submitMulti" type="submit" value="Bookmark">
-		<p>not functional</p>
+		<?php if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == TRUE && $CheckBookmarkResult == 0) { ?>
+				<form method = "post">
+				<input class="btn btn-lg btn-circle btn-outline-new-white" type="submit" name="BookmarkSubmit" value="Bookmark">
+				</form>
+		<?php }?>
 	</div>
 
 	<!-- End Bookmark -->
