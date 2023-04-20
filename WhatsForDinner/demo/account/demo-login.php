@@ -1,6 +1,6 @@
 <?php //Start a session
 session_start();
-require "connection.php";?>
+require "../connection.php";?>
 
 <?php if ($stmt = $connection->prepare('SELECT userID, password FROM whatsdinner.user WHERE username = :username')) {
     
@@ -24,7 +24,7 @@ require "connection.php";?>
             $_SESSION['username'] = $_POST['username'];
             $_SESSION['userID'] = $userID;
             $_SESSION['usePantry'] = "FALSE";
-            header('Location: demo-account.php');
+            header('Location: ../demo-account.php');
         } else {
             echo 'Incorrect username and/or password!';
         }
@@ -52,17 +52,17 @@ require "connection.php";?>
     <meta name="author" content="">
 
     <!-- Site Icons -->
-    <link rel="shortcut icon" href="../images/placeholder.ico" type="image/x-icon">
-    <link rel="apple-touch-icon" href="../images/apple-touch-icon.png">
+    <link rel="shortcut icon" href="../../images/placeholder.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" href="../../images/apple-touch-icon.png">
 
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../css/bootstrap.min.css">
     <!-- Site CSS -->
-    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../../css/style.css">
     <!-- Responsive CSS -->
-    <link rel="stylesheet" href="../css/responsive.css">
+    <link rel="stylesheet" href="../../css/responsive.css">
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="../css/custom.css">
+    <link rel="stylesheet" href="../../css/custom.css">
 
     <!--[if lt IE 9]>
     <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
@@ -76,7 +76,7 @@ require "connection.php";?>
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <div class="container">
                 <a class="navbar-brand" href="demo-home.php">
-                    <img src="../images/logo.png" width=150px alt="What's for Dinner?"/>
+                    <img src="../../images/logo.png" width=150px alt="What's for Dinner?"/>
                 </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbars-rs-food"
                     aria-controls="navbars-rs-food" aria-expanded="false" aria-label="Toggle navigation">
@@ -149,12 +149,12 @@ require "connection.php";?>
     <!-- End Footer -->
 
     <!-- ALL JS FILES -->
-    <script src="../js/jquery-3.2.1.min.js"></script>
-    <script src="../js/popper.min.js"></script>
-    <script src="../js/bootstrap.min.js"></script>
+    <script src="../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../js/popper.min.js"></script>
+    <script src="../../js/bootstrap.min.js"></script>
     <!-- ALL PLUGINS -->
-    <script src="../js/images-loded.min.js"></script>
-    <script src="../js/custom.js"></script>
+    <script src="../../js/images-loded.min.js"></script>
+    <script src="../../js/custom.js"></script>
 
 </body>
 </html>
