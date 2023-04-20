@@ -1,5 +1,8 @@
-<!DOCTYPE html>
+<?php require "connection.php"; 
+require "common.php"; 
+session_start();?>
 
+<!DOCTYPE html>
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -31,15 +34,31 @@
 	  <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
 	<![endif]-->
 </head>
-
-<?php require "connection.php"; 
-require "common.php"; ?>
+</html>
 
 <?php // fetch rawnames for dynamic search
 $RawSQL = "SELECT DISTINCT rawName FROM whatsdinner.raw ORDER BY rawName";
 $RawStmt = $connection->prepare($RawSQL); 
 $RawStmt->execute();
 $RawResult = $RawStmt->fetchAll(); ?>
+
+<?php // fetch pantry if user logged in
+if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == TRUE) { 
+  try {
+    $UserPantrySQL = "SELECT raw.rawName
+    FROM whatsdinner.raw
+    LEFT JOIN whatsdinner.inpantry ON whatsdinner.raw.rawID = whatsdinner.inpantry.rawID
+    WHERE whatsdinner.inpantry.userID = :userID";
+
+    $UserPantryStmt = $connection->prepare($UserPantrySQL); 
+    $UserPantryStmt->bindParam(':userID', $_SESSION['userID'], PDO::PARAM_STR);
+    $UserPantryStmt->execute();
+
+    $UserPantryResult = $UserPantryStmt->fetchAll();
+  } catch (PDOException $error) {
+      echo $UserPantrySQL . "<br>" . $error->getMessage();
+  }
+} ?>
 
 <?php // matchcase or multisearch submits
 if (isset($_POST['submitMatchCase'])) {
@@ -82,6 +101,15 @@ if (isset($_POST['submitMatchCase'])) {
   }
 } ?>
 
+<?php // toggle pantry
+if (isset($_SESSION['loggedin']) && isset($_POST['yesPantry']) && $_SESSION['usePantry'] == "FALSE") {
+  $_SESSION['usePantry'] = "TRUE";
+  header('Location: demo-home.php');
+} else if (isset($_SESSION['loggedin']) && isset($_POST['noPantry']) && $_SESSION['usePantry'] == "TRUE") {
+  $_SESSION['usePantry'] = "FALSE";
+  header('Location: demo-home.php');
+}
+?>
 
 <body>
 	<!-- Start header -->
@@ -141,24 +169,35 @@ if (isset($_POST['submitMatchCase'])) {
 		<div class="container">
 			<div class="row">
 				<div class="col-lg-12">
+					<p></p>
+					<div class="text-sm-left"> <p>To select multiple, hold CTRL while clicking.</p> </div>
 					<div class="blog-search-form">
+						<!-- Submit Multi Search -->
 						<form method ="post">
 							<select name = "rawName[]" id = "rawName[]" size = 8 multiple required> 
 								<?php foreach($RawResult as $option):
-										if((isset($_SESSION['loggedin']) && in_array($option, $UserPantryResult)) == TRUE && $_SESSION['usePantry'] == "TRUE") { ?>
+									if((isset($_SESSION['loggedin']) && in_array($option, $UserPantryResult)) == TRUE && $_SESSION['usePantry'] == "TRUE") { ?>
 										<option value = "<?php echo $option['rawName'];?>" required selected><?php echo $option['rawName'];?></option>
-										<?php } else { ?>
+									<?php } else { ?>
 										<option value = "<?php echo $option['rawName'];?>" required><?php echo $option['rawName'];?></option>
-										<?php } 
+									<?php } 
 								endforeach; ?>
 							</select>
-							<!-- <a class="btn btn-lg btn-circle btn-outline-new-white" name="submitMulti" type="submit" value="Search">Search</a> -->
-							<input class="btn btn-lg btn-circle btn-outline-new-white" name="submitMulti" type="submit" value="Search"></a>
+							<p></p>
+							<input class="btn btn-lg btn-circle btn-outline-new-white" name="submitMulti" type="submit" value="Search">
 						</form>
-						<div class="text-sm-center"> <p>Hold "Ctrl" and click to select multiple ingredients.</p> </div>
+						<p></p>
+						<!-- Toggle Pantry -->
+						<form method = "post"> 
+							<?php if (isset($_SESSION['loggedin']) && $_SESSION['usePantry'] == "FALSE") { ?>
+								<input class = "btn btn-lg btn-circle btn-outline-new-white" type = "submit" name = "yesPantry" value = "Use Pantry"> 
+							<?php } else if (isset($_SESSION['loggedin']) && $_SESSION['usePantry'] == "TRUE") { ?>
+								<input class = "btn btn-lg btn-circle btn-outline-new-white" type = "submit" name = "noPantry" value = "Don't Use Pantry">
+							<?php } ?>
+						</form>
 					</div>
 				</div>
-			</div>
+			</div> 
 		</div>
 	</div>
 	<!-- End Multi Search -->
