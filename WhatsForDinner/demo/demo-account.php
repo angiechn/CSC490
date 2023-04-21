@@ -12,7 +12,7 @@ session_start();
 
 // redirect to login if not logged in
 if (!isset ($_SESSION['loggedin'])) {
-    header('Location: account/demo-login.php');
+    header('Location: ../demo/account/demo-login.php');
 }
 ?>
 
@@ -187,13 +187,7 @@ if (isset($_POST['submitAddToPantry'])) {
 								<a class="dropdown-item" href="demo-desserts.php">Desserts</a>
 							</div>
 						</li>
-						<li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="dropdown-a" data-toggle="dropdown">Account</a>
-                            <div class="dropdown-menu" aria-labelledby="dropdown-a">
-                                <a class="dropdown-item" href="demo-account.php">My Account</a>
-                                <a class="dropdown-item" href="account/demo-logout.php">Logout</a>
-                            </div>
-                        </li>
+						<li class="nav-item"><a class="nav-link" href="demo-account.php">Account</a></li>
 					</ul>
 				</div>
 			</div>
@@ -228,6 +222,7 @@ if (isset($_POST['submitAddToPantry'])) {
                                         <img src="../images/placeholder.png" class="result-image" alt="Image">
                                         <h1><a href="demo-recipe.php?recipeID=<?php echo escape($row["recipeID"]);?>">
                                             <?php echo escape($row["recipeName"]); ?></a></h1>
+										</div>
                                     <?php } ?>
 								</div>
 							</div>
