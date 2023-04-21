@@ -75,7 +75,7 @@ require "../connection.php";?>
     <header class="top-navbar">
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <div class="container">
-                <a class="navbar-brand" href="demo-home.php">
+                <a class="navbar-brand" href="../demo-home.php">
                     <img src="../../images/logo.png" width=150px alt="What's for Dinner?"/>
                 </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbars-rs-food"
@@ -90,14 +90,14 @@ require "../connection.php";?>
                                 <input type="submit" name="submitMatchCase" value="Search">
                             </form>
                         </div>
-                        <li class="nav-item"><a class="nav-link" href="demo-home.php">Home</a></li>
+                        <li class="nav-item"><a class="nav-link" href="../demo-home.php">Home</a></li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="dropdown-a"
                                 data-toggle="dropdown">Categories</a>
                             <div class="dropdown-menu" aria-labelledby="dropdown-a">
-                                <a class="dropdown-item" href="demo-entrees.php">Entrees</a>
-                                <a class="dropdown-item" href="demo-sides.php">Sides</a>
-                                <a class="dropdown-item" href="demo-desserts.php">Desserts</a>
+                                <a class="dropdown-item" href="../demo-entrees.php">Entrees</a>
+                                <a class="dropdown-item" href="../demo-sides.php">Sides</a>
+                                <a class="dropdown-item" href="../demo-desserts.php">Desserts</a>
                             </div>
                         </li>
                         <li class="nav-item"><a class="nav-link" href="demo-account.php">Account</a></li>
@@ -130,7 +130,7 @@ require "../connection.php";?>
                                 <div class="text-center">
                                 <p></p>
                                 <div class="register-link">
-                                Not registered yet? <a href="#">Register here</a>
+                                Not registered yet? <a href="demo-register.php">Register here</a>
                                 </div>
                                 <p></p>
                                 <input class="btn btn-lg btn-circle btn-outline-new-white" type="submit" value="Login">

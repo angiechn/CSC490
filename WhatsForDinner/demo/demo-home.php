@@ -308,5 +308,4 @@ if (isset($_SESSION['loggedin']) && isset($_POST['yesPantry']) && $_SESSION['use
 	<script src="../js/custom.js"></script>
 
 </body>
-
 </html>
