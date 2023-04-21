@@ -35,6 +35,22 @@ require "../connection.php";?>
 }
 ?>
 
+<?php if (isset($_POST['submitMatchCase'])) {
+	try { // query to fetch recipe name from rec name
+		$matchCaseSQL = "SELECT *
+        FROM whatsdinner.recipe
+        WHERE whatsdinner.recipe.recipeName LIKE :recName";
+		$matchCaseStmt= $connection->prepare($matchCaseSQL);
+		$recName = '%' . $_POST['recName'] . '%';
+		$matchCaseStmt->bindParam(':recName', $recName, PDO::PARAM_STR);
+		$matchCaseStmt->execute();
+
+		$matchCaseResult = $matchCaseStmt->fetchAll();
+	} catch (PDOException $error) {
+		echo $matchCaseSQL . "<br>" . $error->getMessage();
+	}
+}?>
+
 <!DOCTYPE html>
 <html lang="en"><!-- Basic -->
 
@@ -100,7 +116,7 @@ require "../connection.php";?>
                                 <a class="dropdown-item" href="../demo-desserts.php">Desserts</a>
                             </div>
                         </li>
-                        <li class="nav-item"><a class="nav-link" href="demo-account.php">Account</a></li>
+                        <li class="nav-item"><a class="nav-link" href="../demo-account.php">Account</a></li>
                     </ul>
                 </div>
             </div>
@@ -145,6 +161,49 @@ require "../connection.php";?>
         </div>
     </div>
     <!--End Login-->
+
+    <!--Start Results-->
+	<div class="result-container">
+		<div class="container">
+				<?php // output results for match case
+					if (isset($_POST['submitMatchCase'])) {
+							if ($matchCaseResult && $matchCaseStmt->rowCount() > 0) { ?>
+								<div class="row">
+									<?php foreach ($matchCaseResult as $row) { 
+										try { // fetch unmatching ingredients for recipe
+										$recipeID = $row["recipeID"];
+						
+										$IngDisplaySQL = "SELECT *
+											FROM whatsdinner.ingredientRaw 
+											LEFT JOIN whatsdinner.ingredient 
+											ON whatsdinner.ingredient.recipeID = whatsdinner.ingredientRaw.recID 
+											AND whatsdinner.ingredient.ingredientID = whatsdinner.ingredientRaw.ingID 
+											LEFT JOIN whatsdinner.raw ON whatsdinner.raw.rawID = whatsdinner.ingredientraw.rawID 
+											WHERE recID = :recipeID";
+						
+										$IngDisplayStmt = $connection->prepare($IngDisplaySQL); 
+										$IngDisplayStmt->bindParam(':recipeID', $recipeID, PDO::PARAM_STR);
+										$IngDisplayStmt->execute();
+						
+										$IngResult = $IngDisplayStmt->fetchAll();
+										} catch (PDOException $error) {
+										echo $IngDisplaySQL . "<br>" . $error->getMessage();
+										} 
+									?>
+										<div class="col-lg-11">
+											<img src="../images/<?php echo escape($row["recipeID"]); ?>.jpg" class="result-image" alt="Image">
+											<h1><a href="demo-recipe.php?recipeID=<?php echo escape($row["recipeID"]); ?>"> <?php echo escape($row["recipeName"]); ?></a></h1>
+											<p> <?php foreach ($IngResult as $tuple) { echo escape($tuple["rawName"]) . ", "; } ?> </p>
+										</div>
+									<?php } ?>
+								</div>
+							<?php } else { ?> <p> No results found.</p> <?php }
+					} else { ?>
+						<p> No results found. </p>
+				<?php } ?>
+		</div>
+	</div>
+	<!--End Results-->
 
     <!-- Start Footer -->
     <footer class="footer-area bg-f">
