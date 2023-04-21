@@ -152,9 +152,9 @@ session_start();?>
     <!--Start Login-->
     <?php if (!isset ($_POST['submitMatchCase'])) { ?>
         <div class="blog-box">
-            <div class="container" position="center">
-                <div class="row">
-                    <div class="col-lg-4 col-md-6 col-12">
+            <div class="container">
+                    <div class="logrow">
+                        <div class="col-lg-12">
                         <div class="blog-box-inner">
                                 <h1 class="text-center">Login</h1>
                                 <form action = "demo-login.php" method = "post" class = "blog-search-form">
@@ -181,11 +181,11 @@ session_start();?>
         </div>
     </div>
     <!--End Login-->
-    <div class="result-container">
-		<div class="container">
-			<div class="row">
 				<?php } else if (isset($_POST['submitMatchCase'])) {
 							if ($matchCaseResult && $matchCaseStmt->rowCount() > 0) { ?>
+                                <div class="result-container">
+		<div class="container">
+
 								<div class="row">
 									<?php foreach ($matchCaseResult as $row) { 
 										try { // fetch unmatching ingredients for recipe

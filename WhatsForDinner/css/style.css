@@ -174,7 +174,7 @@ button:focus {
 .top-navbar .navbar-light .navbar-nav .nav-link {
   color: #010101;
   font-size: 18px;
-  padding: 0px 20px;
+  padding: 0px, 10px 20px;
   border-radius: 4px;
 }
 
@@ -309,7 +309,7 @@ button:focus {
 -------------------------------------------------------------------*/
 
 .section-box {
-  padding: 70px 10px;
+  padding: 70px 50px 10px;
 }
 .about-section-box .img-fluid {
   padding: 20px;
@@ -901,6 +901,8 @@ button:focus {
 .blog-box-inner {
   position: relative;
   margin-bottom: 30px;
+  width: 350px;
+  margin: auto;
 }
 
 .blog-box-inner .blog-img-box {

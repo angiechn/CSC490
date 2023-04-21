@@ -190,7 +190,7 @@ if (isset($_POST['submitAddToPantry'])) {
 						<div class="search">
 							<form method="post">
 								<input type="text" required name="recName" id="recName">
-								<input type="submit" name="submitMatchCase" value="Search">
+								<input type="submit" class="btn btn-circle btn-outline-new-white" name="submitMatchCase" value="Search">
 							</form>
 						</div>
 						<li class="nav-item"><a class="nav-link" href="demo-home.php">Home</a></li>
@@ -251,7 +251,7 @@ if (isset($_POST['submitAddToPantry'])) {
 									<div class="row">
 										<?php foreach ($UserBookmarkResult as $row) { ?>
 											<div class="col-xl-8 col-lg-8 col-12">
-											<img src="../images/placeholder.png" class="result-image" alt="Image">
+											<img src="../images/<?php echo escape($row["recipeID"]); ?>.jpg" class="result-image" alt="Image">
 											<h1><a href="demo-recipe.php?recipeID=<?php echo escape($row["recipeID"]);?>">
 												<?php echo escape($row["recipeName"]); ?></a></h1>
 											</div>
@@ -275,9 +275,9 @@ if (isset($_POST['submitAddToPantry'])) {
 										</optgroup>
 									</select>
 									<p></p>
+											</div>
 									<input class = "btn btn-lg btn-circle btn-outline-new-white" type = "submit" name = "submitAddToPantry" value = "Add">
 								</form>
-							</div>
 							<div class="blog-tag-box">
 								<ul class="list-inline tag-list">
 									<?php if ($UserPantryResult && $UserPantryStmt ->rowCount() > 0) { ?>
@@ -297,11 +297,10 @@ if (isset($_POST['submitAddToPantry'])) {
 		</div>
 	<!-- End details -->
 	<!-- Start Results -->
-	<div class="result-container">
-		<div class="container">
-			<div class="row">
-				<?php } else if (isset($_POST['submitMatchCase'])) {
-							if ($matchCaseResult && $matchCaseStmt->rowCount() > 0) { ?>
+			<?php } else if (isset($_POST['submitMatchCase'])) {
+					if ($matchCaseResult && $matchCaseStmt->rowCount() > 0) { ?>
+						<div class="result-container">
+							<div class="container">
 								<div class="row">
 									<?php foreach ($matchCaseResult as $row) { 
 										try { // fetch unmatching ingredients for recipe
@@ -335,7 +334,6 @@ if (isset($_POST['submitAddToPantry'])) {
 					} else { ?>
 						<p> No results found. </p>
 				<?php } ?>		
-			</div>
 		</div>
 	</div>
 	<!-- End Results -->

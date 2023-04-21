@@ -128,7 +128,7 @@ if (isset($_SESSION['loggedin']) && isset($_POST['yesPantry']) && $_SESSION['use
 						<div class="search">
 							<form method="post">
 								<input type="text" required name="recName" id="recName">
-								<input type="submit" name="submitMatchCase" value="Search">
+								<input type="submit" class="btn btn-circle btn-outline-new-white" name="submitMatchCase" value="Search">
 							</form>
 						</div>
 						<li class="nav-item"><a class="nav-link" href="demo-home.php">Home</a></li>
