@@ -1,6 +1,7 @@
 <?php
 require "connection.php";
 require "common.php";
+session_start();
 ?>
 
 <?php // query to fetch dessert
@@ -95,7 +96,18 @@ $dessertResult = $dessertStmt->fetchAll();
 								<a class="dropdown-item" href="demo-desserts.php">Desserts</a>
 							</div>
 						</li>
-						<li class="nav-item"><a class="nav-link" href="">Account</a></li>
+						<?php if (isset($_SESSION['loggedin'])) { ?>
+						<li class="nav-item dropdown">
+							<a class="nav-link dropdown-toggle" href="#" id="dropdown-b"
+								data-toggle="dropdown">Account</a>
+								<div class="dropdown-menu" aria-labelledby="dropdown-b">
+									<a class="dropdown-item" href="demo-account.php">My Account</a>
+									<a class="dropdown-item" href="account/demo-logout.php">Logout</a>
+								</div>
+						</li>
+						<?php } else { ?>
+							<li class="nav-item"><a class="nav-link" href="account/demo-login.php">Login</a></li>
+						<?php } ?>
 					</ul>
 				</div>
 			</div>
