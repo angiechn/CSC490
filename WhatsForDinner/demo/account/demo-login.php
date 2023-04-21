@@ -129,6 +129,10 @@ require "../connection.php";?>
                                 </div>
                                 <div class="text-center">
                                 <p></p>
+                                <div class="register-link">
+                                Not registered yet? <a href="#">Register here</a>
+                                </div>
+                                <p></p>
                                 <input class="btn btn-lg btn-circle btn-outline-new-white" type="submit" value="Login">
                             </form>
                         </div>
