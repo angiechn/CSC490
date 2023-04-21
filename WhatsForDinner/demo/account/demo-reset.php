@@ -2,7 +2,6 @@
 session_start();
 require "../connection.php";?>
 
-
 <!DOCTYPE html>
 <html lang="en"><!-- Basic -->
 
@@ -52,12 +51,6 @@ require "../connection.php";?>
                 </button>
                 <div class="collapse navbar-collapse" id="navbars-rs-food">
                     <ul class="navbar-nav ml-auto">
-                        <div class="search">
-                            <form method="post">
-                                <input type="text" required name="recName" id="recName">
-                                <input type="submit" name="submitMatchCase" value="Search">
-                            </form>
-                        </div>
                         <li class="nav-item"><a class="nav-link" href="../demo-home.php">Home</a></li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="dropdown-a"
@@ -90,6 +83,7 @@ require "../connection.php";?>
     <!-- Start header -->
     <div class="all-page-title page-breadcrumb">
         <div class="container text-center">
+            <h1>Reset</h1>
         </div>
     </div>
     <!-- End header -->

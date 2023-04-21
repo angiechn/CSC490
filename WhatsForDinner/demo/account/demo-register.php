@@ -1,6 +1,7 @@
 <?php //Start a session
-session_start();
-require "../connection.php";?>
+require "../connection.php";
+require "../common.php";
+session_start();?>
 
 <!DOCTYPE html>
 <html lang="en"><!-- Basic -->
@@ -51,12 +52,6 @@ require "../connection.php";?>
                 </button>
                 <div class="collapse navbar-collapse" id="navbars-rs-food">
                     <ul class="navbar-nav ml-auto">
-                        <div class="search">
-                            <form method="post">
-                                <input type="text" required name="recName" id="recName">
-                                <input type="submit" name="submitMatchCase" value="Search">
-                            </form>
-                        </div>
                         <li class="nav-item"><a class="nav-link" href="../demo-home.php">Home</a></li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="dropdown-a"
@@ -89,12 +84,18 @@ require "../connection.php";?>
     <!-- Start header -->
     <div class="all-page-title page-breadcrumb">
         <div class="container text-center">
+            <div class="col-lg-12">
+					<?php if (!isset($_POST['submitMatchCase'])) { ?>
+						<h1>Register</h1>
+					<?php } else if (isset($_POST['submitMatchCase'])) { ?>
+						<h1>Results</h1>
+					<?php } ?>
+				</div>
         </div>
     </div>
     <!-- End header -->
 
     <!--Start Registration-->
-
     <div class="blog-box">
         <div class="container">
             <div class="logrow">
@@ -230,4 +231,5 @@ if ($stmt = $connection->prepare('SELECT userID, password FROM whatsdinner.user 
 }
 $connection = null;
 ?>
+
 
