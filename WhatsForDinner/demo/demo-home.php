@@ -125,12 +125,10 @@ if (isset($_SESSION['loggedin']) && isset($_POST['yesPantry']) && $_SESSION['use
 				</button>
 				<div class="collapse navbar-collapse" id="navbars-rs-food">
 					<ul class="navbar-nav ml-auto">
-						<div class="blog-search-form">
+						<div class="search">
 							<form method="post">
 								<input type="text" required name="recName" id="recName">
-								<btn class="search-btn">
-								<i input type="submit" class="fa fa-search" name="submitMatchCase"></i>
-								</btn>
+								<input type="submit" name="submitMatchCase" value="Search">
 							</form>
 						</div>
 						<li class="nav-item"><a class="nav-link" href="demo-home.php">Home</a></li>
@@ -229,10 +227,31 @@ if (isset($_SESSION['loggedin']) && isset($_POST['yesPantry']) && $_SESSION['use
 			if (isset($_POST['submitMatchCase'])) {
 				if ($result && $statement->rowCount() > 0) { ?>
 					<div class="row">
-						<?php foreach ($result as $row) { ?>
+						<?php foreach ($result as $row) { 
+							try { // fetch unmatching ingredients for recipe
+								$recipeID = $row["recipeID"];
+				
+								$IngDisplaySQL = "SELECT *
+									FROM whatsdinner.ingredientRaw 
+									LEFT JOIN whatsdinner.ingredient 
+									ON whatsdinner.ingredient.recipeID = whatsdinner.ingredientRaw.recID 
+									AND whatsdinner.ingredient.ingredientID = whatsdinner.ingredientRaw.ingID 
+									LEFT JOIN whatsdinner.raw ON whatsdinner.raw.rawID = whatsdinner.ingredientraw.rawID 
+									WHERE recID = :recipeID";
+				
+								$IngDisplayStmt = $connection->prepare($IngDisplaySQL); 
+								$IngDisplayStmt->bindParam(':recipeID', $recipeID, PDO::PARAM_STR);
+								$IngDisplayStmt->execute();
+				
+								$IngResult = $IngDisplayStmt->fetchAll();
+								} catch (PDOException $error) {
+								echo $IngDisplaySQL . "<br>" . $error->getMessage();
+								} 
+						?>
 							<div class="col-lg-11">
 								<img src="../images/<?php echo escape($row["recipeID"]); ?>.jpg" class="result-image" alt="Image">
 								<h1><a href="demo-recipe.php?recipeID=<?php echo escape($row["recipeID"]); ?>"> <?php echo escape($row["recipeName"]); ?></a></h1>
+								<p> <?php foreach ($IngResult as $tuple) { echo escape($tuple["rawName"]) . ", "; } ?> </p>
 							</div>
 						<?php } ?>
 					</div>
