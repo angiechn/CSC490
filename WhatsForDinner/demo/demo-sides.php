@@ -1,21 +1,37 @@
-<!DOCTYPE html>
 <?php
-/**
- * Function to query recipes based on user input
- * User inputs rawname
- */
-
-// required
 require "connection.php";
 require "common.php";
-
-// query to fetch rawnames for dropdown or dynamic search
-$sql2 = "SELECT DISTINCT rawName FROM whatsdinner.raw";
-$statement2 = $connection->prepare($sql2); 
-$statement2->execute();
-$result2 = $statement2->fetchAll();
 ?>
 
+<?php // query to fetch sides
+$sideSQL = "SELECT whatsdinner.recipe.recipeID, whatsdinner.recipe.recipeName 
+        FROM whatsdinner.recipe
+        LEFT JOIN whatsdinner.type 
+        ON whatsdinner.recipe.recipeID = whatsdinner.type.recipeID
+        WHERE whatsdinner.type.type = 'Side'";
+
+$sideStmt= $connection->prepare($sideSQL); 
+$sideStmt->execute();
+$sideResult = $sideStmt->fetchAll();
+?>
+
+<?php if (isset($_POST['submitMatchCase'])) {
+	try { // query to fetch recipe name from rec name
+		$matchCaseSQL = "SELECT *
+        FROM whatsdinner.recipe
+        WHERE whatsdinner.recipe.recipeName LIKE :recName";
+		$matchCaseStmt= $connection->prepare($matchCaseSQL);
+		$recName = '%' . $_POST['recName'] . '%';
+		$matchCaseStmt->bindParam(':recName', $recName, PDO::PARAM_STR);
+		$matchCaseStmt->execute();
+
+		$matchCaseResult = $matchCaseStmt->fetchAll();
+	} catch (PDOException $error) {
+		echo $matchCaseSQL . "<br>" . $error->getMessage();
+	}
+}?>
+
+<!DOCTYPE html>
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -49,55 +65,6 @@ $result2 = $statement2->fetchAll();
 
 </head>
 
-<?php
-//Query to fetch all recipe names with type "Side"
-try { 
-    $sql = "SELECT whatsdinner.recipe.recipeID, whatsdinner.recipe.recipeName 
-        FROM whatsdinner.recipe
-        LEFT JOIN whatsdinner.type 
-        ON whatsdinner.recipe.recipeID = whatsdinner.type.recipeID
-        WHERE whatsdinner.type.type = 'Side'";
-
-    $statement = $connection->prepare($sql); 
-    $statement->execute();
-    $result = $statement->fetchAll();
-
-
-} catch (PDOException $error) {
-    echo $sql . "<br>" . $error->getMessage();
-  }
-?>
-
-<!--take user input from submit bar-->
-<?php
-if (isset($_POST['submitMulti'])) {
-	try {
-		$raws = $_POST['rawName'];
-		// query to fetch recipe name from raw names
-		$sql = sprintf("SELECT *
-		FROM whatsdinner.recipe
-		WHERE whatsdinner.recipe.recipeID IN 
-			(SELECT DISTINCT whatsdinner.recipe.recipeID
-			FROM whatsdinner.recipe 
-			LEFT JOIN whatsdinner.ingredient ON whatsdinner.recipe.recipeID = whatsdinner.ingredient.recipeID
-			LEFT JOIN whatsdinner.ingredientraw ON whatsdinner.ingredientraw.recID = whatsdinner.ingredient.recipeID
-			LEFT JOIN whatsdinner.raw ON whatsdinner.raw.rawID = whatsdinner.ingredientraw.rawID
-			WHERE rawName IN (%s)
-			GROUP BY whatsdinner.recipe.recipeID
-			HAVING count(DISTINCT whatsdinner.raw.rawID) = %s)",
-			"'" . implode("', '", $raws) . "'",
-			count($raws)
-		);
-		$statement = $connection->prepare($sql); 
-		$statement->execute();
-		$result = $statement->fetchAll();
-		} catch (PDOException $error) {
-		echo $sql . "<br>" . $error->getMessage();
-	}
-}
-?>
-
-
 <body>
 	<!-- Start header -->
 	<header class="top-navbar">
@@ -124,8 +91,8 @@ if (isset($_POST['submitMulti'])) {
 								data-toggle="dropdown">Categories</a>
 							<div class="dropdown-menu" aria-labelledby="dropdown-a">
 								<a class="dropdown-item" href="demo-entrees.php">Entrees</a>
-								<a class="dropdown-item" href="">Sides</a>
-								<a class="dropdown-item" href="">Desserts</a>
+								<a class="dropdown-item" href="demo-sides.php">Sides</a>
+								<a class="dropdown-item" href="demo-desserts.php">Desserts</a>
 							</div>
 						</li>
 						<li class="nav-item"><a class="nav-link" href="">Account</a></li>
@@ -142,7 +109,11 @@ if (isset($_POST['submitMulti'])) {
 		<div class="container text-center">
 			<div class="row">
 				<div class="col-lg-12">
-					<h1>Entrees</h1>
+					<?php if (!isset($_POST['submitMatchCase'])) { ?>
+						<h1>Sides</h1>
+					<?php } else if (isset($_POST['submitMatchCase'])) { ?>
+						<h1>Results</h1>
+					<?php } ?>
 				</div>
 			</div>
 		</div>
@@ -152,28 +123,54 @@ if (isset($_POST['submitMulti'])) {
 	<!--Start Results-->
 	<div class="result-container">
 		<div class="container">
-				<?php
-					// output results for match case
-					if ($result && $statement->rowCount() > 0) { ?>
+				<?php // output results for match case
+					if ($sideResult && $sideStmt->rowCount() > 0 && !isset($_POST['submitMatchCase'])) { ?>
 						<div class="row">
-								<?php foreach ($result as $row) { ?>
+								<?php foreach ($sideResult as $row) { 
+									try { // fetch unmatching ingredients for recipe
+										$recipeID = $row["recipeID"];
+						
+										$IngDisplaySQL = "SELECT *
+											FROM whatsdinner.ingredientRaw 
+											LEFT JOIN whatsdinner.ingredient 
+											ON whatsdinner.ingredient.recipeID = whatsdinner.ingredientRaw.recID 
+											AND whatsdinner.ingredient.ingredientID = whatsdinner.ingredientRaw.ingID 
+											LEFT JOIN whatsdinner.raw ON whatsdinner.raw.rawID = whatsdinner.ingredientraw.rawID 
+											WHERE recID = :recipeID";
+						
+										$IngDisplayStmt = $connection->prepare($IngDisplaySQL); 
+										$IngDisplayStmt->bindParam(':recipeID', $recipeID, PDO::PARAM_STR);
+										$IngDisplayStmt->execute();
+						
+										$IngResult = $IngDisplayStmt->fetchAll();
+										} catch (PDOException $error) {
+										echo $IngDisplaySQL . "<br>" . $error->getMessage();
+										} ?>
 									<div class="col-lg-11">
-									<img src="../images/<?php echo escape($row["recipeID"]); ?>.jpg" class="result-image" alt="Image">
+										<img src="../images/<?php echo escape($row["recipeID"]); ?>.jpg" class="result-image" alt="Image">
 										<h1><a href="demo-recipe.php?recipeID=<?php echo escape($row["recipeID"]);?>">
 										<?php echo escape($row["recipeName"]); ?></a></h1>
-										<p>Ingredients • Listed • Here</p> 
+										<p> <?php foreach ($IngResult as $tuple) { echo escape($tuple["rawName"]) . ", "; } ?> </p>
 									</div>
 								<?php } ?>
-							</div>
-					  <?php }
-					else { ?>
+						</div>
+			  	<?php } else if (isset($_POST['submitMatchCase'])) {
+							if ($matchCaseResult && $matchCaseStmt->rowCount() > 0) { ?>
+								<div class="row">
+									<?php foreach ($matchCaseResult as $row) { ?>
+										<div class="col-lg-11">
+											<img src="../images/<?php echo escape($row["recipeID"]); ?>.jpg" class="result-image" alt="Image">
+											<h1><a href="demo-recipe.php?recipeID=<?php echo escape($row["recipeID"]); ?>"> <?php echo escape($row["recipeName"]); ?></a></h1>
+										</div>
+									<?php } ?>
+								</div>
+							<?php } else { ?> <p> No results found.</p> <?php }
+					} else { ?>
 						<p> No results found. </p>
-					<?php } ?>
+				<?php } ?>
 		</div>
 	</div>
 	<!--End Results-->
-
-
 
 	<!-- Start Footer -->
 	<footer class="footer-area bg-f">
