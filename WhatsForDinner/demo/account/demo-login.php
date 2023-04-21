@@ -132,6 +132,9 @@ require "../connection.php";?>
                                 <div class="register-link">
                                 Not registered yet? <a href="demo-register.php">Register here</a>
                                 </div>
+                                <div class="reset-pw">
+                                Forgot password? <a href="demo-reset.php">Reset password</a>
+                                </div>
                                 <p></p>
                                 <input class="btn btn-lg btn-circle btn-outline-new-white" type="submit" value="Login">
                             </form>
