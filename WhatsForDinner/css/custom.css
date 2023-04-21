@@ -49,3 +49,9 @@
   object-position: center;
   padding: 20px;
 }
+
+select {
+  width: 100%;
+  border-radius: 1em;
+}
+

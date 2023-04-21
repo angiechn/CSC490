@@ -18,7 +18,7 @@ session_start();?>
 
 	<!-- Site Icons -->
 	<link rel="shortcut icon" href="../images/placeholder.png" type="image/x-icon">
-	<link rel="apple-touch-icon" href="../images/apple-touch-icon.png">
+	<link rel="apple-touch-icon" href="../images/placeholder.png">
 
 	<!-- Bootstrap CSS -->
 	<link rel="stylesheet" href="../css/bootstrap.min.css">
@@ -125,10 +125,12 @@ if (isset($_SESSION['loggedin']) && isset($_POST['yesPantry']) && $_SESSION['use
 				</button>
 				<div class="collapse navbar-collapse" id="navbars-rs-food">
 					<ul class="navbar-nav ml-auto">
-						<div class="search">
+						<div class="blog-search-form">
 							<form method="post">
 								<input type="text" required name="recName" id="recName">
-								<input type="submit" name="submitMatchCase" value="Search">
+								<btn class="search-btn">
+								<i input type="submit" class="fa fa-search" name="submitMatchCase"></i>
+								</btn>
 							</form>
 						</div>
 						<li class="nav-item"><a class="nav-link" href="demo-home.php">Home</a></li>
@@ -150,6 +152,7 @@ if (isset($_SESSION['loggedin']) && isset($_POST['yesPantry']) && $_SESSION['use
 	<!-- End header -->
 
 
+
 	<!-- Start header -->
 	<div class="all-page-title page-breadcrumb">
 		<div class="container text-center">
@@ -169,37 +172,43 @@ if (isset($_SESSION['loggedin']) && isset($_POST['yesPantry']) && $_SESSION['use
 		<div class="container">
 			<div class="row">
 				<div class="col-lg-12">
-					<p></p>
 					<div class="text-sm-left"> <p>To select multiple, hold CTRL while clicking.</p> </div>
-					<div class="blog-search-form">
 						<!-- Submit Multi Search -->
-						<form method ="post">
-							<select name = "rawName[]" id = "rawName[]" size = 8 multiple required> 
-								<?php foreach($RawResult as $option):
-									if((isset($_SESSION['loggedin']) && in_array($option, $UserPantryResult)) == TRUE && $_SESSION['usePantry'] == "TRUE") { ?>
-										<option value = "<?php echo $option['rawName'];?>" required selected><?php echo $option['rawName'];?></option>
-									<?php } else { ?>
-										<option value = "<?php echo $option['rawName'];?>" required><?php echo $option['rawName'];?></option>
-									<?php } 
-								endforeach; ?>
-							</select>
-							<p></p>
-							<input class="btn btn-lg btn-circle btn-outline-new-white" name="submitMulti" type="submit" value="Search">
-						</form>
-						<p></p>
-						<!-- Toggle Pantry -->
-						<form method = "post"> 
-							<?php if (isset($_SESSION['loggedin']) && $_SESSION['usePantry'] == "FALSE") { ?>
-								<input class = "btn btn-lg btn-circle btn-outline-new-white" type = "submit" name = "yesPantry" value = "Use Pantry"> 
-							<?php } else if (isset($_SESSION['loggedin']) && $_SESSION['usePantry'] == "TRUE") { ?>
-								<input class = "btn btn-lg btn-circle btn-outline-new-white" type = "submit" name = "noPantry" value = "Don't Use Pantry">
-							<?php } ?>
-						</form>
+						<div class="dropdown">
+							<form method ="post" >
+								<select class="form-select" name = "rawName[]" id = "rawName[]" multiple required> 
+									<?php foreach($RawResult as $option):
+										if((isset($_SESSION['loggedin']) && in_array($option, $UserPantryResult)) == TRUE && $_SESSION['usePantry'] == "TRUE") { ?>
+											<option value = "<?php echo $option['rawName'];?>" required selected><?php echo $option['rawName'];?></option>
+										<?php } else { ?>
+											<option value = "<?php echo $option['rawName'];?>" required><?php echo $option['rawName'];?></option>
+										<?php } 
+									endforeach; ?>
+								</select>
+								<div class="col-lg-12">
+									<div class="text-sm-center">
+								<p></p>
+								<p></p>
+								<p></p>
+										<input class="btn btn-circle btn-outline-new-white" name="submitMulti" type="submit" value="Search">
+										<p></p>
+										<!-- Toggle Pantry -->
+										<form method = "post"> 
+											<?php if (isset($_SESSION['loggedin']) && $_SESSION['usePantry'] == "FALSE") { ?>
+												<input class = "btn btn-lg btn-circle btn-outline-new-white" type = "submit" name = "yesPantry" value = "Use Pantry"> 
+											<?php } else if (isset($_SESSION['loggedin']) && $_SESSION['usePantry'] == "TRUE") { ?>
+												<input class = "btn btn-lg btn-circle btn-outline-new-white" type = "submit" name = "noPantry" value = "Don't Use Pantry">
+											<?php } ?>
+										</form>
+								</div>
+							</form>
+						</div>
 					</div>
 				</div>
-			</div> 
+			</div>
 		</div>
-	</div>
+	</div> 
+		
 	<!-- End Multi Search -->
 
 	<!--Start Results-->

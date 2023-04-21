@@ -11,8 +11,6 @@
 
 @import url(animate.css);
 @import url(font-awesome.min.css);
-@import url(superslides.css);
-@import url(baguetteBox.min.css);
 
 /*------------------------------------------------------------------
     SKELETON
@@ -248,11 +246,11 @@ button:focus {
   padding: 19px 36px;
 }
 .btn {
-  display: inline-block;
   font-weight: 600;
   text-align: center;
   white-space: nowrap;
   vertical-align: middle;
+  top: 50%;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -261,7 +259,7 @@ button:focus {
   padding: 12px 30px;
   font-size: 16px;
   line-height: 1.5;
-  border-radius: 0.1875rem;
+  border-radius: 150px;
   transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
     border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
@@ -270,6 +268,7 @@ button:focus {
   background-color: transparent;
   background-image: none;
   border-color: #fa9380;
+  padding-top: 10px;
 }
 .btn-outline-new-white:hover {
   color: #ffffff;
@@ -613,7 +612,6 @@ button:focus {
   padding-bottom: 0px;
 }
 .bg-f {
-  background-image: url("../images/footer-bg.jpg");
   background-attachment: scroll;
   background-clip: initial;
   background-color: rgba(0, 0, 0, 0);
