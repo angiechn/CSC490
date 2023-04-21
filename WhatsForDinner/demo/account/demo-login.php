@@ -1,8 +1,9 @@
 <?php //Start a session
-session_start();
-require "../connection.php";?>
+require "../connection.php";
+require "../common.php";
+session_start();?>
 
-<?php if ($stmt = $connection->prepare('SELECT userID, password FROM whatsdinner.user WHERE username = :username')) {
+<?php if (!isset($_POST['submitMatchCase']) && $stmt = $connection->prepare('SELECT userID, password FROM whatsdinner.user WHERE username = :username')) {
     
     $stmt->bindParam(':username', $_POST['username']);
     $stmt->execute();
@@ -32,10 +33,7 @@ require "../connection.php";?>
         echo 'Incorrect username and/or password!';
     }
     unset($stmt);
-}
-?>
-
-<?php if (isset($_POST['submitMatchCase'])) {
+} else if (isset($_POST['submitMatchCase'])) {
 	try { // query to fetch recipe name from rec name
 		$matchCaseSQL = "SELECT *
         FROM whatsdinner.recipe
@@ -123,13 +121,22 @@ require "../connection.php";?>
         </nav>
     </header>
     <!-- End header -->
-
-    <!-- Start header -->
-    <div class="all-page-title page-breadcrumb">
-        <div class="container text-center">
-        </div>
-    </div>
-    <!-- End header -->
+    
+	<!-- Start All Pages -->
+	<div class="all-page-title page-breadcrumb">
+		<div class="container text-center">
+			<div class="row">
+				<div class="col-lg-12">
+					<?php if (!isset($_POST['submitMatchCase'])) { ?>
+						<h1>Login</h1>
+					<?php } else if (isset($_POST['submitMatchCase'])) { ?>
+						<h1>Results</h1>
+					<?php } ?>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- End All Pages -->
 
     <!--Start Login-->
     <?php if (!isset ($_POST['submitMatchCase'])) { ?>
@@ -155,18 +162,18 @@ require "../connection.php";?>
                                     <p></p>
                                     <input class="btn btn-lg btn-circle btn-outline-new-white" type="submit" value="Login">
                                 </form>
-                            </div>
                         </div>
                     </div>
                 </div>
             </div>
+            
         </div>
+    </div>
     <!--End Login-->
-    <!--Start Results-->
-	<div class="result-container">
+    <div class="result-container">
 		<div class="container">
-				<?php // output results for match case
-					} else if (isset($_POST['submitMatchCase'])) {
+			<div class="row">
+				<?php } else if (isset($_POST['submitMatchCase'])) {
 							if ($matchCaseResult && $matchCaseStmt->rowCount() > 0) { ?>
 								<div class="row">
 									<?php foreach ($matchCaseResult as $row) { 
@@ -191,7 +198,7 @@ require "../connection.php";?>
 										} 
 									?>
 										<div class="col-lg-11">
-											<img src="../images/<?php echo escape($row["recipeID"]); ?>.jpg" class="result-image" alt="Image">
+											<img src="../../images/<?php echo escape($row["recipeID"]); ?>.jpg" class="result-image" alt="Image">
 											<h1><a href="demo-recipe.php?recipeID=<?php echo escape($row["recipeID"]); ?>"> <?php echo escape($row["recipeName"]); ?></a></h1>
 											<p> <?php foreach ($IngResult as $tuple) { echo escape($tuple["rawName"]) . ", "; } ?> </p>
 										</div>
@@ -200,10 +207,11 @@ require "../connection.php";?>
 							<?php } else { ?> <p> No results found.</p> <?php }
 					} else { ?>
 						<p> No results found. </p>
-				<?php } ?>
+				<?php } ?>		
+			</div>
 		</div>
 	</div>
-	<!--End Results-->
+	<!-- End Results -->
 
     <!-- Start Footer -->
     <footer class="footer-area bg-f">
@@ -224,6 +232,7 @@ require "../connection.php";?>
 
 </body>
 </html>
+
 
 <?//Check login data in the form
 if ( !isset($_POST['username'], $_POST['password']) ) {
