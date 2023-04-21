@@ -132,41 +132,41 @@ require "../connection.php";?>
     <!-- End header -->
 
     <!--Start Login-->
-    <div class="blog-box">
-        <div class="container" position="center">
-            <div class="row">
-                <div class="col-lg-4 col-md-6 col-12">
-                    <div class="blog-box-inner">
-                            <h1 class="text-center">Login</h1>
-                            <form action = "demo-login.php" method = "post" class = "blog-search-form">
-                                <input name="username" placeholder="Username" id="username" type="text" required>
-                                <p></p>
-                                <input name="password" placeholder="Password" id="password" type="password" required>
-                                </div>
-                                <div class="text-center">
-                                <p></p>
-                                <div class="register-link">
-                                Not registered yet? <a href="demo-register.php">Register here</a>
-                                </div>
-                                <div class="reset-pw">
-                                Forgot password? <a href="demo-reset.php">Reset password</a>
-                                </div>
-                                <p></p>
-                                <input class="btn btn-lg btn-circle btn-outline-new-white" type="submit" value="Login">
-                            </form>
+    <?php if (!isset ($_POST['submitMatchCase'])) { ?>
+        <div class="blog-box">
+            <div class="container" position="center">
+                <div class="row">
+                    <div class="col-lg-4 col-md-6 col-12">
+                        <div class="blog-box-inner">
+                                <h1 class="text-center">Login</h1>
+                                <form action = "demo-login.php" method = "post" class = "blog-search-form">
+                                    <input name="username" placeholder="Username" id="username" type="text" required>
+                                    <p></p>
+                                    <input name="password" placeholder="Password" id="password" type="password" required>
+                                    </div>
+                                    <div class="text-center">
+                                    <p></p>
+                                    <div class="register-link">
+                                    Not registered yet? <a href="demo-register.php">Register here</a>
+                                    </div>
+                                    <div class="reset-pw">
+                                    Forgot password? <a href="demo-reset.php">Reset password</a>
+                                    </div>
+                                    <p></p>
+                                    <input class="btn btn-lg btn-circle btn-outline-new-white" type="submit" value="Login">
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
     <!--End Login-->
-
     <!--Start Results-->
 	<div class="result-container">
 		<div class="container">
 				<?php // output results for match case
-					if (isset($_POST['submitMatchCase'])) {
+					} else if (isset($_POST['submitMatchCase'])) {
 							if ($matchCaseResult && $matchCaseStmt->rowCount() > 0) { ?>
 								<div class="row">
 									<?php foreach ($matchCaseResult as $row) { 
