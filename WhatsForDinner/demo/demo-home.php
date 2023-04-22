@@ -185,7 +185,7 @@ if (isset($_SESSION['loggedin']) && isset($_POST['yesPantry']) && $_SESSION['use
 						<!-- Submit Multi Search -->
 						<div class="dropdown">
 							<form method ="post" >
-								<select class="form-select" name = "rawName[]" id = "rawName[]" multiple required> 
+								<select class="form-select" name = "rawName[]" id = "rawName[]" size = 7 multiple required> 
 									<?php foreach($RawResult as $option):
 										if((isset($_SESSION['loggedin']) && in_array($option, $UserPantryResult)) == TRUE && $_SESSION['usePantry'] == "TRUE") { ?>
 											<option value = "<?php echo $option['rawName'];?>" required selected><?php echo $option['rawName'];?></option>

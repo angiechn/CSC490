@@ -251,9 +251,10 @@ if (isset($_POST['submitAddToPantry'])) {
 									<div class="row">
 										<?php foreach ($UserBookmarkResult as $row) { ?>
 											<div class="col-xl-8 col-lg-8 col-12">
-											<img src="../images/<?php echo escape($row["recipeID"]); ?>.jpg" class="result-image" alt="Image">
-											<h1><a href="demo-recipe.php?recipeID=<?php echo escape($row["recipeID"]);?>">
-												<?php echo escape($row["recipeName"]); ?></a></h1>
+												<img src="../images/<?php echo escape($row["recipeID"]); ?>.jpg" class="result-image" alt="Image">
+												<h1><a href="demo-recipe.php?recipeID=<?php echo escape($row["recipeID"]);?>">
+													<?php echo escape($row["recipeName"]); ?></a></h1>
+            										<a href="demo-account.php?recipeID=<?php echo escape($row["recipeID"]);?>" class = "btn btn-lg btn-circle btn-outline-new-white">Delete</a>
 											</div>
 										<?php } ?>
 									</div>
@@ -275,12 +276,15 @@ if (isset($_POST['submitAddToPantry'])) {
 										</optgroup>
 									</select>
 									<p></p>
-											</div>
+							</div>
 									<input class = "btn btn-lg btn-circle btn-outline-new-white" type = "submit" name = "submitAddToPantry" value = "Add">
 								</form>
 							<div class="blog-tag-box">
 								<ul class="list-inline tag-list">
+									<p></p>
 									<?php if ($UserPantryResult && $UserPantryStmt ->rowCount() > 0) { ?>
+										<?php echo "Click on ingredients to delete."?>
+										<p></p>
 										<?php foreach ($UserPantryResult as $row) { ?>
 											<li class = "list-inline-item"><a href = "demo-account.php?rawID=<?php echo escape($row["rawID"]);?>"><?php echo escape($row["rawName"]);?></a></li>
 										<?php } ?>

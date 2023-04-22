@@ -2,6 +2,22 @@
 require "common.php"; 
 session_start();?>
 
+<?php if (isset($_POST['submitMatchCase'])) {
+	try { // query to fetch recipe name from rec name
+		$matchCaseSQL = "SELECT *
+        FROM whatsdinner.recipe
+        WHERE whatsdinner.recipe.recipeName LIKE :recName";
+		$matchCaseStmt= $connection->prepare($matchCaseSQL);
+		$recName = '%' . $_POST['recName'] . '%';
+		$matchCaseStmt->bindParam(':recName', $recName, PDO::PARAM_STR);
+		$matchCaseStmt->execute();
+
+		$matchCaseResult = $matchCaseStmt->fetchAll();
+	} catch (PDOException $error) {
+		echo $matchCaseSQL . "<br>" . $error->getMessage();
+	}
+}?>
+
 <!DOCTYPE html>
 <html lang="en"><!-- Basic -->
 
@@ -142,7 +158,18 @@ if (isset($_POST['BookmarkSubmit'])) {
 								<a class="dropdown-item" href="demo-desserts.php">Desserts</a>
 							</div>
 						</li>
-						<li class="nav-item"><a class="nav-link" href="demo-account.php">Account</a></li>
+						<?php if (isset($_SESSION['loggedin'])) { ?>
+						<li class="nav-item dropdown">
+							<a class="nav-link dropdown-toggle" href="#" id="dropdown-b"
+								data-toggle="dropdown">Account</a>
+								<div class="dropdown-menu" aria-labelledby="dropdown-b">
+									<a class="dropdown-item" href="demo-account.php">My Account</a>
+									<a class="dropdown-item" href="account/demo-logout.php">Logout</a>
+								</div>
+						</li>
+						<?php } else { ?>
+							<li class="nav-item"><a class="nav-link" href="account/demo-login.php">Login</a></li>
+						<?php } ?>
 					</ul>
 				</div>
 			</div>
@@ -155,9 +182,13 @@ if (isset($_POST['BookmarkSubmit'])) {
 		<div class="container text-center">
 			<div class="row">
 				<div class="col-lg-12">
-					<h1><?php foreach ($rec1Result as $row): ?>
-						<?php echo escape($row["recipeName"]); ?>
-					<?php endforeach; ?></h1>
+					<?php if (!isset($_POST['submitMatchCase'])) { ?>
+						<h1><?php foreach ($rec1Result as $row): ?>
+							<?php echo escape($row["recipeName"]); ?>
+						<?php endforeach; ?></h1>
+					<?php } else if (isset($_POST['submitMatchCase'])) { ?>
+						<h1>Results</h1>
+					<?php } ?>
 				</div>
 			</div>
 		</div>
@@ -167,43 +198,80 @@ if (isset($_POST['BookmarkSubmit'])) {
 	<!-- Start Recipe -->
 	<div class="about-section-box">
 		<div class="container">
-			<div class="row">
-				<div class="col-lg-6 col-md-6">
-					<img src="../images/<?php echo escape($row["recipeID"]); ?>.jpg" alt="" class="img-fluid">
-				</div>
-				<div class="col-lg-6 col-md-6 text-center">
-					<div class="inner-column">
-						<h1>Ingredients</h1>
-						<?php foreach ($rec2Result as $row): ?>
-							<ul>
-								<?php echo escape($row["measurement"]); ?>
-								<?php echo escape($row["unit"]); ?>
-								<?php echo escape($row["preparation"]); ?>
-								<?php echo escape($row["rawName"]); ?>
-							</ul>
-						<?php endforeach; ?>
+			<?php if (!isset($_POST['submitMatchCase'])) { ?>
+				<div class="row">
+					<div class="col-lg-6 col-md-6">
+						<img src="../images/<?php echo escape($row["recipeID"]); ?>.jpg" alt="" class="img-fluid">
+					</div>
+					<div class="col-lg-6 col-md-6 text-center">
+						<div class="inner-column">
+							<h1>Ingredients</h1>
+							<?php foreach ($rec2Result as $row): ?>
+								<ul>
+									<?php echo escape($row["measurement"]); ?>
+									<?php echo escape($row["unit"]); ?>
+									<?php echo escape($row["preparation"]); ?>
+									<?php echo escape($row["rawName"]); ?>
+								</ul>
+							<?php endforeach; ?>
+						</div>
+					</div>
+					<div class="col-md-12">
+						<div class="instructions">
+							<h1>Directions</h1>
+							<?php foreach ($rec1Result as $row): ?>
+								<p><?php echo escape($row["instructions"]); ?></p>
+								<p><?php echo escape($row["notes"]); ?></p>
+							<?php endforeach; ?>
+						</div>
 					</div>
 				</div>
-				<div class="col-md-12">
-					<div class="instructions">
-						<h1>Directions</h1>
-						<?php foreach ($rec1Result as $row): ?>
-							<p><?php echo escape($row["instructions"]); ?></p>
-							<p><?php echo escape($row["notes"]); ?></p>
-						<?php endforeach; ?>
-					</div>
-				</div>
-			</div>
+			<?php } else if (isset($_POST['submitMatchCase'])) {
+							if ($matchCaseResult && $matchCaseStmt->rowCount() > 0) { ?>
+								<div class="row">
+									<?php foreach ($matchCaseResult as $row) { 
+										try { // fetch unmatching ingredients for recipe
+										$recipeID = $row["recipeID"];
+						
+										$IngDisplaySQL = "SELECT *
+											FROM whatsdinner.ingredientRaw 
+											LEFT JOIN whatsdinner.ingredient 
+											ON whatsdinner.ingredient.recipeID = whatsdinner.ingredientRaw.recID 
+											AND whatsdinner.ingredient.ingredientID = whatsdinner.ingredientRaw.ingID 
+											LEFT JOIN whatsdinner.raw ON whatsdinner.raw.rawID = whatsdinner.ingredientraw.rawID 
+											WHERE recID = :recipeID";
+						
+										$IngDisplayStmt = $connection->prepare($IngDisplaySQL); 
+										$IngDisplayStmt->bindParam(':recipeID', $recipeID, PDO::PARAM_STR);
+										$IngDisplayStmt->execute();
+						
+										$IngResult = $IngDisplayStmt->fetchAll();
+										} catch (PDOException $error) {
+										echo $IngDisplaySQL . "<br>" . $error->getMessage();
+										} 
+									?>
+										<div class="col-lg-11">
+											<img src="../images/<?php echo escape($row["recipeID"]); ?>.jpg" class="result-image" alt="Image">
+											<h1><a href="demo-recipe.php?recipeID=<?php echo escape($row["recipeID"]); ?>"> <?php echo escape($row["recipeName"]); ?></a></h1>
+											<p> <?php foreach ($IngResult as $tuple) { echo escape($tuple["rawName"]) . ", "; } ?> </p>
+										</div>
+									<?php } ?>
+								</div>
+							<?php } else { ?> <p> No results found.</p> <?php }
+					} else { ?>
+						<p> No results found. </p>
+				<?php } ?>
 		</div>
 	</div>
 	<!-- End Recipe -->
 
 	<!-- Start Bookmark -->
 	<div class="container text-center">
-		<?php if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == TRUE && $CheckBookmarkResult == 0) { ?>
+		<?php if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == TRUE && $CheckBookmarkResult == 0 && !isset($_POST['submitMatchCase'])) { ?>
 				<form method = "post">
 				<input class="btn btn-lg btn-circle btn-outline-new-white" type="submit" name="BookmarkSubmit" value="Bookmark">
 				</form>
+				<p></p>
 		<?php }?>
 	</div>
 
