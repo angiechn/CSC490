@@ -29,9 +29,7 @@ session_start();?>
         } else {
             echo 'Incorrect username and/or password!';
         }
-    } else {
-        echo 'Incorrect username and/or password!';
-    }
+    } 
     unset($stmt);
 } else if (isset($_POST['submitMatchCase'])) {
 	try { // query to fetch recipe name from rec name
