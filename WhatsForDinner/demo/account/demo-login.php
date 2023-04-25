@@ -1,16 +1,16 @@
-<?php 
+<?php
 require "../connection.php";
 require "../common.php";
-session_start();?>
+session_start(); ?>
 
 <?php if (!isset($_POST['submitMatchCase']) && $stmt = $connection->prepare('SELECT userID, password FROM whatsdinner.user WHERE username = :username')) {
-    
+
     $stmt->bindParam(':username', $_POST['username']);
     $stmt->execute();
-    
+
     //Check if account exists
     if ($stmt->rowCount() > 0) {
-        
+
         $stmt->bindColumn('userID', $userID);
         $stmt->bindColumn('password', $password);
         $stmt->fetch();
@@ -29,23 +29,23 @@ session_start();?>
         } else {
             echo 'Incorrect username and/or password!';
         }
-    } 
+    }
     unset($stmt);
 } else if (isset($_POST['submitMatchCase'])) {
-	try { // query to fetch recipe name from rec name
-		$matchCaseSQL = "SELECT *
+    try { // query to fetch recipe name from rec name
+        $matchCaseSQL = "SELECT *
         FROM whatsdinner.recipe
         WHERE whatsdinner.recipe.recipeName LIKE :recName";
-		$matchCaseStmt= $connection->prepare($matchCaseSQL);
-		$recName = '%' . $_POST['recName'] . '%';
-		$matchCaseStmt->bindParam(':recName', $recName, PDO::PARAM_STR);
-		$matchCaseStmt->execute();
+        $matchCaseStmt = $connection->prepare($matchCaseSQL);
+        $recName = '%' . $_POST['recName'] . '%';
+        $matchCaseStmt->bindParam(':recName', $recName, PDO::PARAM_STR);
+        $matchCaseStmt->execute();
 
-		$matchCaseResult = $matchCaseStmt->fetchAll();
-	} catch (PDOException $error) {
-		echo $matchCaseSQL . "<br>" . $error->getMessage();
-	}
-}?>
+        $matchCaseResult = $matchCaseStmt->fetchAll();
+    } catch (PDOException $error) {
+        echo $matchCaseSQL . "<br>" . $error->getMessage();
+    }
+} ?>
 
 <!DOCTYPE html>
 <html lang="en"><!-- Basic -->
@@ -88,10 +88,9 @@ session_start();?>
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <div class="container">
                 <a class="navbar-brand" href="../demo-home.php">
-                    <img src="../../images/logo.png" width=150px alt="What's for Dinner?"/>
+                    <img src="../../images/logo.png" width=150px alt="What's for Dinner?" />
                 </a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbars-rs-food"
-                    aria-controls="navbars-rs-food" aria-expanded="false" aria-label="Toggle navigation">
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbars-rs-food" aria-controls="navbars-rs-food" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbars-rs-food">
@@ -99,13 +98,12 @@ session_start();?>
                         <div class="search">
                             <form method="post">
                                 <input type="text" required name="recName" id="recName">
-                                <input type="submit" name="submitMatchCase" value="Search">
+                                <input type="submit" class="btn btn-circle btn-outline-new-white" name="submitMatchCase" value="Search">
                             </form>
                         </div>
                         <li class="nav-item"><a class="nav-link" href="../demo-home.php">Home</a></li>
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="dropdown-a"
-                                data-toggle="dropdown">Categories</a>
+                            <a class="nav-link dropdown-toggle" href="#" id="dropdown-a" data-toggle="dropdown">Categories</a>
                             <div class="dropdown-menu" aria-labelledby="dropdown-a">
                                 <a class="dropdown-item" href="../demo-entrees.php">Entrees</a>
                                 <a class="dropdown-item" href="../demo-sides.php">Sides</a>
@@ -113,137 +111,139 @@ session_start();?>
                             </div>
                         </li>
                         <?php if (isset($_SESSION['loggedin'])) { ?>
-						<li class="nav-item dropdown">
-							<a class="nav-link dropdown-toggle" href="#" id="dropdown-b"
-								data-toggle="dropdown">Account</a>
-								<div class="dropdown-menu" aria-labelledby="dropdown-b">
-									<a class="dropdown-item" href="../demo-account.php">My Account</a>
-									<a class="dropdown-item" href="demo-logout.php">Logout</a>
-								</div>
-						</li>
-						<?php } else { ?>
-							<li class="nav-item"><a class="nav-link" href="demo-login.php">Login</a></li>
-						<?php } ?>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="dropdown-b" data-toggle="dropdown">Account</a>
+                                <div class="dropdown-menu" aria-labelledby="dropdown-b">
+                                    <a class="dropdown-item" href="../demo-account.php">My Account</a>
+                                    <a class="dropdown-item" href="demo-logout.php">Logout</a>
+                                </div>
+                            </li>
+                        <?php } else { ?>
+                            <li class="nav-item"><a class="nav-link" href="demo-login.php">Login</a></li>
+                        <?php } ?>
                     </ul>
                 </div>
             </div>
         </nav>
     </header>
     <!-- End header -->
-    
-	<!-- Start All Pages -->
-	<div class="all-page-title page-breadcrumb">
-		<div class="container text-center">
-			<div class="row">
-				<div class="col-lg-12">
-					<?php if (!isset($_POST['submitMatchCase'])) { ?>
-						<h1>Login</h1>
-					<?php } else if (isset($_POST['submitMatchCase'])) { ?>
-						<h1>Results</h1>
-					<?php } ?>
-				</div>
-			</div>
-		</div>
-	</div>
-	<!-- End All Pages -->
+
+    <!-- Start All Pages -->
+    <div class="all-page-title page-breadcrumb">
+        <div class="container text-center">
+            <div class="row">
+                <div class="col-lg-12">
+                    <?php if (!isset($_POST['submitMatchCase'])) { ?>
+                        <h1>Login</h1>
+                    <?php } else if (isset($_POST['submitMatchCase'])) { ?>
+                        <h1>Results</h1>
+                    <?php } ?>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End All Pages -->
 
     <!--Start Login-->
-    <?php if (!isset ($_POST['submitMatchCase'])) { ?>
+    <?php if (!isset($_POST['submitMatchCase'])) { ?>
         <div class="blog-box">
             <div class="container">
-                    <div class="logrow">
-                        <div class="col-lg-12">
+                <div class="logrow">
+                    <div class="col-lg-12">
                         <div class="blog-box-inner">
-                                <h1 class="text-center">Login</h1>
-                                <form action = "demo-login.php" method = "post" class = "blog-search-form">
-                                    <input name="username" placeholder="Username" id="username" type="text" required>
-                                    <p></p>
-                                    <input name="password" placeholder="Password" id="password" type="password" required>
-                                    </div>
-                                    <div class="text-center">
-                                    <p></p>
-                                    <div class="register-link">
-                                    Not registered yet? <a href="demo-register.php">Register here</a>
-                                    </div>
-                                    <div class="reset-pw">
-                                    Forgot password? <a href="demo-reset.php">Reset password</a>
-                                    </div>
-                                    <p></p>
-                                    <input class="btn btn-lg btn-circle btn-outline-new-white" type="submit" value="Login">
-                                </form>
+                            <h1 class="text-center">Login</h1>
+                            <form action="demo-login.php" method="post" class="blog-search-form">
+                                <input name="username" placeholder="Username" id="username" type="text" required>
+                                <p></p>
+                                <input name="password" placeholder="Password" id="password" type="password" required>
+                        </div>
+                        <div class="text-center">
+                            <p></p>
+                            <div class="register-link">
+                                Not registered yet? <a href="demo-register.php">Register here</a>
+                            </div>
+                            <div class="reset-pw">
+                                Forgot password? <a href="demo-reset.php">Reset password</a>
+                            </div>
+                            <p></p>
+                            <input class="btn btn-lg btn-circle btn-outline-new-white" type="submit" value="Login">
+                            </form>
                         </div>
                     </div>
                 </div>
             </div>
-            
-        </div>
-    </div>
-    <!--End Login-->
-				<?php } else if (isset($_POST['submitMatchCase'])) {
-							if ($matchCaseResult && $matchCaseStmt->rowCount() > 0) { ?>
-                                <div class="result-container">
-		<div class="container">
 
-								<div class="row">
-									<?php foreach ($matchCaseResult as $row) { 
-										try { // fetch unmatching ingredients for recipe
-										$recipeID = $row["recipeID"];
-						
-										$IngDisplaySQL = "SELECT *
+        </div>
+        </div>
+        <!--End Login-->
+        <?php } else if (isset($_POST['submitMatchCase'])) {
+        if ($matchCaseResult && $matchCaseStmt->rowCount() > 0) { ?>
+            <div class="result-container">
+                <div class="container">
+
+                    <div class="row">
+                        <?php foreach ($matchCaseResult as $row) {
+                            try { // fetch unmatching ingredients for recipe
+                                $recipeID = $row["recipeID"];
+
+                                $IngDisplaySQL = "SELECT *
 											FROM whatsdinner.ingredientRaw 
 											LEFT JOIN whatsdinner.ingredient 
 											ON whatsdinner.ingredient.recipeID = whatsdinner.ingredientRaw.recID 
 											AND whatsdinner.ingredient.ingredientID = whatsdinner.ingredientRaw.ingID 
 											LEFT JOIN whatsdinner.raw ON whatsdinner.raw.rawID = whatsdinner.ingredientraw.rawID 
 											WHERE recID = :recipeID";
-						
-										$IngDisplayStmt = $connection->prepare($IngDisplaySQL); 
-										$IngDisplayStmt->bindParam(':recipeID', $recipeID, PDO::PARAM_STR);
-										$IngDisplayStmt->execute();
-						
-										$IngResult = $IngDisplayStmt->fetchAll();
-										} catch (PDOException $error) {
-										echo $IngDisplaySQL . "<br>" . $error->getMessage();
-										} 
-									?>
-										<div class="col-lg-11">
-											<img src="../../images/<?php echo escape($row["recipeID"]); ?>.jpg" class="result-image" alt="Image">
-											<h1><a href="demo-recipe.php?recipeID=<?php echo escape($row["recipeID"]); ?>"> <?php echo escape($row["recipeName"]); ?></a></h1>
-											<p> <?php foreach ($IngResult as $tuple) { echo escape($tuple["rawName"]) . ", "; } ?> </p>
-										</div>
-									<?php } ?>
-								</div>
-							<?php } else { ?> <p> No results found.</p> <?php }
-					} else { ?>
-						<p> No results found. </p>
-				<?php } ?>		
-			</div>
-		</div>
-	</div>
-	<!-- End Results -->
 
-    <!-- Start Footer -->
-    <footer class="footer-area bg-f">
-        <div class="container">
-            <div class="row">
+                                $IngDisplayStmt = $connection->prepare($IngDisplaySQL);
+                                $IngDisplayStmt->bindParam(':recipeID', $recipeID, PDO::PARAM_STR);
+                                $IngDisplayStmt->execute();
+
+                                $IngResult = $IngDisplayStmt->fetchAll();
+                            } catch (PDOException $error) {
+                                echo $IngDisplaySQL . "<br>" . $error->getMessage();
+                            }
+                        ?>
+                            <div class="col-lg-11">
+                                <img src="../../images/<?php echo escape($row["recipeID"]); ?>.jpg" class="result-image" alt="Image">
+                                <h1><a href="demo-recipe.php?recipeID=<?php echo escape($row["recipeID"]); ?>"> <?php echo escape($row["recipeName"]); ?></a></h1>
+                                <p> <?php foreach ($IngResult as $tuple) {
+                                        echo escape($tuple["rawName"]) . ", ";
+                                    } ?> </p>
+                            </div>
+                        <?php } ?>
+                    </div>
+                <?php } else { ?> <p> No results found.</p> <?php }
+                                                    } else { ?>
+                <p> No results found. </p>
+            <?php } ?>
+                </div>
             </div>
-        </div>
-    </footer>
-    <!-- End Footer -->
+            </div>
+            <!-- End Results -->
 
-    <!-- ALL JS FILES -->
-    <script src="../../js/jquery-3.2.1.min.js"></script>
-    <script src="../../js/popper.min.js"></script>
-    <script src="../../js/bootstrap.min.js"></script>
-    <!-- ALL PLUGINS -->
-    <script src="../../js/images-loded.min.js"></script>
-    <script src="../../js/custom.js"></script>
+            <!-- Start Footer -->
+            <footer class="footer-area bg-f">
+                <div class="container">
+                    <div class="row">
+                    </div>
+                </div>
+            </footer>
+            <!-- End Footer -->
+
+            <!-- ALL JS FILES -->
+            <script src="../../js/jquery-3.2.1.min.js"></script>
+            <script src="../../js/popper.min.js"></script>
+            <script src="../../js/bootstrap.min.js"></script>
+            <!-- ALL PLUGINS -->
+            <script src="../../js/images-loded.min.js"></script>
+            <script src="../../js/custom.js"></script>
 
 </body>
+
 </html>
 
 
-<?//Check login data in the form
-if ( !isset($_POST['username'], $_POST['password']) ) {
-	exit('');
-}?>
+<? //Check login data in the form
+if (!isset($_POST['username'], $_POST['password'])) {
+    exit('');
+} ?>
