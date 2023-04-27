@@ -6,6 +6,7 @@ Members and Contribution:
  - Faith (UI Design, Image Sourcing, Recipe Sourcing)
  
 Project Description: Reverse recipe search website. 
+
 Tools: XAMPP
 
 Instructions:
